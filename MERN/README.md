@@ -11,7 +11,7 @@ The reasoning for this is that Creat React App (CRA) can be generated using only
 
 CSS styling sheets will be used because although this may take longer than other styling methods such as inline styling in the React.js component can make the code complicated.
 
-#  APPLICATION DEPLOYMENT
+###  APPLICATION DEPLOYMENT
 ## SYSTEM REQUIREMENTS SPECIFICATION
 
 The application is an expense management system. The application should a 
