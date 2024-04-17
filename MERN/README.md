@@ -2,25 +2,27 @@
 
 ## SYSTEM ARCHITECTURE
 
-### WEB STACK
-
 The intended webstack used for developing the application is create react app, together with Express, Node and MongoDB. 
-The reasoning for this is that Creat React App (CRA) can be generated using only one command and therefore saves time. Next.js supports server-side rendering, whereas React.js supports client-side rendering which improves the application performance
+The reasoning for this is that Creat React App (CRA) can be generated using only one command and therefore saves time. Further, React.js allows a developer to write user interfaces and use it an unlimited number of times and only requires a basic knowledge of HTML and CSS.
 
-### STYLING
+To style the system CSS styling sheets will because although this may take longer the code is written in a separate document and therefore the code easier to read and less complicated than other methods such as inline styling.
 
-CSS styling sheets will be used because although this may take longer than other styling methods such as inline styling in the React.js component can make the code complicated.
+The application will deployed on netlify because it is a free site with good services.
 
-###  APPLICATION DEPLOYMENT
+In summary the webstack is MongoDB, Express.js, React.js, and Node.js, otherwise known as MERN stack, the application will be styled on separate CSS document(s) and will be deployed using Netlify.
+
 ## SYSTEM REQUIREMENTS SPECIFICATION
 
-The application is an expense management system. The application should a 
+The proposed application/website is an expense management system, which will be used manage user expenses. The application will be created in React.js, Express.js, Node.js, and MongoDB and should be able to be run in the command line interface using npm start.
+
+The target users are both businesses and individuals, who will benefit from being able to keep track of the business expenses in the case of businesses or personal expenses in the case of individuals. 
+
 ### SIMILAR APPLICATIONS
  - WegoPro
  - Zoho 
 
 These applications also provide expense management, however, they only provide for businesses the intended application to be created caters for business and individuals. 
-The applicationn is also free and theirfore cheaper.
+The application is also free and theirfore cheaper.
 
 ### USER STORIES
 
