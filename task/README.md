@@ -39,6 +39,8 @@ Examples of software which does something similar are`Nomola` and `SCP security`
 
 ### USER STORIES
 
+- As a responder or volunteer who uses the application, I want the application to be able to display all current disasters, so that I can quickly view the current situation and respond effectively to emergencies.
+- 
 
 ### FUNCTIONAL REQUIREMENTS
 
