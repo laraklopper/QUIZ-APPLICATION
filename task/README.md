@@ -39,8 +39,12 @@ Examples of software which does something similar are`Nomola` and `SCP security`
 
 ### USER STORIES
 
+
 - As a responder or volunteer who uses the application, I want the application to be able to display all current disasters, so that I can quickly view the current situation and respond effectively to emergencies.
-- 
+- As a user of the application, I want to store data in the database, and retrieve the from the database after logging in.
+- As someone who administrates the application, I want to be able to delete or edit user data in the database, so that I can monitor and manage normal end-user activity on the application effectively.
+- As an administration user, I want the application to classify and filter users to be able to assign specific rights and permissions.
+- As a user of the application, I want the application to perform requests, to be able to fetch data from the database and add data to the database without encountering errors or delays.
 
 ### FUNCTIONAL REQUIREMENTS
 
