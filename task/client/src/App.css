@@ -1,0 +1,171 @@
+#root{
+  margin: 0px;
+  padding: 10px;
+  width: 100%;
+  display: block;
+  background-color: darkgoldenrod;
+}
+.appContainer{
+  background-color: goldenrod;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  padding: 10px;
+}
+/*HEADER*/
+.header{
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+      margin-left: 0px;
+        margin-right: 0px;
+      
+  background-color: olive;
+}
+.h1{
+  text-align: center;
+  font-family: cursive;
+  font-weight: bold;
+  color: black;
+}
+/* NAVIGATION BAR */
+.navcol{
+  display: flex;
+  justify-content: center;
+  padding: 0px;
+}
+.navBar{
+  display: flex;
+  list-style-type: none;
+  justify-content: center;
+  text-decoration: none;
+}
+.h2{
+  text-align: center;
+}
+li{
+  padding: 2px;
+  text-decoration: none;
+}
+.rules{
+  list-style-type: none;
+}
+.linkText{
+  color: black;
+  font-weight: bold;
+  text-decoration: none;
+  font-weight: bold;
+  font-family: sans-serif;
+}
+Link{
+  text-decoration: none;
+  color: black;
+  font-weight: 800;
+}
+.section1 {
+  margin: 0px;
+  padding: 10px;
+  background-color: olivedrab
+}
+/* LOGIN PAGE */
+.section1{
+  margin: 0px;
+  padding: 10px;
+  background-color: olivedrab
+}
+#loginForm{
+  border: 2px solid black;
+  padding: 10px;
+  background-color: gray;
+}
+.loginRow{
+  display: flex;
+  margin-top: 5px;
+  padding: 10px;
+}
+.loginInput{
+  margin-left: 5px;
+}
+.loginLabel{
+  display: flex;
+  align-items: baseline;
+}
+/* REGISTRATION PAGE */
+/* registration form */
+#registrationForm{
+  padding: 10px;
+  background-color: gray;
+  border: 2px solid black;
+}
+.regisRow{
+  display: flex;
+      margin-top: 5px;
+        margin-bottom: 5px;
+        margin-right: 0px;
+        margin-left: 0px;
+}
+.regisLabel{
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 0px;
+  padding: 10px;
+  
+}
+.regisCol{
+  margin: 0px;
+  display: flex;
+}
+.regisLabelCheckbox{
+display: flex;
+  align-items: baseline;
+}
+.regisLabelText{
+  font-weight: bold;
+  float: left;
+}
+.regisInput{
+  margin-left: 5px;
+  float: right;
+  margin-right: 0px;
+      padding: 5px;
+}
+/* USER LIST */
+.h3{
+  text-align: center;
+}
+.userList{
+  list-style-type: none;
+  }
+/* Footer */
+.pageFooter{
+  background-color: #728e3e;
+  margin-top: 10px;
+  padding: 10px;
+  margin-bottom: 10px;
+  
+}
+#rulesList{
+  
+  margin-top: 5px;
+  margin-left: 10px;
+}
+.rules{
+  background-color: gray;
+}
+#rulesHeading{
+  text-align: left;
+  margin-top: 10px;
+    margin-left: 10px;
+}
+/* .h5{
+  text-align: center;
+} */
+/* PAGE 2: USER BETS */
+/* PAGE 3: SPORT EVENTS */
+.betFormRow{
+  display: flex;
+}
+.betFormLabel{
+  display: flex;
+  align-items: baseline;
+}
