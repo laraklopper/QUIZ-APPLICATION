@@ -28,6 +28,9 @@ The application will, however, be deployed using `Netlify` since it is a cost-fr
 
 ## SYSTEM REQUIREMENTS SPECIFICATION
 ### HOW THE APPLICATION WILL WORK
+The application uses `nodemon` third party middleware in the back-end to allow the application to run in the front-end and back-end code using `npm start`, the front-end `client` and back-end `server` folders must, however, be run separately using `npm start` in the terminal/command line interface.  A `proxy server` will be included in the `package.json` file in the front-end ensure that the back-end and front-end code will run together. 
+The intended  users who will benefit from the application are individuals that enjoy quiz games for recreational purposes. To use the application requires that users register (sign up), and the option to sign up as admin users, subject to certain restriction, such as age requirements. The application  also provides admin users with user authorization for specific rights and permissions.  After  registration users are able to login. 
+
 ### SIMILAR SOFTWARE
 
 Examples of similar applications/software are `Kahoot`, and `Trivia Crack`. However, there are several  significant differences between these applications and the intended web-application/software such as, the media types used on the application and the purposes.
