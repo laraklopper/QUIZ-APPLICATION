@@ -39,6 +39,15 @@ The intended web-application/software is different in that Kahoot is used for ed
 Trivia Crack is also an application used for recreational purposes, however, although the intended application/software also allows users to add questions, Trivia Crack allows users to add video questions, and the intended application/software does not provide users with the option to add questions in media format to  allow the application to load faster.
 
 ### USER STORIES
+
+-	As a user of the application, I want the application to be able to provide a friendly user interface (UI) to ensure a positive user experience (UX)
+-	As a user of the application, I want the application to provide secure user login to protect details on my account.
+-	As a user of the application, I want the application to provide a user interface that is user friendly to allow a positive user experience.
+-	As a user of the application, I want the application to be able to store my user account details after registration.
+-	As a user of the application, I want to be able to view the results after answering questions.
+-	As a user of the application, I want the application to be able to edit my account details.
+-	As a user of the application, I want the application to allow me to add new questions and save them to the database.
+
 #### ALL USERS
 #### ADMIN USERS
 ### SYSTEM REQUIREMENTS 
