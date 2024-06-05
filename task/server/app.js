@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 
 require('dotenv').config();
 const uri = process.env.MONGODB_URL;
-const database = process.env.DATABASE_NAME;
+const database = process.env.DATABASE_NAME;re
 const port = process.env.PORT || 3001;
 const app = express();
 
@@ -12,6 +12,8 @@ const app = express();
 app.use(cors())
 app.use(express.json())
 
+//==========CONNECT TO MONGODB================
+mongoose.Promise = global.Promise;
 
 mongoose.connect(uri, {
     useNewUrlParser: true,
