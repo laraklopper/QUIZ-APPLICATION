@@ -1,9 +1,11 @@
+// Import necessary modules and packages
 const express = require('express');
 const router = express.Router();
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 //Schemas
-const User = require('../models/userSchema')
+const User = require('../models/userSchema');
+//Import custom middleware
 import { checkAge, checkJwtToken } from '../middleware/middleware';
 
 //=========SETUP MIDDLEWARE============
