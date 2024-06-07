@@ -165,7 +165,7 @@ export default function App() {
         <Container className='appContainer'>
           <Routes>
             {loggedIn ? (
-              <Route path='/' element={<Page1 logout={logout}/>} />
+              <Route path='/home' element={<Page1 logout={logout}/>} />
             ) : (
               <>
                 <Route path='/' element={
