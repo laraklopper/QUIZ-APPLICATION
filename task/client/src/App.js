@@ -1,12 +1,16 @@
+// Import necessary modules and packages
 import React, { useEffect, useState } from 'react';
-import './App.css'
+import './App.css'l//Import CSS stylesheet
+//Bootstrap
 import Container from 'react-bootstrap/Container';
-import {BrowserRouter, Routes, Route } from 'react-router-dom'
-import Page1 from './Pages/Page1';
-import Login from './Pages/Login';
-import Registration from './Pages/Registration';
+//React-Router components
+import {BrowserRouter, Routes, Route } from 'react-router-dom'; // React Router components for routing
+//Pages
+import Page1 from './Pages/Page1';//Import Page1 (HOME) component
+import Login from './Pages/Login';//Import LoginPage component
+import Registration from './Pages/Registration'; //Import RegistrationPage component
 
-
+//App Function Components
 export default function App() {
   //=========STATE VARIABLES============
   //user variables
@@ -30,21 +34,23 @@ export default function App() {
   const [loggedIn, setLoggedIn] = useState(false);
 
   //==========USE EFFECT HOOK TO FETCH ALL USERS==================
+  //Fetch users when the component mounts or when loggedIn changes
   useEffect(() =>{
     //Function to fetch all users
-    const fetchUsers = async () => {
+    const fetchUsers = async () => {//Define an async function to fetch all users
       try {
-        const token = localStorage.getItem('token')
-
+        const token = localStorage.getItem('token')//Retrieve token from localStorage
+        // Conditional rendering if token or login status is missing
         if (!token || ! loggedIn) {
-          return
+          return; // Exit if no token is found or user is not logged in
         }
+        
         const response = await fetch (`http://localhost:3001/users/findUsers`, {
           method: 'GET',
           mode: 'cors',
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',// Specify the Content-Type being sent in the request payload.
+            'Authorization': `Bearer ${token}`,//Add the Authorization header containing the JWT token
           }
         });
 
@@ -66,7 +72,7 @@ export default function App() {
   //==========REQUESTS===============
   //---------POST---------------
   //Function to submitLogin
-  const submitLogin = async (e) => {
+  const submitLogin = async (e) => {//Define an async function to submit user login
     e.preventDefault();
     try {
       const response = await fetch('http://localhost:3001/users/login',{
@@ -86,7 +92,7 @@ export default function App() {
         const data = await response.json();
         localStorage.setItem('username', userData.username)
         localStorage.setItem('loggedIn', true);
-        localStorage.setItem('token', data)
+        localStorage.setItem('token', data.token)
 
         setLoggedIn(true);
 
