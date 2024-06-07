@@ -1,5 +1,19 @@
 const jwt = require('jsonwebtoken');
 
+// Middleware to verify JWT and extract user info
+const authenticateToken = (req, res, next) => {
+    const token = req.headers['authorization'];
+    if (!token) return res.status(401).json({ message: 'No token provided' });
+    
+    // Verify the token using the secret key
+    jwt.verify( token,  'secretKey',  (err, user) => {
+        if (err) return res.status(403).json({ message: 'Failed to authenticate token' });
+        req.user = user;// Attach the decoded user information to the request object
+        next();
+    });
+};
+
+
 //Middleware function to check and verify a JWT token from the 'token' header
 const checkJwtToken = (req, res, next) => {
     const authHeader = req.headers.authorization;
@@ -46,4 +60,4 @@ const checkAge = (req, res, next) => {
     next()
 }
 
-module.exports = {checkJwtToken, checkAge}
+module.exports = {authenticateToken, checkJwtToken, checkAge}
