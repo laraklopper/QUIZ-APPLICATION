@@ -60,4 +60,21 @@ const checkAge = (req, res, next) => {
     next()
 }
 
+// Middleware to check if the user is above 18 if admin is selected
+const checkAdminAge = (req, res, next) => {
+    if (req.body.admin) {
+        const today = new Date();
+        const birthDate = new Date(req.body.dateOfBirth);
+        const age = today.getFullYear() - birthDate.getFullYear();
+        const m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        if (age < 18) {
+            return res.status(400).json({ error: 'Admin users must be above 18 years old' });
+        }
+    }
+    next();
+};
+
 module.exports = {authenticateToken, checkJwtToken, checkAge}
