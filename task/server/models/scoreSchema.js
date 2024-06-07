@@ -2,17 +2,26 @@ import mongoose from "mongoose";
 
 const scoreSchema = mongoose.Schema({
     username: {
-        type: String, required: true
+        type: String,
+        required: true
     },
-    result: {
-        type: Array, default: [], required: true,
+    quizName: {
+        type: String,
+        required: true,
+    }
+      result: {
+        type: Array, 
+        default: [], 
+        required: true,
     },
-    /* attempts : { 
+    attempts : { 
          type : Number, 
          default : 0
-     },*/
+     },
     score: {
-        type: Number, default: 0, required: true
+        type: Number, 
+        default: 0, 
+        required: true
     },
 }, { timestamps: true })
 
