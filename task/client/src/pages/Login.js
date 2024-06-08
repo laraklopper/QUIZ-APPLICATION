@@ -10,13 +10,13 @@ export default function Login({submitLogin, userData, setUserData}) {
 
   //======EVENT LISTENER===============
   // Event listener for handling user login data changes
-  const handleUserLogin = (event) => {
-    const { name, value } = event.target;
-    // Update userData state with new values
-    setUserData((prevState) => (
-      { ...prevState, [name]: value }
-    ));
-  };
+  // const handleUserLogin = (event) => {
+  //   const { name, value } = event.target;
+  //   // Update userData state with new values
+  //   setUserData((prevState) => (
+  //     { ...prevState, [name]: value }
+  //   ));
+  // };
 
   // Event listener to handle user Login
   const handleSubmit = (e) => {
@@ -41,7 +41,9 @@ export default function Login({submitLogin, userData, setUserData}) {
               type='text'
               name='username'
               value={userData.username}
-              onChange={handleUserLogin}
+              onChange={(e) => setUserData(
+                  {...userData, username: e.target.value})}
+              // onChange={handleUserLogin}
               autoComplete='off'
               placeholder='Username'
               />
@@ -54,7 +56,9 @@ export default function Login({submitLogin, userData, setUserData}) {
                 type='email'
                 name='email'
                 value={userData.email}
-                onChange={handleUserLogin}
+               onChange={(e) => setUserData(
+                  {...userData, email: e.target.value})}
+                // onChange={handleUserLogin}
                 autoComplete='off'
                 placeholder='Email'
                 />
@@ -70,7 +74,10 @@ export default function Login({submitLogin, userData, setUserData}) {
                 type='password'
                 name='password'
                 value={userData.password}
-                onChange={handleUserLogin}
+                  onChange={(e) => setUserData(
+                      {...userData, password: e.target.value}
+                    )}
+                // onChange={handleUserLogin}
                 autoComplete='off'
                 placeholder='Password'
                 />
