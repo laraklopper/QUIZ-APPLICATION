@@ -5,9 +5,6 @@ const cors = require('cors');
 const jwt = require('jsonwebtoken');
 //Schemas
 const User = require('../models/userSchema');
-//Import custom middleware
-// import { checkAge, checkJwtToken } from '../middleware/middleware';
-import { authenticateToken } from '../middleware/middleware';
 
 //=========SETUP MIDDLEWARE============
 router.use(cors());// Enable Cross-Origin Resource Sharing for all routes
@@ -31,7 +28,7 @@ router.use(express.json());// Parse JSON bodies for incoming requests
 
 //-----------GET--------------
 //Route to handle GET requests to fetch a single user
-router.get('/user', checkJwtToken ,async (req, res) => {
+router.get('/user', async (req, res) => {
     console.log('Finding user');
     try {
         const user = await User.findOne({ username: req.user.username })
@@ -53,12 +50,12 @@ router.get('/user', checkJwtToken ,async (req, res) => {
 })
 
 //Route to GET all users 
-router.get('/findUsers', /*checkJwtToken,*/ async (req, res,) => {
+router.get('/findUsers', async (req, res,) => {
     console.log('Finding users')
     
     try {
-        const { username } = req.query;// Extract the username from the query parameters
-        const users = await User.find({ username });// Find users matching the username
+        const { username } = req.query;
+        const users = await User.find({ username });
 
         console.log(users);
         res.status(200).json(users);
@@ -73,38 +70,52 @@ router.get('/findUsers', /*checkJwtToken,*/ async (req, res,) => {
 //Route to send POST request to login endpoint
 router.get('/login', async (req, res) =>{
     console.log(req.body);
+    console.log('User Login')
     
     try {
         
-        const {username, password} = req.body;//Extract username and password from the request body
-        const user = await User.findOne({username, password})// Find the user based on the username and password
-        // console.log(user);
+        const {username, password} = req.body;
+        const user = await User.findOne({username, password});
+        console.log(user);
+    //Conditional rendering to check if the user is found
 
-        if (!user) throw new Error('User not found');
-
-      // Generate a JWT token if the user is found
-        const jwtToken = jwt.sign(
-            { userId: user._id, username: user.username },
-            'secretKey',
-            /*process.env.JWT_SECRET,*/
-
-            { expiresIn: '12h', algorithm: 'HS256' }
-        );
-  
-        res.json({'token': jwtToken});// Respond with the JWT token
+        if(user){
+            if(password === user.password){
+              // Generate a JWT token for authentication
+                const jwtToken = jwt.sign(
+                    {userId: user._id},
+                    'secretKey',
+                    /*process.env.JWT_SECRET,*/
+                    { expiresIn: '12h', algorithm: 'HS256' }
+                )
+                res.json({'token': jwtToken});// Respond with the JWT token
+            }
+            else{
+                throw new Error('Password Incorrect')
+            }
+        }
+        else{
+            throw new Error('User not found')
+        }
     } 
-    catch (error) {
+    catch (error) 
+    {
         console.error('Login Failed: Username or password are incorrect', error.message);
-        res.status(401).json({ message: 'User not authenticated' })
+        res.status(401).json({ message: 'User not authenticated' });
     }
 })
 
 //Route to send a POST request the register endpoint
-router.post('/register', checkAge, async (req, res) => {
-    // console.log('Register User');
+router.post('/register', async (req, res) => {
+    console.log('Register User');
     console.log(req.body);
     try {
         const {username, email, dateOfBirth, password, admin = false} = req.body;
+
+         if (!username || !email || !dateOfBirth || !password) {
+      console.error('Username and password are required');
+      return res.status(400).json({ message: 'Username and password are required' });
+    }
         // Check if the username already exists
         const existingUser = await User.findOne({username});
 
@@ -145,9 +156,9 @@ router.post('/register', checkAge, async (req, res) => {
     }
 })
 
-
+//--------------DELETE--------------------
 //Route to send a DELETE request to the /deleteUser endpoint
-router.delete('/deleteUser/:id', checkJwtToken, async (req, res) => {
+router.delete('/deleteUser/:id',  async (req, res) => {
     try {
         const {id} = req.params;
 
