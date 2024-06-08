@@ -1,5 +1,5 @@
 // Import necessary modules and packages
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';// Import the React module to use React functionalities
 import './App.css'l//Import CSS stylesheet
 //Bootstrap
 import Container from 'react-bootstrap/Container';
@@ -14,15 +14,15 @@ import Registration from './Pages/Registration'; //Import RegistrationPage compo
 export default function App() {
   //=========STATE VARIABLES============
   //user variables
-  const [users, setUsers] = useState([]);
-  const [userData, setUserData] = useState({
+  const [users, setUsers] = useState([]);//State to store list of users
+  const [userData, setUserData] = useState({//State to store userData
     username: '',
     email: '',
     dateOfBirth: '',
     admin: '',
     password: '',
   });
-  const [newUserData, setNewUserData] = useState({
+  const [newUserData, setNewUserData] = useState({//State variable used to store Data about newUsers
     newUsername: '',
     newEmail: '',
     newDateOfBirth: '',
@@ -31,7 +31,9 @@ export default function App() {
   });
   //Event variables
   const [error, setError] = useState(null);
-  const [loggedIn, setLoggedIn] = useState(false);
+    //State variables to manage user Login
+  const [loggedIn, setLoggedIn] = useState(false);;// Boolean variable used to track if the user is logged in
+  const [loggedOut, setLoggedOut] = useState(true);// Boolean variable used to track whether the user is currently logged out.
 
   //==========USE EFFECT HOOK TO FETCH ALL USERS==================
   //Fetch users when the component mounts or when loggedIn changes
@@ -46,11 +48,11 @@ export default function App() {
         }
         
         const response = await fetch (`http://localhost:3001/users/findUsers`, {
-          method: 'GET',
-          mode: 'cors',
+          method: 'GET',//Http method
+          mode: 'cors',//
           headers: {
-            'Content-Type': 'application/json',// Specify the Content-Type being sent in the request payload.
-            'Authorization': `Bearer ${token}`,//Add the Authorization header containing the JWT token
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
           }
         });
 
@@ -110,7 +112,8 @@ export default function App() {
     } catch (error) {
       setError(`Login Failed ${error.message}`);
       console.log(`Login Failed ${error.message}`); //Log an error message in the console for debugging purposes
-      setLoggedIn(false);
+      loggedOut()
+      // setLoggedIn(false);
   }
   }
     //Function to add a new user
@@ -153,6 +156,16 @@ export default function App() {
     }
   }
   //========EVENT LISTENERS==========
+
+   /*Function to set the loggedOut status to false
+  stating that the user is logged in*/
+   const appLogin = () => {
+     let token = localStorage.getItem('token'); // Retrieve token from localStorage
+     //Condtional rendering to check if the token exists
+     if (token) {
+       setLoggedOut(false);// Set loggedOut state to false, indicating the user is logged in
+     }
+   }
 
   const logout = () => {
     localStorage.removeItem('token');
