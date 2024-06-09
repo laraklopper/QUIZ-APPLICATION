@@ -79,6 +79,7 @@ router.get('/findUsers', async (req, res,) => {
         // Find users optionally filtered by username
         const { username } = req.query;// Extract username from request query
         const query = username ? { username } : {}; // Construct query object: if username is provided, filter by username, otherwise, fetch all users
+        // const users = await User.find({ username });
         const users = await User.find(query); // Use the query object to find users
         console.log(users);// Log the users in the console for debugging purposes
             // Send a 201 Created response with a success message and the saved user object
