@@ -30,10 +30,9 @@ export default function App() {
     newPassword: ''
   });
   //Event variables
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(null);//State to handle errors during data fetching
     //State variables to manage user Login
   const [loggedIn, setLoggedIn] = useState(false);;// Boolean variable used to track if the user is logged in
-  const [loggedOut, setLoggedOut] = useState(true);// Boolean variable used to track whether the user is currently logged out.
 
   //==========USE EFFECT HOOK TO FETCH ALL USERS==================
   //Fetch users when the component mounts or when loggedIn changes
@@ -46,84 +45,116 @@ export default function App() {
         if (!token || ! loggedIn) {
           return; // Exit if no token is found or user is not logged in
         }
-        
+        //Send a GET request to the /users/findUsers endpoint
         const response = await fetch (`http://localhost:3001/users/findUsers`, {
-          method: 'GET',//Http method
-          mode: 'cors',//
+          method: 'GET',//HTTP request method
+          mode: 'cors',//Set the mode to cors allowing Cross-Origin-Requests
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',// Specify the Content-Type being sent in the request payload 
+            'Authorization': token,//Add the Authorization header containing the JWT token
           }
         });
-
+        //Response handling
+        // Conditional rendering if the response indicates success (status code 200-299)
         if (!response.ok) {
-          throw new Error ('Failed to fetch user data');
+          throw new Error ('Failed to fetch user data');//Throw an error message if GET request is unsuccessful
         } 
 
-        const fetchedData = await response.json()
-        setUsers(fetchedData)
+        const fetchedData = await response.json()//parse the response data as JSON
+        setUsers(fetchedData);//Log the fetchedData in the console for debugging purposes
       } 
       catch (error) {
-        console.error('Error fetching user', error.message);  
-        setError('Error fetching user');
+        console.error('Error fetching user', error.message);//Log an error message in the console for debugging purposes
+        setError('Error fetching user');//Set an error message in the error state
       }
     }
     fetchUsers()
   },[loggedIn]);
 
   //==========REQUESTS===============
-  //---------POST---------------
-  //Function to submitLogin
-  const submitLogin = async (e) => {//Define an async function to submit user login
-    e.preventDefault();
+  //--------GET-------------
+ /* const fetchUser = async (userId) => {
+    console.log('Fetch single user');
     try {
-      const response = await fetch('http://localhost:3001/users/login',{
-        method: 'POST',
+      const token = localStorage.getItem('token');
+      if (!token || !loggedIn) return
+
+      const response = await fetch (`http://localhost:3001/users/${userId}`, {
+        method: 'GET',
         mode: 'cors',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        }
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch user data');
+      }
+          const fetchedUser = await response.json();
+          setUserData(fetchedUser);
+          return fetchedUser;
+    } catch (error) {
+          console.error('Error fetching user details:', error.message);
+          setError('Error fetching user details:', error.message)
+    }
+  }*/
+  //---------POST---------------
+  //Function to submitLogin
+  const submitLogin = async (e) => {//Define an async function to submit user login
+    e.preventDefault();// Prevent the default form submission behavior
+    try {
+            // Send a POST request to the server for user login
+      const response = await fetch('http://localhost:3001/users/login',{
+        method: 'POST',//Http request method
+        mode: 'cors',//Set the mode to cors, allowing cross-origin requests 
+        headers: {
+          'Content-Type': 'application/json',// Specify the Content-Type being sent in the request payload.
         },
-        body: JSON.stringify({
+        body: JSON.stringify({// Convert user login data to JSON string
           username: userData.username,
           email: userData.email,
           password: userData.password
         })
       })
-
+// Conditional rendering if the response indicates success (status code 200-299)
       if (response.ok) {
-        const data = await response.json();
-        localStorage.setItem('username', userData.username)
-        localStorage.setItem('loggedIn', true);
-        localStorage.setItem('token', data.token)
+        const data = await response.json();//Parse the response data as JSON
+        localStorage.setItem('username', userData.username)// Store the user's username in the localStorage under the key 'username'
+        localStorage.setItem('loggedIn', true);/* Store the login status of the user in the localStorage under the key 'loggedIn'
+        Setting it to true indicates that the user is logged in*/
+        localStorage.setItem('token', data.token)/* Store the authentication token received 
+        from the server in the localStorage under the key 'token'*/
 
-        setLoggedIn(true);
+        setLoggedIn(true);//Update the loggedIn state to true
 
         setError(null);
-        setUserData({
+        setUserData({//Clear the UserData input
           username: ' ',
           email: ' ',
           password: ' ',
         })
 
-        console.log('User logged In');
+        console.log('User logged In');//Log a message in the console for debugging purposes
+        console.log(data);//Log a message in the console for debugging purposes
       } else {
         throw new Error('Username or password are incorrect')
       }
     } catch (error) {
-      setError(`Login Failed ${error.message}`);
+      setError(`Login Failed ${error.message}`);//Set the error state with an error message
       console.log(`Login Failed ${error.message}`); //Log an error message in the console for debugging purposes
-      loggedOut()
-      // setLoggedIn(false);
+      setLoggedIn(false);//Update the logged in State to false
   }
   }
     //Function to add a new user
-  const addUser = async (e) => {
-    console.log('register new user');
-    e.preventDefault();
+  const addUser = async (e) => {//Define an async function to add a new user
+    console.log('register new user');//Log a message in the console for debugging purposes
+    e.preventDefault();//Prevent default form submission behaviour
     try {
+      //Send a POST request to the register endpoint
       const response = await fetch ('http://localhost:3001/users/register', {
-        method: 'POST',
-        mode: 'cors',
+        method: 'POST',//HTTP request method
+        mode: 'cors',//Set the mode to cors allowing cross-origin requests
         headers: {
           'Content-Type': 'application/json',
         },
@@ -135,7 +166,7 @@ export default function App() {
           password: newUserData.newPassword,
         })
       })
-
+// Condtitional rendering to check if if the response indicates success (status code 200-299)
       if (response.ok) {
         console.log('user successfully registerd.');
         setNewUserData(
