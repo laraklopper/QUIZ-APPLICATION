@@ -71,7 +71,7 @@ router.get('/findUsers', async (req, res,) => {
 
 //----------POST-------------
 //Route to send POST request to login endpoint
-router.get('/login', async (req, res) =>{
+router.post('/login', async (req, res) =>{
     console.log(req.body);//Log the request body in the console for debugging purposes
     console.log('User Login')//Log a message in the console for debugging purposes
     
