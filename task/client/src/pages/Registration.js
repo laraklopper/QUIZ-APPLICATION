@@ -28,7 +28,7 @@ export default function Registration({addUser, newUserData, setNewUserData}) {
     <MainHeader mainHeading="REGISTRATION"/>
     <section className='section1'>
       <Row>
-        <Col className='regisCol'>
+        <Col>
         <h3 className='h3'>ENTER REGISTRATION DETAILS</h3>
         </Col>
       </Row>
@@ -44,6 +44,8 @@ export default function Registration({addUser, newUserData, setNewUserData}) {
             type='text'
             name='newUsername'
             value={newUserData.newUsername}
+onChange={(e) => setNewUserData(
+                  {...newUserData, newUsername: e.target.value})}
             onChange={handleInputChange}
             placeholder='USERNAME'
             autoComplete='off'
@@ -60,7 +62,9 @@ export default function Registration({addUser, newUserData, setNewUserData}) {
                 type='email'
                 name='newEmail'
                 value={newUserData.newEmail}
-                onChange={handleInputChange}
+                onChange={(e) => setNewUserData(
+                  {...newUserData, newEmail: e.target.value})}
+                // onChange={handleInputChange}
                 placeholder='ENTER EMAIL'
                 autoComplete="off"
                 required
@@ -76,6 +80,8 @@ export default function Registration({addUser, newUserData, setNewUserData}) {
                 type='date'
                 name='newDateOfBirth'
                 value={newUserData.newDateOfBirth}
+onChange={(e) => setNewUserData(
+                  {...newUserData, newDateOfBirth: e.target.value})}
                 autoComplete='off'
                 placeholder="dd/mm/yyyy"
                 onChange={handleInputChange}
@@ -92,7 +98,9 @@ export default function Registration({addUser, newUserData, setNewUserData}) {
                 type='password'
                  name='newPassword'
                  value={newUserData.newPassword}
-                 onChange={handleInputChange}
+                onChange={(e) => setNewUserData(
+                  {...newUserData, newPassword: e.target.value})}
+                 // onChange={handleInputChange}
                  placeholder='Password'   
                  autoComplete='currentpassword'              
               />
@@ -105,7 +113,9 @@ export default function Registration({addUser, newUserData, setNewUserData}) {
               <input 
                 type="checkbox"
                 checked={newUserData.newAdmin}
-                onChange={handleInputChange}
+                onChange={(e) => setNewUserData(
+                  {...newUserData, newPassword: e.target.value})}
+                // onChange={handleInputChange}
                 name="newAdmin"
                 id="adminCheckbox"
               />
