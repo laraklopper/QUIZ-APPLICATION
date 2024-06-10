@@ -1,17 +1,41 @@
 import React from 'react'
+//Bootstrap
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
+//Rules function component
 export default function Rules() {
-  return (
-    <div id='rules'>
-      
-          <h3 id='rulesHeading'>RULES</h3>
+
+  //=====JSX RENDERING===========
+  return (    
+      <Row className='rulesRow'>
+        <Col xs={12} md={8} className='rulesCol'>
           <ul className='rulesList'>
-              <li className='rule'>The username does not have to be the users real name.</li>
-              <li className='rule'>Username and email must be unique</li>
-              <li className='rule'>Passwords must be at least 8 characters.</li>
-              <li className='rule'>All admin users must be older than 18</li>
-              <li className='rule'>Users may only on initial registration register as an admin user</li>
+            <li className='ruleItem'>    
+              <h6 className='rule'>
+              ALL ADMIN USERS MUST BE OLDER THAN 18
+              </h6>
+            </li>
+            <li className='ruleItem'>
+              <h6 className='rule'>
+              THE APPLICATION DOES NOT SUPPORT ANY FORM OF GAMBLING
+              </h6>
+            </li>
+            <li>
+              <h6 className='rule'>
+              USER INFORMATION IS PRIVATE AND MAY NOT BE ACCESSED
+              WITHOUT AUTHORIZATION
+              </h6>
+            </li>
+           <li className='ruleItem'>
+            <h5 className='rule'>
+              ANY USER WHO DOES NOT ADHERE TO THESE RULES MAY BE REMOVED
+            </h5>
+           </li>
           </ul>
-    </div>
+        </Col>
+        <Col xs={6} md={4} className='rulesCol'>
+        </Col>
+      </Row>
   )
 }
