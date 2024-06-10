@@ -1,9 +1,13 @@
-import React from 'react'
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import { Link } from 'react-router-dom';
+import React from 'react';// Import the React module to use React functionalities
+//Bootstrap
+import Row from 'react-bootstrap/Row'; // Import the Row component from react-bootstrap
+import Col from 'react-bootstrap/Col'; // Import the Col component from react-bootstrap
+import { Link } from 'react-router-dom';// Import Link from react-router-dom for navigation
 
-export default function Header(heading) {
+
+//Header function component
+//Take the Heading component as a prop
+export default function Header(heading) {//Export default Header function component
   return (
     <header>
         <Row>
