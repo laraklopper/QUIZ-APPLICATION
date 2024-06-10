@@ -8,7 +8,7 @@ require('dotenv').config();// Load environment variables from a .env file
 //Extract Environmental Variables
 const uri = process.env.DATABASE_URL;//Extract the database URL from the enviromental variables
 const database = process.env.DATABASE_NAME;//Extract the database name from enviromental variables
-const port = process.env.PORT || 3001;//Extract the database URL from the enviromental variables
+const port = process.env.PORT || 3001;//Extract the PORT number from the enviromental variables
 
 const app = express();// Create an Express application
 
