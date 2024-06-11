@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require('mongoose');
 
 const scoreSchema = mongoose.Schema({
     username: {
@@ -8,21 +8,17 @@ const scoreSchema = mongoose.Schema({
     quizName: {
         type: String,
         required: true,
-    }
-      result: {
-        type: Array, 
-        default: [], 
-        required: true,
     },
-    attempts : { 
-         type : Number, 
-         default : 0
-     },
     score: {
-        type: Number, 
-        default: 0, 
-        required: true
+        type: Number,
+        default: 0,
+        required,
     },
-}, { timestamps: true })
+    attempts:{
+        type: Number,
+        default: 0,
+        required: true,
+    }, 
+}, {timestamp: true})
 
-export default mongoose.model('result', scoreSchema);
+module.exports = mongoose.model('scores', scoreSchema);
