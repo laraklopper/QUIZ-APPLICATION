@@ -2,17 +2,25 @@ const jwt = require('jsonwebtoken');
 
 // Middleware to verify JWT and extract user info
 const authenticateToken = (req, res, next) => {
-    const token = req.headers['authorization'];
-    if (!token) return res.status(401).json({ message: 'No token provided' });
+    const token = req.headers['authorization'];// Extract token from Authorization header
+    if (!token) return res.status(401).json(
+        { message: 'No token provided' }
+    );
     
     // Verify the token using the secret key
-    jwt.verify( token,  'secretKey',  (err, user) => {
-        if (err) return res.status(403).json({ message: 'Failed to authenticate token' });
+    jwt.verify( 
+        token,  
+       process.env.JWT_SECRET || 'secretKey', //SecretKey
+        (err, user) => {
+                //Conditional rendering to check if the token exists
+        if (err) 
+            return res.status(403).json(
+                { message: 'Failed to authenticate token' }// If no token is provided, deny access
+            );
         req.user = user;// Attach the decoded user information to the request object
-        next();
+        next();// Call next middleware
     });
 };
-
 
 //Middleware function to check and verify a JWT token from the 'token' header
 const checkJwtToken = (req, res, next) => {
