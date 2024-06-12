@@ -11,27 +11,7 @@ const User = require('../models/userSchema');// Import the User model
 router.use(cors());// Enable Cross-Origin Resource Sharing for all routes
 router.use(express.json());// Parse JSON bodies for incoming requests
 
-/*
-// Middleware to authenticate JWT token
-const authenticateToken = (req, res, next) => {
-    const token = req.header('Authorization')?.split(' ')[1];    // Extract token from Authorization header
-    //Conditional rendering to chexk if the token exists
-    if (!token) {
-        return res.status(401).json({ message: 'Access Denied' });// If no token is provided, deny access
 
-    }
-
-    // Verify token
-    jwt.verify(token, process.env.JWT_SECRET || 'secretKey', (err, user) => {
-        if (err) {
-            // If token verification fails, deny access
-            return res.status(403).json({ message: 'Invalid Token' });
-        }
-        req.user = user; // Attach user data to request object
-        next(); // Call next middleware
-    });
-};
-*/
 //========ROUTES==============
 
 /*
@@ -193,6 +173,35 @@ router.post('/register', async (req, res) => {
     }
 })
 
+//-------------PUT-----------------
+//Route to edit userAccount
+router.put('/editAccount:_id', async (req, res) => {
+    console.log('edit Account');
+    try {
+        const {_id} = req.params
+        const {username, email} = req.body
+
+        const updateUser = {}
+        if (username) updateUser.username = username
+        if (email) updateUser.email = email;
+
+        const updatedAccount = await User.findByIdAndUpdate(
+            _id,
+            updateUser,
+            { new: true }
+        )
+
+        if (!updatedAccount) {
+            return res.status(404).json({ message: 'User not found' })
+        }
+        console.log('Updated User Account:', updatedAccount);
+        res.status(201).json({ message: 'User account successfully updated', updatedAccount })
+    } catch (error) {
+        console.error(`Error occured while updating User Account ${error.message}`);
+        return res.status(500).json({ message: 'Internal server error' })
+
+    }
+})
 //--------------DELETE--------------------
 //Route to send a DELETE request to the /deleteUser endpoint
 router.delete('/deleteUser/:id',  async (req, res) => {
