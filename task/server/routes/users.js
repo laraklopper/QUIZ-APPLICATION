@@ -72,6 +72,17 @@ router.get('/findUsers', async (req, res,) => {
     }
 });
 
+// Route to fetch all quizzes
+router.get('/quizzes', async (req, res) => {
+    try {
+        const quizzes = await Quiz.find();
+        res.status(200).json(quizzes);
+    } catch (error) {
+        console.error('Error fetching quizzes:', error);
+        return res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
+
 //----------POST-------------
 //Route to send POST request to login endpoint
 router.post('/login', async (req, res) =>{
@@ -173,6 +184,19 @@ router.post('/register', async (req, res) => {
     }
 })
 
+// Route to add new quiz
+router.post('/addQuiz', async (req, res) => {
+    console.log(req.body);
+    try {
+        const quiz = new Quiz(req.body);
+        await quiz.save();
+        res.status(201).json({ message: 'Quiz successfully created' });
+    } catch (error) {
+        console.error(`Error occurred while adding new Quiz`, error);
+        return res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
+
 //-------------PUT-----------------
 //Route to edit userAccount
 router.put('/editAccount:_id', async (req, res) => {
@@ -202,6 +226,19 @@ router.put('/editAccount:_id', async (req, res) => {
 
     }
 })
+
+// Route to edit a quiz
+router.put('/editQuiz/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const updatedQuiz = await Quiz.findByIdAndUpdate(id, req.body, { new: true });
+        res.status(200).json(updatedQuiz);
+    } catch (error) {
+        console.error('Error editing quiz:', error);
+        return res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
+
 //--------------DELETE--------------------
 //Route to send a DELETE request to the /deleteUser endpoint
 router.delete('/deleteUser/:id',  async (req, res) => {
@@ -228,6 +265,17 @@ router.delete('/deleteUser/:id',  async (req, res) => {
     }
 })
 
+// Route to delete a quiz
+router.delete('/deleteQuiz/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        await Quiz.findByIdAndDelete(id);
+        res.status(200).json({ message: 'Quiz successfully deleted' });
+    } catch (error) {
+        console.error('Error deleting quiz:', error);
+        return res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
 
 
 module.exports = router;// Export the router to be used in other parts of the application
