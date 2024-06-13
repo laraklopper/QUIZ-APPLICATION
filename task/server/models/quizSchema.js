@@ -1,39 +1,33 @@
-// Import the Mongoose library
+// Import the Mongoose library for MongoDB interactions
 const mongoose = require('mongoose');
 
-// Define the Quiz schema
+// Define the Quiz schema using Mongoose's Schema method
 const QuizSchema = mongoose.Schema({
-    // Field for the quiz name, which is a required string
+    // Define the 'quizName' field which is a required string
     quizName: {
-        type: String,
-        required: true,
+        type: String,         // The type of this field is String
+        required: true,       // This field is required
     },
-    // Field for the username of the person who created the quiz, which is a required string
+    // Define the 'username' field which is a required string
     username: {
-        type: String,
-        required: true,
+        type: String,         // The type of this field is String
+        required: true,       // This field is required
     },
-    // Field for the questions, which is a required array of strings. Default is an empty array.
-    questions: { 
-        type: [String],  // Specifies that the field should be an array of strings
-        default: [],     // Sets the default value to an empty array if none is provided
-        required: true,  // Marks the field as required, meaning it must be provided
-    },
-    // Field for the options, which is a required array of arrays of strings. Default is an empty array.
-    options: { 
-        type: [[String]],  // Specifies that the field should be an array of arrays of strings
-        default: [],       // Sets the default value to an empty array if none is provided
-        required: true     // Marks the field as required, meaning it must be provided
-    },
-    // Field for the answers, which is a required array of strings. Default is an empty array.
-    answers: {
-        type: [String],  // Specifies that the field should be an array of strings
-        default: [],     // Sets the default value to an empty array if none is provided
-        required: true,  // Marks the field as required, meaning it must be provided
+    // Define the 'questions' field as an array of objects
+    questions: {
+        type: [{
+            questionText: String,    // The text of the question
+            correctAnswer: String,   // The correct answer to the question
+            options: [String]        // An array of possible answer options
+        }],
+        default: [],            // Default value is an empty array if no questions are provided
+        required: true,         // This field is required
     }
-}, 
-// Enable timestamps to automatically add createdAt and updatedAt fields
-{ timestamps: true });
+},
+    {
+        // Enable timestamps to automatically add 'createdAt' and 'updatedAt' fields
+        timestamps: true
+    });
 
 // Export the Quiz model based on the QuizSchema
-module.exports = mongoose.model('quiz', QuizSchema);
+module.exports = mongoose.model('Quiz', QuizSchema);
