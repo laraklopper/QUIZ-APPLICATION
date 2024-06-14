@@ -75,7 +75,7 @@ router.get('/findUsers', async (req, res,) => {
 });
 
 // Route to fetch all quizzes
-router.get('/quizzes', async (req, res) => {
+/*router.get('/quizzes', async (req, res) => {
     try {
         const quizzes = await Quiz.find();
         res.status(200).json(quizzes);
@@ -83,8 +83,16 @@ router.get('/quizzes', async (req, res) => {
         console.error('Error fetching quizzes:', error);
         return res.status(500).json({ message: 'Internal Server Error' });
     }
+});*/
+router.get('/getQuizzes', async (req, res) => {
+    try {
+        // Find all quizzes and populate the user field with username
+        const quizzes = await Quiz.find().populate('user', 'username');
+        res.json(quizzes);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 });
-
 //----------POST-------------
 //Route to send POST request to login endpoint
 router.post('/login', async (req, res) =>{
