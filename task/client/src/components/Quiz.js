@@ -5,7 +5,7 @@ import Col from 'react-bootstrap/Col';
 export default function Quiz({selectedQuiz, questionIndex, handleAnswer}) {
     //============STATE VARIABLES===============
   
-  const [play, setPlay] = useState(true);// State to track whether the game is being played or not
+  const [play, setPlay] = useState(false);// State to track whether the game is being played or not
   const [answers, setAnswers] = useState([]);   //store the answers from the database as an array
   const [timerEnabled, setTimerEnabled] = useState(true);  // Indicates if the timer is enabled
   const [score, setScore] = useState(0);  //Track the user score => save user score to the database after the quiz is complete
@@ -63,12 +63,6 @@ export default function Quiz({selectedQuiz, questionIndex, handleAnswer}) {
     }, [currentQuestion, startQuiz]);
     //=========REQUESTS============
     
-    /*
-    => useEffecthook to display timer option
-    => fetch the questions from the database by name quiz by 
-    name -> async function fetch the answers from the database
-    */
-
     // ===========EVENT LISTENERS===========
 
     /*
@@ -83,7 +77,7 @@ export default function Quiz({selectedQuiz, questionIndex, handleAnswer}) {
     => handleGameStatus
     */
 
-  /*
+
 // Handles moving to the next question
 const handleNextQuestion = () => {
 if (currentQuestion + 2 === questions.length) {
@@ -94,7 +88,7 @@ if (currentQuestion + 2 === questions.length) {
   setTimer(10); 
   }
 };
-*/
+
 
   /*
   // Handles the change in the timer option
@@ -112,11 +106,25 @@ if (currentQuestion + 2 === questions.length) {
 
   
   /*
+    const generateAnswers = () => {
+        return 'anwers'.split('').map((answer) => (//Fetch answers from database
+            <Button
+                variant='primary'
+                className='answerBtn'
+                key={answer}
+                value={answer}
+                onClick={handleGuess}
+            >
+                {letter}
+            </Button>
+        ));
+    };
     //randomly generate answers fetched from database
     const generateAnswers = () => {
-      return answers.split('').map(() => (
+      return answers.split('').map(() => (//Fetch answers from database
         <Button
-    //Function to randomise answers from the database
+        
+    
        answers[Math.floor(Math.random() * answers.length)]
     }
       >
