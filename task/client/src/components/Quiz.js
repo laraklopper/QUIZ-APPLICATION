@@ -5,13 +5,13 @@ import Col from 'react-bootstrap/Col';
 export default function Quiz({selectedQuiz, questionIndex, handleAnswer}) {
     //============STATE VARIABLES===============
   
-  // const [play, setPlay] = useState(true);// State to track whether the game is being played or not
-  // const [answers, setAnswers] = useState([]);   //store the answers from the database as an array
-  // const [timerEnabled, setTimerEnabled] = useState(true);  // Indicates if the timer is enabled
-  // const [score, setScore] = useState(0);  //Track the user score => save user score to the database after the quiz is complete
-  // const [currentQuestion, setCurrentQuestion] = useState(0);   // Tracks the current question index
-  // const [lastQuestion, setLastQuestion] = useState(false);     // Indicates if the current question is the last one
-  // const [timer, setTimer] = useState(10);     // Sets the countdown timer for each question
+  const [play, setPlay] = useState(true);// State to track whether the game is being played or not
+  const [answers, setAnswers] = useState([]);   //store the answers from the database as an array
+  const [timerEnabled, setTimerEnabled] = useState(true);  // Indicates if the timer is enabled
+  const [score, setScore] = useState(0);  //Track the user score => save user score to the database after the quiz is complete
+  const [currentQuestion, setCurrentQuestion] = useState(0);   // Tracks the current question index
+  const [lastQuestion, setLastQuestion] = useState(false);     // Indicates if the current question is the last one
+  const [timer, setTimer] = useState(10);     // Sets the countdown timer for each question
 
     //==============================================
        useEffect(() => {
@@ -42,17 +42,25 @@ export default function Quiz({selectedQuiz, questionIndex, handleAnswer}) {
   },[])
 
 //===========USE EFFECT HOOK TO DISPLAY TIMER OPTION============
-        useEffect(() => {
-        if (startQuiz) {
-            const interval =setInterval(() => {
+         useEffect(() => {
+        if
+            (startQuiz) {
+            const interval = setInterval(() => {
                 setTimer(prevTimer => {
-                    if(prevTimer > 0){
+                    if
+                        (prevTimer > 0) {
                         return prevTimer - 1;
-                    })
-            })
+                    }
+                    else {
+                        setCurrentQuestion(prevQuestion => prevQuestion + 1);
+                        // Reset timer for the next question
+                        return 10;
+                    }
+                });
+            }, 1000);
+            return () => clearInterval(interval);
         }
-    })
-
+    }, [currentQuestion, startQuiz]);
     //=========REQUESTS============
     
     /*
