@@ -19,9 +19,17 @@ export default function Page3(
   const [questions, setQuestions] = useState([
     { questionText: '', correctAnswer: '', options: ['', '', '', ''] }
   ]);
+  
   const [error, setError] = useState(null);
   const [editingQuiz, setEditingQuiz] = useState(null);
-
+  // const [newQuizName, setNewQuizName] = useState('')
+  // const [questions, setQuestions] = useState([
+  //   {
+  //     newQuestionText: '',
+  //     newCorrectAnswer: '',
+  //     newOptions: ['', '', '']
+  //   }
+  // ]);
   
   //========UsE EFFECT HOOK TO FETCH QUIZZES FROM DATABASE===================
   // Fetch all quizzes when the component mounts
@@ -29,7 +37,7 @@ export default function Page3(
     // Fetch all quizzes on component mount
     const fetchQuizzes = async () => {
       try {
-        // const token = localStorage.getItem('token')
+        const token = localStorage.getItem('token')
         const response = await fetch('http://localhost:3001/users/findQuizzes',);
         const data = await response.json();
         setQuizzes(data);
