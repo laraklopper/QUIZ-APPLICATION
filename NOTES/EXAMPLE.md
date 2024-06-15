@@ -31,19 +31,31 @@
 
     - **models/quiz.js:**
         ```javascript
+        // Import the Mongoose library for MongoDB interactions
         const mongoose = require('mongoose');
         
         const quizSchema = new mongoose.Schema({
-            category: String,
-            questions: [
-                {
-                    question: String,
-                    options: [String],
-                    answer: String
-                }
-            ]
-        });
+            quizName: {
+                type: String,         
+                required: true,      
+            },
+            username: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'User',
+                required: true,       
+            },
+            questions: {
+                type: [{
+                    questionText: String,    
+                    correctAnswer: String,  
+                    options: [String]        
+                }],
+                default: [],            
+                required: true,         
+            }
+        },{timestamps: true});
         
+        // Export the Quiz model based on the QuizSchema
         module.exports = mongoose.model('Quiz', quizSchema);
         ```
 
@@ -95,7 +107,7 @@
         ```javascript
         const express = require('express');
         const router = express.Router();
-        const User = require('../models/user');
+        const User = require ('../models/userSchema');
         const jwt = require('jsonwebtoken');
         
         router.post('/register', async (req, res) => {
