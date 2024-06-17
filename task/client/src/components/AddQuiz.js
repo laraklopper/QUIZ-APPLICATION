@@ -4,13 +4,8 @@ import Col from 'react-bootstrap/Col';
 
 
 //AddQuiz function component
-export default function AddQuiz() {
-  //======STATE VARIABLES=================
-  const [quizName, setQuizName] = useState('');
-  const [username, setUsername] = useState('')
-  const [questions, setQuestions] = useState([{ questionText: '', correctAnswer: '', options: ['', '', ''] }]);
- 
-  //=================================================
+export default function AddQuiz({addNewQuiz}) {
+  
 
 
   const handleQuestionChange = (index, field, value) => {
@@ -27,29 +22,7 @@ export default function AddQuiz() {
     setQuestions([...questions, { questionText: '', correctAnswer: '', options: ['', '', ''] }]);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await fetch('http://localhost:3001/users/quizzes', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          quizName,
-          username,
-          questions
-        })
-      });
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const quiz = await response.json();
-      console.log('Quiz created:', quiz);
-    } catch (error) {
-      console.error('There was an error creating the quiz:', error);
-    }
-  };
+
 
   //========JSX RENDERING===================
 
