@@ -29,6 +29,8 @@ export default function App() {
     newAdmin: false,
     newPassword: ''
   });
+  // Quiz variables
+  const [quizList, setQuizList] = useState([])
   //Event variables
   const [error, setError] = useState(null);//State to handle errors during data fetching
     //State variables to manage user Login
@@ -99,6 +101,37 @@ export default function App() {
           setError('Error fetching user details:', error.message)
     }
   }*/
+
+  
+  //Function to fetch Quizzes
+  const fetchQuizzes = async () => {//Define an async function to fetch quizzes from the database
+    // console.log('Fetch quiz');
+    try {
+      const token = localStorage.getItem('token')//Retrieve the token from localStorage
+      //Send a GET request to the /users/fetchQuiz endpoint
+      const response = await fetch('http://localhost:3001/users/fetchQuiz', {
+        method: 'GET',//HTTP request method
+        mode: 'cors',//Set the mode to cors, allowing cross-origin requests 
+        headers: {
+          'Content-Type': 'application/json',// Specify the Content-Type being sent in the request payload.
+          'Authorization': `Bearer ${token}`,
+        }
+      })
+      //Response handling
+// Conditional rendering if the response indicates success (status code 200-299)
+
+      if (response.ok) {
+        const quizData = await response.json();// Parse JSON response
+        setQuizList(quizData);
+        // console.log(quizData);//Log a message in the console for debugging purposes
+      } else {
+        throw new Error('Failed to fetch quizzes')//Throw an error message stating theat the request is unsuccessful
+      }
+    } catch (error) {
+      console.error('Error fetching quizzes:', error);//Log an error message in the console for debuggging purposes
+      setError('Error fetching quizzes:', error)//Set the error state with an error message
+    }
+  }
   //---------POST---------------
   //Function to submitLogin
   const submitLogin = async (e) => {//Define an async function to submit user login
@@ -178,12 +211,12 @@ export default function App() {
             newPassword: ''
           });
       } else {
-        throw new Error ('Error adding user')
+        throw new Error ('Error adding user')//Throw an error message indicating the request was unsuccessful
       }
 
     } catch (error) {
-      setError(`Error adding new user: ${error.message}`);
-      console.error(`Error adding new user: ${error.message}`); 
+      setError(`Error adding new user: ${error.message}`); //Set the error state with an error message
+      console.error(`Error adding new user: ${error.message}`);  //Log an error message in the console for debugging purposes
     }
   }
   //========EVENT LISTENERS==========
