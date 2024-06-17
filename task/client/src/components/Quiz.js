@@ -13,36 +13,8 @@ export default function Quiz({selectedQuiz, questionIndex, handleAnswer}) {
   const [lastQuestion, setLastQuestion] = useState(false);     // Indicates if the current question is the last one
   const [timer, setTimer] = useState(10);     // Sets the countdown timer for each question
 
-    //==============================================
-       useEffect(() => {
-    const fetchQuizzes = async () => {
-      try {
-        const token = localStorage.getItem('token')
-        const response = await fetch ('http://localhost:3001/users/fetchQuiz', {
-          method: 'GET',
-          mode: 'cors',
-          headers: {
-            'Content/type': 'application/json',
-            'Authorization': token,
-          }        
-        })
-
-        if (response.ok) {
-          const quizData = await response.json();// Parse JSON response
-          setQuizList(quizData);
-        } else {
-          throw new Error('Failed to fetch Quizzes')// Throw error if response is not ok
-        }
-        
-      } catch (error) {
-        console.error('Error fetching quizzes:', error);
-      }
-    }
-    fetchQuizzes()
-  },[])
-
 //===========USE EFFECT HOOK TO DISPLAY TIMER OPTION============
-         useEffect(() => {
+    useEffect(() => {
         if
             (startQuiz) {
             const interval = setInterval(() => {
