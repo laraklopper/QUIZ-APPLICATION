@@ -1,75 +1,44 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Quiz from './Quiz';
 
 //Page 2
 // GameDisplay component definition
 export default function GameDisplay() {
-  // State variables => move to page2.js 
-  const [quizList, setQuizList] = useState([]); // Stores the list of quizzes fetched from the server 
-  const [selectedQuiz, setSelectedQuiz] = useState(null); // Stores the currently selected quiz
-  const [questionIndex, setQuestionIndex] = useState(0); // Stores the index of the current question
-  const [score, setScore] = useState(0); // Stores the user's score
+  //==========STATE VARIABLES==============
+  // State to track the selected quiz
+  const [selectedQuiz, setSelectedQuiz] = useState(null);  // State to track the selected quiz
+  const [questionIndex, setQuestionIndex] = useState(0);  // State to track the current question index
+  const [score, setScore] = useState(0);  // State to track the user's score
 
-  //=================USE EFFECT HOOK=======================
-  // useEffect hook to fetch quizzes when the component mounts
-  useEffect(() => {
-    const fetchQuizzes = async () => {
-      try {
-        const token = localStorage.getItem('token'); // Retrieve token from local storage
-        const response = await fetch('http://localhost:3001/users/fetchQuiz', {
-          method: 'GET',//HTTP request method
-          mode: 'cors',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': token, // Send token for authentication
-          }
-        });
 
-        //Handle response
-        if (response.ok) {
-          const data = await response.json(); // Parse JSON response
-          setQuizList(data); // Update quizList state with fetched data
-        } else {
-          throw new Error('Failed to fetch quizzes'); // Throw error if response is not ok
-        }
-      } catch (error) {
-        console.error('Error fetching quizzes:', error); // Log any errors that occur
-      }
+ 
+  
+
+  //=========EVENTS==============
+  // Function to handle selecting a quiz
+  const handleSelect = (event) => {
+    try {
+      const quiz = JSON.parse(event.target.value);      // Parse the selected quiz from the event value
+      setSelectedQuiz(quiz);      // Set the selected quiz
+      setQuestionIndex(0);      // Reset the question index to 0
+      setScore(0);      // Reset the score to 0
+
+    } catch (error) {
+      console.error('Error parsing quiz:', error);// Log any errors in the console that occur during the JSON parsing for debugging purposes
+
+    }
+  };
+
+   const handleTimerChange = (event) => {
+        setTimerEnabled(event.target.checked); // Update timerEnabled based on the checkbox state
     };
-
-    fetchQuizzes(); // Call the fetchQuizzes function
-  }, []); // Empty dependency array means this effect runs once when the component mounts
-
-  //=> mov to Page2.js
-  // Function to handle answer selection
-  const handleAnswer = async (answer) => {
-    if (answer === selectedQuiz.questions[questionIndex].correctAnswer) {
-      setScore(score + 1); // Increment score if the answer is correct
-    }
-    if (questionIndex < selectedQuiz.questions.length - 1) {
-      setQuestionIndex(questionIndex + 1); // Move to the next question
-    } else {
-      try {
-        const response = await fetch('/api/results', {
-          method: 'POST',
-          headers: { 
-            'Content-Type': 'application/json' 
-          },
-          body: JSON.stringify({ quizId: selectedQuiz._id, score }) // Send quizId and score to the server
-        });
-        const data = await response.json(); // Parse JSON response
-        console.log('Result saved:', data); // Log the result
-      } catch (error) {
-        console.error('Error saving result:', error); // Log any errors that occur
-      }
-    }
-  };
-
-  // Function to handle quiz selection
-  const handleSelect = (quiz) => {
-    setSelectedQuiz(quiz); // Set the selected quiz
-    setQuestionIndex(0); // Reset question index to 0
-    setScore(0); // Reset score to 0
-  };
+  
+    const startQuiz = () => {
+        setPlay(true)
+    };
+    
 
   //======================================
   // Render the component UI
