@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, {  useEffect, useRef, useState } from 'react'
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
@@ -7,7 +7,6 @@ export default function QuizDisplay() {
     //=========STATE VARIABLES====================
     const [answers, setAnswers] = useState([]);
     const [selectedQuiz, setSelectedQuiz] = useState(null)
-    const [currentScore, setCurrentScore] = useState(0)
     const [currentQuestion, setCurrentQuestion] = useState(0)
     const [lastQuestion, setLastQuestion] = useState(false); // Indicates if the current question is the last one
     const [quizStarted, setQuizStarted] = useState(false)
@@ -21,10 +20,10 @@ export default function QuizDisplay() {
     ]);
     // const [score, setScore] = useState(0);
      //State variables to handle timer option
-
     const [timer, setTimer] = useState(10)
     const [timerEnabled, setTimerEnabled] = useState(false);
-    
+        const intervalRef = useRef(null)
+
    //=============TIMER=====================
     //===========USE EFFECT HOOK TO DISPLAY TIMER OPTION============
     useEffect(() => {
@@ -74,9 +73,9 @@ export default function QuizDisplay() {
     }
     
     // Handles the change in the timer option
-    // const handleTimerChange = (event) => {
-    //     setTimerEnabled(event.target.checked); // Update timerEnabled based on the checkbox state
-    // };
+    const handleTimerChange = (event) => {
+        setTimerEnabled(event.target.checked); // Update timerEnabled based on the checkbox state
+    };
 
     //=========EVENT LISTENERS====================
 
@@ -85,6 +84,7 @@ export default function QuizDisplay() {
         setQuizStarted(true)
     };
 
+      // Function to select a quiz from the dropdown
       const handleSelect = (event) => {
     try {
       const quiz = JSON.parse(event.target.value)
