@@ -48,10 +48,11 @@ export default function QuizDisplay({ quizList, currentQuestion, setCurrentQuest
         }, 1000); // Update every second
     };
 
-    // Function to stop the timer
-    const handleStop = () => {
-        clearInterval(intervalRef.current);// Update timerEnabled based on the checkbox state
-    };
+// Function to stop the timer
+const handleStop = () => {
+    clearInterval(intervalRef.current); // Clears the interval using the reference to the interval stored in intervalRef
+};
+
 
     // Handles the change in the timer option
     const handleTimerChange = (event) => {
@@ -115,19 +116,22 @@ export default function QuizDisplay({ quizList, currentQuestion, setCurrentQuest
             {quizStarted ? ( // Conditional rendering to check if the quiz has started
                 <div>
                     <h3 className='h3'>{selectedQuiz?.quizName}</h3>
+                          {/* Access the quizName property of the set. The optional chaining operator (?.) ensures that if selectedQuiz is null or undefined, 
+                          accessing quizName won't throw an error, and the expression will short-circuit, resulting in null.*/}
                     <div>
                         <Row>
                             <Col xs={12} md={8}>
                             </Col>
                             <Col xs={6} md={4}>
-                                <label>
-                                    Add Timer:
+                                <label className='timerLabel'>{/*Checkbox to add a timer*/}
+                                  <p className='labelText'>ADD TIMER:</p>
                                     <input type="checkbox" onChange={handleTimerChange} checked={timerEnabled} />
                                 </label>
                             </Col>
                         </Row>
                         <h4>{questions[currentQuestion]?.questionText}</h4>
-
+                        {/* Display the question object corresponding to the current 
+                        question index (`currentQuestion`) */}
                         <div>
                             <Row>
                                 {timerEnabled && ( // Display timer if the user chose to add a timer
