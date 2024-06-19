@@ -1,19 +1,22 @@
 import React, { useState, useEffect } from 'react'
+
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 //Components
 import Header from '../components/Header';
 import LogoutBtn from '../components/LogoutBtn';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import QuizDisplay from '../components/QuizDisplay';
 
 //Page 2 function component
 export default function Page2({logout}) {
-    //=====STAT E VARIABLES================
-  const [play, setPlay] = useState(false)
+  //=========STATE VARIABLES====================
+  // const [answers, setAnswers] = useState([])//=> store
   const [selectedQuiz, setSelectedQuiz] = useState(null)
   const [currentScore, setCurrentScore] = useState(0)
-  const [currentQuestion, setCurrentQuestion] = useState()
-  const [timer, setTimer] = useState(10)
-  const [timerEnabled, setTimerEnabled] = useState(false);
+  const [currentQuestion, setCurrentQuestion] = useState(0)
+  const [lastQuestion, setLastQuestion] = useState(false); // Indicates if the current question is the last one
+  
+  const [newQuizName, setNewQuizName] = useState('')
   const [questions, setQuestions] = useState([
     {
       questionText: '',
@@ -21,6 +24,17 @@ export default function Page2({logout}) {
       options: ['', '', '']
     }
   ]);
+  const [quiz, setQuiz] = useState([
+    {
+      quizName: '',
+      questionText: '',
+      correctAnswer: '',
+      options: ['', '', '']
+    }
+  ]);
+  const [score, setScore] = useState(0);
+
+
     
 // Function to handle when an answer is selected
   const handleAnswer = async (answer) => {
@@ -53,12 +67,19 @@ export default function Page2({logout}) {
   };
     //======JSX RENDERING==========
   return (
-    <>
+ <>
     {/* Header */}
     <Header heading="GAME"/>
     {/* section 1 */}
     <section className='section1'>
-
+      {/* QuizDisplay */}
+      <QuizDisplay
+      quizList={quizList}
+      setScore={setScore}
+      lastQuestion={lastQuestion}
+      setLastQuestion={setLastQuestion}
+      handleAnswer={handleAnswer}
+      />     
     </section>
     <footer>
      <Row>
