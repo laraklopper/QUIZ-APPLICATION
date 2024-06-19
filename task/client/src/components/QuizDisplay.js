@@ -145,8 +145,8 @@ export default function QuizDisplay({ quizList, currentQuestion, setCurrentQuest
                             <Row>
                                 {questions[currentQuestion]?.options.map((option, index) => (
                                     <Col xs={6} key={index}>
-                                        <button onClick={() => { /* Add answer selection logic here */ }}>
-                                            {option}
+                                        <button onClick={() => {  generateAnswers()}}>
+                                            {questions.option}
                                         </button>
                                     </Col>
                                 ))}
