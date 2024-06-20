@@ -231,6 +231,7 @@ export default function App() {
      }
    }
 
+    //Function to trigger logoutbtn
   const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('username');
