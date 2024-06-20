@@ -1,7 +1,7 @@
-import React from 'react'
+import React from 'react';// Import the React module to use React functionalities
 //Bootstrap
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row'; // Import the Row component from react-bootstrap
+import Col from 'react-bootstrap/Col'; // Import the Col component from react-bootstrap
 
 //RegistrationRules function component
 export default function RegistrationRules() {
