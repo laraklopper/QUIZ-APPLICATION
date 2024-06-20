@@ -30,35 +30,18 @@ export default function Page3(
   //     newOptions: ['', '', '']
   //   }
   // ]);
-  
-  //========UsE EFFECT HOOK TO FETCH QUIZZES FROM DATABASE===================
-  // Fetch all quizzes when the component mounts
-  useEffect(() => {
-    // Fetch all quizzes on component mount
-    const fetchQuizzes = async () => {
-      try {
-        const token = localStorage.getItem('token')
-        const response = await fetch('http://localhost:3001/users/findQuizzes',);
-        const data = await response.json();
-        setQuizzes(data);
-      } catch (error) {
-        console.error('Error fetching quizzes:', error);
-      }
-    };
-    fetchQuizzes();
-  }, []);
-
-
+ 
   //===========================================
     // Function to add a new question to the form
    const handleAddQuestion = () => {
         setQuestions([...questions, { questionText: '', correctAnswer: '', options: ['', '', '', ''] }]);
     };
 
-  //===============================
+  //=============REQUESTS==================
+  //------------POST-----------------------
 //Function to submit a new Quiz
-    const handleQuizSubmit = async (e) => {
-        e.preventDefault();
+    const addNewQuiz = async (e) => {
+        e.preventDefault(
         try {
             const token = localStorage.getItem('token');
             const response = await fetch('http://localhost:3001/users/addQuiz', {
