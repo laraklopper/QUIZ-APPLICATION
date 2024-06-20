@@ -1,25 +1,40 @@
-import React, { useEffect, useRef, useState } from 'react';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import React, { useEffect, useRef, useState } from 'react';// Import the React module to use React functionalities
+//Bootstrap
+import Row from 'react-bootstrap/Row'; // Import the Row component from react-bootstrap
+import Col from 'react-bootstrap/Col'; // Import the Col component from react-bootstrap
 import Button from 'react-bootstrap/Button'; // Import the Bootstrap Button component
 
 //QuizDisplay function component
-export default function QuizDisplay({ quizList, currentQuestion, setCurrentQuestion, setScore, answers }) {//Export default QuizDisplay function component
-    //=========STATE VARIABLES====================
-    const [timeLeft, setTimeLeft] = useState(10); // State for countdown timer
-    const intervalRef = useRef(null); // Ref to store the interval ID for the timer
-    const [timerEnabled, setTimerEnabled] = useState(false); // State to track if timer is enabled
-    const [selectedQuiz, setSelectedQuiz] = useState(null); // State to store the selected quiz
-    const [lastQuestion, setLastQuestion] = useState(false); // Indicates if the current question is the last one
-    const [quizStarted, setQuizStarted] = useState(false); // State to track if the quiz has started
-    const [questions, setQuestions] = useState([ // State to store the questions of the selected quiz
+export default function QuizDisplay(//Export default QuizDisplay function component
+    { //PROPS PASSED FROM PARENT COMPONENT
+        quizList, 
+        currentQuestion, 
+        setCurrentQuestion, 
+        setCurrentScore, 
+        setLastQuestion, 
+        selectedQuiz, 
+        setSelectedQuiz
+    }
+) {
+    
+  //=======REACT HOOKS=================
+    //-------useState Hook variables------------
+    // State to store the questions of the selected quiz
+    const [questions, setQuestions] = useState([
         {
             questionText: '',
             correctAnswer: '',
             options: ['', '', '']
         }
     ]);
+    const [quizStarted, setQuizStarted] = useState(false);// State to track if the quiz has started
+    //State variables to handle timer option
+    const [timeLeft, setTimeLeft] = useState(10);// State used for countdown timer
+    const [timerEnabled, setTimerEnabled] = useState(false);// State to track if timer is enabled
+    //------UseRef---------------
+    const intervalRef = useRef(null)//React useRef hook to store the interval ID for the timer
 
+     //================USE EFFECT HOOK=======================
     // Effect to clear the interval if timeLeft reaches 0
     useEffect(() => {
         //Conditional rendering to check if the timeLeft is O
