@@ -1,7 +1,8 @@
-import React from 'react'
+// Import necessary modules and packages
+import React from 'react';/ Import the React module to use React functionalities
 //Bootstrap
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';//Import Bootstrap Row 
+import Col from 'react-bootstrap/Col';//Import Bootstrap Colomn
 //Components
 import Header from '../components/Header'
 import LogoutBtn from '../components/LogoutBtn';
