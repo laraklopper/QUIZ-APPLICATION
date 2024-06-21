@@ -55,6 +55,31 @@ export default function Page4({ logout, currentUser, setUsers, setLoggedIn, setE
     }
   };
 
+  /*const deleteUser = async (userId) => {
+    try {
+      //Send delete request to server
+      const response = await fetch(`http://localhost:3001/users/${userId}`, {
+        method: 'DELETE',//Request method
+        mode: 'cors',//Set the mode to cors, allowing cross-origin requests 
+        headers: {
+          'Content-type': 'application/json',
+        },
+      });
+
+      //Conditional rendering to check if the response is successful
+      if (!response.ok) {
+        throw new Error('Failed to remove user');//Throw an error message if the request is unsuccessful
+      }
+      setUsers((prevUsers) =>
+        prevUsers.filter((user) => user._id !== userId)
+      );
+      console.log('User Successfully removed');
+    }
+    catch (error) {
+      setError('Error removing user', error);
+      console.error('Error removing user:', error.message);
+    }
+  };*/
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setEditUserData((prevData) => ({
