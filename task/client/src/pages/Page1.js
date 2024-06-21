@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 //Bootstrap
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -7,51 +7,13 @@ import Header from '../components/Header'
 import LogoutBtn from '../components/LogoutBtn';
 
 //Page1 function component
-export default function Page1({logout, setUserData, setError, loggedIn, error, users}) {
-  const [userData, setUserDataLocal] =useState({
-    username: '',
-    email: '',
-    dateOfBirth: '',
-    admin: '',
-  })
-  //=======REQUESTS==========
-  //---------------GET REQUEST---------------------
-  //Function to fetch a single user
-  const fetchUser = async (userId) => {
-    console.log('Fetch single user');
-    try {
-      const token = localStorage.getItem('token');
-      if (!token || !loggedIn) return;
+export default function Page1({  logout, error, currentUser}) {
+ 
+//=============REQUESTS===================
+//---------------GET---------------------
+//Function to display the Scores list from the database
 
-      const response = await fetch(`http://localhost:3001/users/${userId}`, {
-        method: 'GET',//Request method
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': token,
-        },
-      });
-      if (!response.ok) {
-        throw new Error('Failed to fetch user data');
-      }
-      const fetchedUser = await response.json();
-      setUserData(fetchedUser);
-      setUserDataLocal(fetchedUser)
-      return fetchedUser;
-      // console.log(fetchedUser);
-    }
-    catch (error) {
-      console.error('Error fetching user details:', error.message);
-      setError('Error fetching user details:', error.message)
-    }
-  };
-
-  useEffect(() => {
-    const userId = localStorage.getItem('username');
-    if (userId) {
-      fetchUser(userId)
-    }
-  },);
+//========JSX RENDERING================
 
   return (
     <>
@@ -59,16 +21,30 @@ export default function Page1({logout, setUserData, setError, loggedIn, error, u
     <section>
         <Row>
           <Col xs={6} md={4}>
-          {/* Display a welcome message with the users username */}
           {error ? (
+            // Display error message if username is not found
             <p id='errorMessage'>{error}</p>
           ):(
-                <h2 className = 'h2'>WELCOME:{userData.username}</h2>
-          )}
-            
+            <div>
+              <h2 className='h2'>WELCOME:{currentUser?.username}</h2>
+            </div>
+          )
+           }                
+          
+            <div>
+              <h2>HOW TO PLAY:</h2>
+              {/* Explain how the application works */}
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
+            </div>
           </Col>
-          <Col xs={12} md={8}>
+          <Col xs={6} md={4} >
+          <button>
+            {/* toggle button to fetch scores */}
+          </button>
           </Col>
+            <Col xs={6} md={4}>         
+            {/* display the scores list from the database */}
+            </Col>
         </Row>
     </section>
     <footer className='footer'>
