@@ -152,7 +152,7 @@
         ```javascript
         import React, { useState, useEffect } from 'react';
 
-        const App = () => {
+        export default function App () {
             const [quizzes, setQuizzes] = useState([]);
             const [selectedQuiz, setSelectedQuiz] = useState(null);
             const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -221,9 +221,6 @@
                     <h1>Select Quiz</h1>
                     <select onChange={(e) => startQuiz(quizzes.find(q => q.category === e.target.value))}>
                         {quizzes.map((quiz, index) => (
-                           
-
-```jsx
                             <option key={index} value={quiz.category}>{quiz.category}</option>
                         ))}
                     </select>
