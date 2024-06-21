@@ -69,13 +69,7 @@ export default function App() {
         setError('Error fetching user');
       }
     }
-    fetchUsers()
-  },[loggedIn]);
-
-  //==========REQUESTS===============
-  //--------GET-------------
-  
-  //Function to fetch a currentUser
+      //Function to fetch a currentUser
  const fetchCurrentUser = async () => {
     // console.log('Fetch current user');
     try {
@@ -102,6 +96,12 @@ export default function App() {
           setError('Error fetching user details:', error.message)
     }
   }
+
+  },[loggedIn]);
+
+  //==========REQUESTS===============
+  //--------GET-------------
+  
 
   
   //Function to fetch Quizzes
