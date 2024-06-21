@@ -31,11 +31,7 @@ export default function Page3(
   //   }
   // ]);
  
-  //===========================================
-    // Function to add a new question to the form
-   const handleAddQuestion = () => {
-        setQuestions([...questions, { questionText: '', correctAnswer: '', options: ['', '', '', ''] }]);
-    };
+
 
   //=============REQUESTS==================
   //------------POST-----------------------
@@ -130,6 +126,13 @@ export default function Page3(
             console.error('Error deleting quiz:', error);
         }
     };
+
+    //===================EVENT LISTENERS========================
+    // Function to add a new question to the form
+   const handleAddQuestion = () => {
+        setQuestions([...questions, { questionText: '', correctAnswer: '', options: ['', '', '', ''] }]);
+    };
+
   
   //=============JSX RENDERING===========
 
