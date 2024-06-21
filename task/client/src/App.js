@@ -75,6 +75,7 @@ export default function App() {
 
   //==========REQUESTS===============
   //--------GET-------------
+  //Function to fetch a single User
  /* const fetchUser = async (userId) => {
     console.log('Fetch single user');
     try {
