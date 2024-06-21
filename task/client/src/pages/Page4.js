@@ -16,8 +16,7 @@ export default function Page4({logout, users, setUsers, setLoggedIn, setError })
   editUsername: ' ', //Initial value for the username field
   editUserEmail: ''//Initial value for the email field
  })
- // State variable used to track which user is currently being updated
-const [updateUser, setUpdateUser] = useState(null); // Initial value is null, meaning no user is currently being edited
+const [updateUser, setUpdateUser] = useState(null);
 
 
   //======REQUESTS===============
@@ -25,29 +24,28 @@ const [updateUser, setUpdateUser] = useState(null); // Initial value is null, me
   //Function to edit a user 
   const editUser = async (userId) => {//Define an async function to edit user account
     try {
-      const token = localStorage.getItem('token')// Retrieve the token from localStorage
+      const token = localStorage.getItem('token');
       if (!token) {
-        throw new Error('No token available')//Throw an error message if the token is not available
+        throw new Error('No token available')
       }
       //Send a request to the server
-      const response = await fetch (`http://localhost:3001/users/${userId}`, {
-        method: 'PUT',//HTTP request method
-        mode: 'cors',//Set the mode to cors, allowing cross-origin requests 
+      const response = await fetch (`http://localhost:3001/users/editAccount/${userId}`, {
+        method: 'PUT',
+        mode: 'cors',
         headers: {
-          'Content-Type': 'application/json',// Specify the Content-Type being sent in the request payload
-          'Authorization': token,// Specify the Content-Type being sent in the request payload
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({// Convert data to JSON string and include it in the request body
-          username: editUserData.editUsername,// New username from the state
-          email: editUserData.editUserEmail,// New email from the state
+        body: JSON.stringify({
+          username: editUserData.editUsername,
+          email: editUserData.editUserEmail,
         })
       })
       //Response handling
-     // Conditional rendering to check if the response indicates success (status code 200-299)    
       if (!response.ok) {
-        throw new Error('Failed to update user account');//Throw an error message if the PUT request is unsuccessful
+        throw new Error('Failed to update user account');
       }
-          // Parse the JSON response to get the updated user account
+
       const updatedAccount = await response.json();
 
           // Update the users state with the updated user data
@@ -57,11 +55,11 @@ const [updateUser, setUpdateUser] = useState(null); // Initial value is null, me
   
       // Reset the form data and close the edit form
       setEditUserData({ editUsername: '', editUserEmail: '' });
-      setUpdateUser(null);//Close the edit form by setting the updateUser state to null
-      setLoggedIn('true');//Set the loggedIn state to true
+      setUpdateUser(null);
+      setLoggedIn('true');
 
-      console.log('User Account successfully updated');//Log a success message in the console for debugging purpose
-      console.log(users);//Log the updated users in console for debugging purpose
+      console.log('User Account successfully updated');
+      console.log(users);
     } 
     catch (error) {
       console.error(`Error updating UserAccount: ${error.message}`);//Log an error message in the console for debugging purposes
@@ -74,18 +72,16 @@ const [updateUser, setUpdateUser] = useState(null); // Initial value is null, me
     try {
       //Send delete request to server
       const response = await fetch(`http://localhost:3001/users/${userId}`, {
-        method: 'DELETE',//Request method
-        mode: 'cors',//Set the mode to cors, allowing cross-origin requests 
+        method: 'DELETE',
+        mode: 'cors', 
         headers: {
           'Content-type': 'application/json',
         },
       });
 
-      //Conditional rendering to check if the response is successful
       if (!response.ok) {
-        throw new Error('Failed to remove user');//Throw an error message if the request is unsuccessful
+        throw new Error('Failed to remove user');
       }
-
 
       setUsers((prevUsers) =>
         prevUsers.filter((user) => user._id !== userId)
@@ -120,63 +116,57 @@ const [updateUser, setUpdateUser] = useState(null); // Initial value is null, me
 
   //=======JSX RENDERING==============
   return (
-    
-    <>
+      <>
       <Header heading='USER ACCOUNT' />
       <section className="section1">
-        <div>
-          {users.map((user) => (
-            <div key={user._id}>
-              <Row>
-                <Col xs={6} md={4}>
-                  <label>USERNAME:</label>
-                  <p>{user.username}</p>
-                </Col>
-                <Col xs={6} md={4}>
-                  <label>EMAIL:</label>
-                  <p>{user.email}</p>
-                </Col>
-                <Col xs={6} md={4}>
-                  <label>DATE OF BIRTH</label>
-                  <p>{user.dateOfBirth}</p>
-                </Col>
-              </Row>
-              <Row>
-                <Col xs={12} md={8}>
-                  <label>ADMIN:</label>
-                  <p>{user.admin ? 'Yes' : 'No'}</p>
-                </Col>
-                <Col xs={6} md={4}>
-                  <Button
-                    variant="primary"
-                    type='button'
-                    id='toggleUserEdit'
-                    onClick={() => updateAccount(user._id)}>
-                    {updateUser === user._id ? 'Cancel' : 'Edit'}
-                  </Button>
-                </Col>
-              </Row>
-              {updateUser === user._id && (
-                <div>
-                  <EditUser
-                    editUserData={editUserData}
-                    handleInputChange={handleInputChange}
-                    editUser={() => editUser(user._id)}
-                  />
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
+        {currentUser && (
+          <div>
+            <Row>
+              <Col xs={6} md={4}>
+                <label>USERNAME:</label>
+                <p className='outputText'>{currentUser.username}</p>
+              </Col>
+              <Col xs={6} md={4}>
+                <label>EMAIL:</label>
+                <p className='outputText'>{currentUser.email}</p>
+              </Col>
+              <Col xs={6} md={4}>
+                <label>DATE OF BIRTH:</label>
+                <p className='outputText'>{currentUser.dateOfBirth}</p>
+              </Col>
+            </Row>
+            <Row>
+              <Col xs={6} md={4}>
+                <label>ADMIN:</label>
+                <p className='outputText'>{currentUser.admin ? 'Yes' : 'No'}</p>
+              </Col>
+              <Col xs={6} md={4}></Col>
+              <Col xs={6} md={4}>
+                <Button 
+                  variant="primary" 
+                  type='button' 
+                  id='toggleUserEdit' 
+                  onClick={() => updateAccount(currentUser._id)}>
+                    {updateUser === currentUser._id ? 'Cancel' : 'Edit'}
+                </Button>
+              </Col>
+            </Row>
+            {updateUser === currentUser._id && (
+              <div>
+                <EditUser
+                  editUserData={editUserData}
+                  handleInputChange={handleInputChange}
+                  editUser={() => editUser(currentUser._id)}
+                />
+              </div>
+            )}
+          </div>
+        )}
       </section>
-      {/* Footer */}
       <footer>
         <Row>
-          <Col xs={12} md={8}>
-          </Col>
-          <LogoutBtn
-            logout={logout}
-          />
+          <Col xs={12} md={8}></Col>
+          <LogoutBtn logout={logout} />
         </Row>
       </footer>
     </>
