@@ -14,6 +14,9 @@ export default function Page4({ logout, currentUser, setUsers, setLoggedIn, setE
   });
   const [updateUser, setUpdateUser] = useState(null);
 
+   //======REQUESTS===============
+  //--------PUT---------------
+  //Function to edit a user 
   const editUser = async (userId) => {
     try {
       const token = localStorage.getItem('token');
