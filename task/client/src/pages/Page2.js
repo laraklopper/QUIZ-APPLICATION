@@ -1,5 +1,4 @@
 import React, { useState} from 'react'
-//Bootstrap
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 //Components
@@ -9,7 +8,7 @@ import QuizDisplay from '../components/QuizDisplay';
 
 
 //Page 2 function component
-export default function Page2({logout}) {
+export default function Page2({quizList, logout}) {
   //=========STATE VARIABLES====================
   const [selectedQuiz, setSelectedQuiz] = useState(null);
   const [currentScore, setCurrentScore] = useState(0);
@@ -18,10 +17,10 @@ export default function Page2({logout}) {
 
 
 
-//===========================================
-    
-// Function to handle when an answer is selected
- const handleAnswer = async (answer) => {
+  
+  //========REQUESTS======================
+// Function to addScore once the user finishes the Quiz
+  const handleAnswer = async (answer) => {
     try {
       if (!selectedQuiz) {
         throw new Error("No quiz selected."); // Handle case where no quiz is selected
@@ -51,9 +50,11 @@ export default function Page2({logout}) {
       console.error('Error handling answer:', error);
     }
   }
+
     //======JSX RENDERING==========
+
   return (
- <>
+    <>
     {/* Header */}
     <Header heading="GAME"/>
     {/* section 1 */}
@@ -61,10 +62,13 @@ export default function Page2({logout}) {
       {/* QuizDisplay */}
       <QuizDisplay
       quizList={quizList}
-      setScore={setScore}
+      setCurrentScore={setCurrentScore}      
       lastQuestion={lastQuestion}
       setLastQuestion={setLastQuestion}
       handleAnswer={handleAnswer}
+      currentQuestion={currentQuestion}
+      setCurrentQuestion={setCurrentQuestion}
+      setSelectedQuiz={setSelectedQuiz}
       />     
     </section>
     <footer>
