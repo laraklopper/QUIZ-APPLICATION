@@ -1,3 +1,4 @@
+// Import necessary modules and packages
 import React, { useState } from 'react';
 import '../CSS/Page4.css'
 //Bootstrap
@@ -9,8 +10,18 @@ import Header from '../components/Header';
 import LogoutBtn from '../components/LogoutBtn';
 import EditUser from '../components/EditUser';
 
+
 //Page 4 function component
-export default function Page4({ logout, currentUser, setUsers, setLoggedIn, setError, users }) {
+export default function Page4(
+  {//PROPS PASSED FROM PARENT COMPONENT
+    logout, 
+    currentUser, 
+    setUsers, 
+    setLoggedIn, 
+    setError, 
+    users
+   }
+  ) {
   //===========STATE VARIABLES===============
   const [editUserData, setEditUserData] = useState({
     editUsername: '',
