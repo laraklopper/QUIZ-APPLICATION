@@ -179,7 +179,7 @@ export default function Page4(
       </section>
       <section className='section2'>
         <div>
-          {/* Display all  */}
+          {/* Display all users */}
           {!viewUsers ? (
             <Row>
               <Col>
