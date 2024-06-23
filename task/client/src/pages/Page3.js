@@ -37,21 +37,23 @@ export default function Page3(
   //------------POST-----------------------
 //Function to submit a new Quiz
     const addNewQuiz = async (e) => {
-        e.preventDefault(
+        e.preventDefault()// Prevent the default form submission behavior
         try {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('token');// Get the token from local storage
             const response = await fetch('http://localhost:3001/users/addQuiz', {
-                method: 'POST',
+                method: 'POST',//HTTP request method
+              mode: 'cors',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': token,
                 },
-                body: JSON.stringify({ quizName, username, questions })
+                body: JSON.stringify({ quizName, questions })
             });
 
             if (response.ok) {
-                const data = await response.json();
-                console.log('Quiz added:', data);
+                const data = await response.json(); // Parse the response JSON
+                // console.log('Quiz added:', data);
+              setQuizList([...quizList, quiz]); // Add the new quiz to the quiz list
                 setQuizName('');
                 setUsername('');
                 setQuestions([{ questionText: '', correctAnswer: '', options: ['', '', '', ''] }]);
