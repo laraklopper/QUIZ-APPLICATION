@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const cors = require('cors');
 //Schemas
 const User = require ('../models/userSchema');
-const Quiz = require ('../models/quizSchema')
+const Quiz = require ('../models/quizSchema');
 
 //=========SETUP MIDDLEWARE============
 router.use(cors());
