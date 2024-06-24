@@ -187,31 +187,33 @@ router.post('/register', async (req, res) => {
 
 // Route to send a POST request to addQuiz endpoint
 router.post('/addQuiz', async (req, res) => {
-    console.log(req.body);
-    console.log('Add Quiz')
-    try {
-        const quiz = new Quiz(req.body);
-        
-        // await quiz.save();
-        const user = await User.findById(req.user.userId);
-        if (!user) {
-            return res.status(400).json({ error: 'User not found' });
-        }
+  console.log(req.body); // Log the request body in the console for debugging purposes
 
-        const newQuiz = new Quiz({
-            quizName: req.body.quizName,
-            user: user._id, 
-            questions: req.body.questions
-        });
-          // Save the new quiz to the database
-        const savedQuiz = await newQuiz.save();
-        
-        res.status(201).json(savedQuiz);
-    } catch (error) {
-        console.error(`Error occurred while adding new Quiz`, error);
-        return res.status(500).json({ message: 'Internal Server Error' });
+  try {
+    const { quizName, questions } = req.body; // Extract quizName and questions from the request body
+
+    // Validate that exactly 5 questions are provided
+    if (questions.length !== 5) {
+      return res.status(400).json(
+        { message: 'You must provide exactly 5 questions.' }
+      ); // Respond with a 400 Bad Request status if the condition is not met
     }
+
+    // Create a new Quiz instance using the Quiz model/schema
+    const newQuiz = new Quiz({
+      quizName,
+      questions
+    });
+    const savedQuiz = await newQuiz.save();// Save the new quiz to the database
+
+    // Respond with a 201 Created status and the saved quiz data
+    res.status(201).json(savedQuiz);
+  } catch (error) {
+    console.error(`Error occurred while adding new Quiz: ${error}`); // Log any errors that occur during the process
+    return res.status(500).json({ message: 'Internal Server Error' }); // Respond with a 500 Internal Server Error status and an error message
+  }
 });
+
 
 //-------------PUT-----------------
 // Route to handle PUT requests to edit a user's account
