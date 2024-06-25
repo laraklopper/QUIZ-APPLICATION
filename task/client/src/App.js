@@ -1,18 +1,21 @@
 // Import necessary modules and packages
 import React, { useEffect, useState } from 'react';// Import the React module to use React functionalities
-import './App.css'l//Import CSS stylesheet
+import './App.css';//Import CSS stylesheet
+// React Router components
+import { BrowserRouter, Route, Routes } from 'react-router-dom';// React Router components for routing
 //Bootstrap
 import Container from 'react-bootstrap/Container';
-//React-Router components
-import {BrowserRouter, Routes, Route } from 'react-router-dom'; // React Router components for routing
 //Pages
-import Page1 from './Pages/Page1';//Import Page1 (HOME) component
-import Login from './Pages/Login';//Import LoginPage component
-import Registration from './Pages/Registration'; //Import RegistrationPage component
+import Login from './pages/Login';
+import Registration from './pages/Registration';
+import Page1 from './pages/Page1';
+import Page2 from './pages/Page2';
+import Page3 from './pages/Page3';
+import Page4 from './pages/Page4';
 
-//App Function Components
+//App function component
 export default function App() {
-  //=========STATE VARIABLES============
+  //=======STATE VARIABLES===============
   //User variables
   const [users, setUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
@@ -30,25 +33,23 @@ export default function App() {
     newAdmin: false,
     newPassword: ''
   });
-  // Quiz variables
-  const [quizList, setQuizList] = useState([])
+  //Quiz variables
+  const [quizList, setQuizList] = useState([]);
   //Event variables
   const [error, setError] = useState(null);
   //State variables to manage user Login
-  const [loggedIn, setLoggedIn] = useState(false);;
+  const [loggedIn, setLoggedIn] = useState(false);
 
-  //==========USE EFFECT HOOK TO FETCH ALL USERS==================
+  //============USE EFFECT HOOK TO FETCH USERS======================
   //Fetch users when the component mounts or when loggedIn changes
-  useEffect(() =>{
-    //Function to fetch all users
+  useEffect(() => {
+    //Function to fetch users
     const fetchUsers = async () => {
       try {
-        const token = localStorage.getItem('token')
-        if (!token || ! loggedIn) {
-          return; 
-        }
-        //Send a GET request to the /users/findUsers endpoint
-        const response = await fetch (`http://localhost:3001/users/findUsers`, {
+        const token = localStorage.getItem('token');
+        if (!token || !loggedIn) return;
+
+        const response = await fetch('http://localhost:3001/users/findUsers', {
           method: 'GET',
           mode: 'cors',
           headers: {
@@ -56,60 +57,58 @@ export default function App() {
             'Authorization': `Bearer ${token}`,
           }
         });
-        //Response handling
+
         if (!response.ok) {
-          throw new Error ('Failed to fetch user data');
-        } 
-
-        const fetchedData = await response.json();
-        setUsers(fetchedData);
-      } 
-      catch (error) {
-        console.error('Error fetching user', error.message);
-        setError('Error fetching user');
-      }
-    }
-      //Function to fetch a currentUser
- const fetchCurrentUser = async () => {
-    // console.log('Fetch current user');
-    try {
-      const token = localStorage.getItem('token');
-      if (!token || !loggedIn) return
-
-      const response = await fetch ('http://localhost:3001/users/userId', {
-        method: 'GET',
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          throw new Error('Failed to fetch users');
         }
-      })
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch user data');
+        const fetchedUsers = await response.json();
+        setUsers(fetchedUsers);
+      } catch (error) {
+        console.error('Error fetching users', error.message);
+        setError('Error fetching users');
       }
-          const fetchedUser = await response.json();
-          setUserData(fetchedUser);
-          return fetchedUser;
-    } catch (error) {
-          console.error('Error fetching user details:', error.message);
-          setError('Error fetching user details:', error.message)
+    };
+
+    //Function to fetch the current user details
+    const fetchCurrentUser = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) return;
+
+        const response = await fetch('http://localhost:3001/users/userId', {
+          method: 'GET',
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch current user');
+        }
+
+        const fetchedCurrentUser = await response.json();
+        setCurrentUser(fetchedCurrentUser);
+      } catch (error) {
+        console.error('Error fetching current user', error.message);
+        setError('Error fetching current user');
+      }
+    };
+
+    if (loggedIn) {
+      fetchUsers();
+      fetchCurrentUser();
     }
-  }
+  }, [loggedIn]);
 
-  },[loggedIn]);
-
-  //==========REQUESTS===============
-  //--------GET-------------
-  
-
-  
-  //Function to fetch Quizzes
-  const fetchQuizzes = async () => {//Define an async function to fetch quizzes from the database
-    console.log('Fetch quiz');
+  //==============REQUESTS========================
+  //-----------GET-------------------------
+// Function to fetch quizzes
+  const fetchQuizzes = async () => {
     try {
       const token = localStorage.getItem('token');
-      //Send a GET request to the /users/fetchQuiz endpoint
       const response = await fetch('http://localhost:3001/users/fetchQuiz', {
         method: 'GET',
         mode: 'cors',
@@ -117,74 +116,61 @@ export default function App() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         }
-      })
-      //Response handling
-      if (response.ok) {
-        const quizData = await response.json();// Parse JSON response
-        setQuizList(quizData);
-        console.log(quizData);
-      } else {
+      });
+
+      if (!response.ok) {
         throw new Error('Failed to fetch quizzes');
       }
+
+      const quizData = await response.json();
+      setQuizList(quizData);
     } catch (error) {
       console.error('Error fetching quizzes:', error);
-      setError('Error fetching quizzes:', error);
+      setError('Error fetching quizzes');
     }
-  }
-  //---------POST---------------
-  //Function to submitLogin
-  const submitLogin = async (e) => {//Define an async function to submit user login
-    e.preventDefault();
+  };
+
+  //---------POST---------------------------
+  //Function to submit Login
+  const submitLogin = async (e) => {
     try {
-      // Send a POST request to the server for user login
-      const response = await fetch('http://localhost:3001/users/login',{
+      const response = await fetch('http://localhost:3001/users/login', {
         method: 'POST',
         mode: 'cors',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({// Convert user login data to JSON string
+        body: JSON.stringify({
           username: userData.username,
-          email: userData.email,
           password: userData.password
         })
-      })
+      });
 
-      //Response handling
       if (response.ok) {
-        const data = await response.json();//Parse the response data as JSON
-        localStorage.setItem('username', userData.username)
+        const data = await response.json();
+        localStorage.setItem('username', userData.username);
         localStorage.setItem('loggedIn', true);
-        localStorage.setItem('token', data.token)/* Store the authentication token received 
-        from the server in the localStorage under the key 'token'*/
-
-        setLoggedIn(true);//Update the loggedIn state to true
-
+        localStorage.setItem('token', data.token);
+        setLoggedIn(true);
         setError(null);
-        setUserData({//Clear the UserData input
-          username: ' ',
-          email: ' ',
-          password: ' ',
-        })
-
-        console.log('User logged In');
-        console.log(data);
+        setUserData({
+          username: '',
+          password: '',
+        });
       } else {
-        throw new Error('Username or password are incorrect')
+        throw new Error('Username or password are incorrect');
       }
     } catch (error) {
-      setError(`Login Failed ${error.message}`);
-      console.log(`Login Failed ${error.message}`);
+      setError(`Login Failed: ${error.message}`);
+      console.log(`Login Failed: ${error.message}`);
       setLoggedIn(false);
-  }
-  }
-    //Function to add a new user
-  const addUser = async (e) => {//Define an async function to add a new user
-    console.log('register new user');
-    e.preventDefault();
+    }
+  };
+
+  //Function to register a new user
+  const addUser = async () => {
     try {
-      //Send a POST request to the register endpoint
-      const response = await fetch ('http://localhost:3001/users/register', {
+      const response = await fetch('http://localhost:3001/users/register', {
         method: 'POST',
         mode: 'cors',
         headers: {
@@ -195,72 +181,100 @@ export default function App() {
           email: newUserData.newEmail,
           dateOfBirth: newUserData.newDateOfBirth,
           admin: newUserData.newAdmin,
-          password: newUserData.newPassword,
+          password: newUserData.newPassword
         })
-      })
+      });
 
-      //Response handling
       if (response.ok) {
-        console.log('user successfully registerd.');
-        setNewUserData(
-          {
-            newUsername: '',
-            newEmail: '',
-            newDateOfBirth: '',
-            newAdmin: false,
-            newPassword: ''
-          });
-      } 
-      else {
-        throw new Error ('Error adding user');
+        setNewUserData({
+          newUsername: '',
+          newEmail: '',
+          newDateOfBirth: '',
+          newAdmin: false,
+          newPassword: ''
+        });
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Error adding user');
       }
-
     } catch (error) {
-      setError(`Error adding new user: ${error.message}`); 
-      console.error(`Error adding new user: ${error.message}`);  
+      setError(`Error adding new user: ${error.message}`);
+      console.error(`Error adding new user: ${error.message}`);
     }
-  }
-  //========EVENT LISTENERS==========
+  };
+//===========EVENT LISTENERS============================
 
-   /*Function to set the loggedOut status to false
-  stating that the user is logged in*/
-   const appLogin = () => {
-     let token = localStorage.getItem('token');
-     if (token) {
-       setLoggedOut(false);
-     }
-   }
-
-    //Function to trigger logoutbtn
+  //Function to trigger logoutbtn
   const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('username');
-    localStorage.removeItem('loggedin')
-    setLoggedIn(false)
+    localStorage.removeItem('loggedIn');
+    setLoggedIn(false);
     setError('');
     setUserData({ username: '', password: '' });
-  }
+  };
 
-  //=========JSX RENDERING=============
+  //===========JSX RENDERING=============================
+
   return (
-        <>
+    <>
       <BrowserRouter>
-        <Container className='appContainer'>
+        <Container>
           <Routes>
             {loggedIn ? (
-              <Route path='/home' element={<Page1 logout={logout} />} />
-              <Route path='/page2' element={ <Page2 logout={logout} fetchQuizzes={fetchQuizzes}/>}/>
-              <Route path='/page3' element={<Page3  fetchQuizzes={fetchQuizzes} quizList={quizList} logout={logout}/>}/>
-               <Route path='/page4' element={ <Page4 setError={setError} logout={logout} currentUser={currentUser} setUsers={setUsers} setLoggedIn={setLoggedIn} />}/>
+              <>
+                <Route path='/' element={
+                  <Page1
+                    logout={logout}
+                    error={error}
+                    currentUser={currentUser}
+                  />}
+                />
+                <Route path='/page2' element={
+                  <Page2
+                    logout={logout}
+                    fetchQuizzes={fetchQuizzes}
+                  />}
+                />
+                <Route path='/page3' element={
+                  <Page3
+                    fetchQuizzes={fetchQuizzes}
+                    quizList={quizList}
+                    logout={logout}
+                  />}
+                />
+                <Route path='/page4' element={
+                  <Page4
+                    setError={setError}
+                    logout={logout}
+                    currentUser={currentUser}
+                    setUsers={setUsers}
+                    setLoggedIn={setLoggedIn}
+                    users={users}
+                  />}
+                />
+              </>
             ) : (
               <>
-                <Route path='/' element={ <Login submitLogin={submitLogin} userData={userData}setUserData={setUserData}/>} />
-                <Route path='/reg' element={ <Registration addUser={addUser} newUserData={newUserData} setNewUserData={setNewUserData}/>}/>
+                <Route exact path='/' element={
+                  <Login
+                    submitLogin={submitLogin}
+                    userData={userData}
+                    setUserData={setUserData}
+                  />}
+                />
+                <Route path='/reg' element={
+                  <Registration
+                    addUser={addUser}
+                    newUserData={newUserData}
+                    setNewUserData={setNewUserData}
+                  />}
+                />
               </>
             )}
           </Routes>
         </Container>
       </BrowserRouter>
-    </> 
-  )
-  }
+    </>
+  );
+}
