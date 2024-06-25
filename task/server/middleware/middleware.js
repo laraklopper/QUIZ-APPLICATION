@@ -22,6 +22,20 @@ const authenticateToken = (req, res, next) => {
     });
 };
 
+//Middleware for password validation
+/*const passwordValidation = (req, res, next) => {
+    const {password} = req.body;
+
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    
+    if (!passwordRegex.test(password)) {
+        return res.status(400).json({
+            message: "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character."
+        });
+    }
+
+    next();
+};*/
 //Middleware function to check and verify a JWT token from the 'token' header
 const checkJwtToken = (req, res, next) => {
     const authHeader = req.headers.authorization;
@@ -85,4 +99,5 @@ const checkAdminAge = (req, res, next) => {
     next();
 };
 
-module.exports = {authenticateToken, checkJwtToken, checkAge}
+module.exports = {authenticateToken, checkJwtToken, checkAge, passwordValidation}
+
