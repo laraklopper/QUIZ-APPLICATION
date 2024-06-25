@@ -1,3 +1,4 @@
+// Import necessary modules and packages
 import React from 'react';// Import the React module to use React functionalities
 //Bootstrap
 import Row from 'react-bootstrap/Row'; // Import the Row component from react-bootstrap
