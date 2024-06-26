@@ -45,31 +45,30 @@ router.get('/quizzes', async (req, res) => {
 //------------POST----------------
 //Route to add new quiz
 router.post('/addQuiz', async (req, res) => {
-    console.log(req.body);
-    // console.log('Add Quiz');
+    console.log(req.body);// Log the request body in the console for debugging purposes
+    console.log('Add Quiz');//Log a message in the console for debugging purposes
     try {
-        const quiz = new Quiz(req.body)
+        // const quiz = new Quiz(req.body)
+        const user = await User.findById(req.user.userId)// Find the user by ID from the request
 
-        const user = await User.findById(req.user.userId)
-
+                // If user is not found, return an error response
         if (!user) {
             return res.status(400).json({ error: 'User not found' })
         }
 
-        // Create a new Quiz instance
+        // Create a new Quiz instance with data from the request body
         const newQuiz = new Quiz({
-            quizName,
+            quizName: req.body.quizName,// Set quiz name from request body
             user: user._id, // Reference the user's ObjectId
-            questions
+            questions: req.body.questions// Set questions from request body
         });
 
 
-        const savedQuiz = await newQuiz.save();
-        res.status(201).json(savedQuiz);
+        const savedQuiz = await newQuiz.save();//Save the newQuiz to the database
+        res.status(201).json(savedQuiz);// Respond with the saved quiz and a 201 status code
     } catch (error) {
-        console.error(`Error occured while adding new Task`);
-        return res.status(500).json({ message: 'Internal Server Error' });
-
+        console.error(`Error occured while adding new Task`);//Log an error message in the console for debugging purposes
+        return res.status(500).json({ message: 'Internal Server Error' });//Return a status 500 ('Internal Server Error')
     }
 })
 // Save quiz results
