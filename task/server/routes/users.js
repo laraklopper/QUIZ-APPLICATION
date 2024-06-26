@@ -90,6 +90,25 @@ router.get('/getQuizzes', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+
+// Fetch a specific quiz
+router.get('/quiz/:id', async (req, res) => {
+    try {
+        const quiz = await Quiz.findById(req.params.id);
+        res.json(quiz) 
+    } 
+    catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Save quiz result
+router.post('/user/:id/result', async (req, res) => {
+  const { userId, score } = req.body;
+  // Save the result logic
+  res.status(200).send('Result saved');
+});
+
 //----------POST-------------
 //Route to send POST request to login endpoint
 router.post('/login', async (req, res) =>{
