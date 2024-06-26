@@ -21,19 +21,13 @@ export default function Page3({
   ]);
     const [formError, setFormError] = useState('');//State used to store any error messages related to the form.
     const [updateQuiz, setUpdateQuiz] = useState(null);//State used to store the ID of the quiz being updated
-  // const [newQuizName, setNewQuizName] = useState('')
-  // const [questions, setQuestions] = useState([
-  //   {
-  //     newQuestionText: '',
-  //     newCorrectAnswer: '',
-  //     newOptions: ['', '', '']
-  //   }
-  // ]);
-
+ 
   // ==============REQUESTS=======================
   // ----------POST-------------------
+    // Function to add a new quiz
   const addNewQuiz = async (event) => {
     event.preventDefault();// Prevent the default form submission behavior
+    //Conditional rendering to check if exactly 5 questions are added//
     if (questions.length !== 5) {
       setFormError('You must add exactly 5 questions.');// Set an error message if the condition is not met
       return;
@@ -59,8 +53,9 @@ export default function Page3({
       setQuizList([...quizList, quiz]); // Update the quiz list state with the new quiz
       
       // Reset the form fields
-      setQuizName('');
-      setQuestions([{ questionText: '', correctAnswer: '', options: ['', '', '', ''] }]);
+setQuizList([...quizList, quiz]); // Update the quiz list with the new quiz
+      setQuizName('');// Reset the quiz name
+      setQuestions([{ questionText: '', correctAnswer: '', options: ['', '', '', ''] }]);// Reset the questions
       setFormError('');// Clear any existing error messages
       console.log('Quiz created:', quiz);// Log the created quiz to the console for debugging purposes
 
