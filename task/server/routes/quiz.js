@@ -1,16 +1,39 @@
 // Import necessary modules and packages
-const express = require('express');
-const router = express.Router();
-const cors = require('cors');
+const express = require('express');// Import Express Web framework 
+const router = express.Router();// Create an Express router
+const cors = require('cors'); //Import Cross-Origin Resource Sharing middleware
+// Import the 'jsonwebtoken' library for handling JSON Web Tokens
+const jwt = require('jsonwebtoken');
 //Schemas
-const Quiz = require('../models/quizSchema')
-const User = require('../models/userSchema')
+const Quiz = require('../models/quizSchema')// Import the quizSchema model
+const User = require('../models/userSchema')// Import the quizSchema model
 
 //=======SETUP MIDDLEWARE===========
-router.use(cors())
-router.use(express.json())
+router.use(express.json()); // Parse incoming request bodies in JSON format
+router.use(cors()); //Enable Cross-Origin Resource sharing 
 
+const authMiddleware = (req, res, next) => {
+        // Retrieve the token from the Authorization header, if it exists, and remove the 'Bearer ' prefix
+    const token = req.header('Authorization')?.replace('Bearer ', '');
+    if (!token) {
+        // If no token is found, respond with a 401 status code and an error message
 
+        return res.status(401).json({ message: 'Access denied. No token provided.' });
+    }
+
+    try {
+        const decoded = jwt.verify(
+            token, 
+            'Secret-Key', //Secret-key
+            /*process.env.JWT_SECRET*/);
+                // Attach the decoded user information to the request object for further use in the request lifecycle
+        req.user = decoded;
+        next();// Call the next middleware function in the stack
+    } catch (ex) {
+                // If token verification fails, respond with a 400 status code and an error message
+        res.status(400).json({ message: 'Invalid token.' });
+    }
+};
 //=============ROUTES=====================
 /*
 |================================================|
