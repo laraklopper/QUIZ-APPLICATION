@@ -16,7 +16,10 @@ export default function Page2({quizList, logout}) {
   const [lastQuestion, setLastQuestion] = useState(false);
 
 
-
+  // useEffect to fetch quizzes when component mounts
+  useEffect(() => {
+    fetchQuizzes()
+  })
   
   //========REQUESTS======================
 // Function to addScore once the user finishes the Quiz
