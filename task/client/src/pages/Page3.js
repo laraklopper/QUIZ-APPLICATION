@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react';// Import the React module to use React functionalities
 import '../CSS/Page3.css';
 // Bootstrap
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row'; // Import the Row component from react-bootstrap
+import Col from 'react-bootstrap/Col'; // Import the Col component from react-bootstrap
 import Button from 'react-bootstrap/Button';
 // Components
 import Header from '../components/Header';
@@ -47,13 +47,12 @@ export default function Page3({
       
       // Conditional rendering to check if the response indicates success (status code 200-299)
       if (!response.ok) {
-        throw new Error('Network response was not ok');//Log a message in the console for debugging purposes
+        throw new Error('Network response was not ok');//Throw an error message if the POST request is unsuccessful
       }
       const quiz = await response.json();//Parse the data as JSON
       setQuizList([...quizList, quiz]); // Update the quiz list state with the new quiz
       
       // Reset the form fields
-setQuizList([...quizList, quiz]); // Update the quiz list with the new quiz
       setQuizName('');// Reset the quiz name
       setQuestions([{ questionText: '', correctAnswer: '', options: ['', '', '', ''] }]);// Reset the questions
       setFormError('');// Clear any existing error messages
@@ -66,6 +65,7 @@ setQuizList([...quizList, quiz]); // Update the quiz list with the new quiz
   };
 
   // ---------------PUT-----------------------
+  //Function to edit a quiz
   const editQuiz = async (e) => {
     e.preventDefault();
      // Conditional rendering to check that exactly 5 questions are provided
