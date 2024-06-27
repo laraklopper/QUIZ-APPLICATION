@@ -2,7 +2,9 @@
 const express = require('express');// Import Express Web framework for handling HTTP requests
 const mongoose = require('mongoose');//Import the Mongoose library
 const cors = require('cors');// Middleware for enabling Cross-Origin Resource Sharing
-const routes = require('./routes/users')// Import User-defined routes
+//Import routes
+const userRouter = require('./routes/users');
+const quizRouter = require('./routes/quiz');
 require('dotenv').config();// Load environment variables from a .env file
 
 //Extract Environmental Variables
@@ -66,9 +68,8 @@ app.use(cors()); // Enable Cross-Origin Resource Sharing
 app.use(express.json()); // Parse incoming JSON requests
 
 //============ROUTES================
-app.use('/users', routes);// Mount user routes defined in ./routes/users at /users endpoint
-
-
+app.use('/users', userRouter )// Mount user routes defined in ./routes/users at /users endpoint
+app.use('/quiz', quizRouter )// Mount quiz routs defined in ./routes/quiz at /quiz endpoint
 //======START THE SERVER=============
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);// Log server startup message in the console for debugging purposes
