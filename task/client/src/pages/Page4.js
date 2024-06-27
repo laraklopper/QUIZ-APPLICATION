@@ -11,7 +11,7 @@ import LogoutBtn from '../components/LogoutBtn';// Import the LogoutBtn componen
 import EditUser from '../components/EditUser';// Import the EditUser component from '../components/EditUser'
 
 //Page 4 function component
-export default function Page4(
+export default function Page4(//Export default Page4 function component
   {//PROPS PASSED FROM PARENT COMPONENT
     logout, 
     currentUser, 
