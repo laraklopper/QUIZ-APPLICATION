@@ -9,7 +9,8 @@ import LogoutBtn from '../components/LogoutBtn';//Import LogoutBtn function comp
 import AddQuiz from '../components/AddQuiz';//Import AddQuiz function component
 
 // Page3 function component
-export default function Page3({//Export default Page3 function component
+export default function Page3(//Export default Page3 function component
+  {//PROPS PASSED FROM PARENT COMPONENT 
   quizList,
   setQuizList,
   setError,
@@ -23,9 +24,11 @@ export default function Page3({//Export default Page3 function component
   const [formError, setFormError] = useState('');//State used to store any error messages related to the form.
   // const [updateQuiz, setUpdateQuiz] = useState(null);//State used to store the ID of the quiz being updated
 
+  // useEffect to fetch quizzes when component mounts
   useEffect(() => {
-    fetchQuizzes()
+    fetchQuizzes()//call the fetchQuizzes function
   })
+  
   // ==============REQUESTS=======================
   // ----------POST-------------------
   //Function to add a new quiz
