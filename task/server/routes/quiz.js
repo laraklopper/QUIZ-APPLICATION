@@ -1,6 +1,8 @@
+// Import necessary modules and packages
 const express = require('express');
 const router = express.Router();
 const cors = require('cors');
+//Schemas
 const Quiz = require('../models/quizSchema')
 
 //=======SETUP MIDDLEWARE===========
@@ -22,16 +24,7 @@ router.use(express.json())
 |DELETE          | DELETE    |  router.delete()  |
 |================|===========|===================|
 */
-/* 
-=>Fetch quiz(GET)
-=> fetch all quizzes(GET
-=> fetch score/s(GET)
-=>addscores(POST)
-=>Deletequiz(DELETE)
-= AddQuiz(POST)
-=> EditQuiz(PUT)
-=> 
-*/
+
 //------------------GET---------------
 // Get all quizzes
 router.get('/quizzes', async (req, res) => {
