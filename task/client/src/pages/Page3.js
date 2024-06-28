@@ -86,11 +86,12 @@ export default function Page3(//Export default Page3 function component
     }
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:3001/quiz/editQuiz/${updateQuiz}`, {
+      const response = await fetch(`http://localhost:3001/quiz/editQuiz/${quiz._id}`, {
         method: 'PUT',
+        mode: 'cors',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': token,
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify({ quizName, questions })
       });
