@@ -1,6 +1,10 @@
 // Import necessary modules and packages
 const express = require('express');// Import Express Web framework 
 const router = express.Router();// Create an Express router
+/*
+The express.Router() function is used to create a new router object. 
+This function is used to create a new router object to handle requests. 
+*/
 const cors = require('cors'); //Import Cross-Origin Resource Sharing middleware
 // Import the 'jsonwebtoken' library for handling JSON Web Tokens
 const jwt = require('jsonwebtoken');
@@ -10,8 +14,12 @@ const User = require('../models/userSchema')// Import the quizSchema model
 
 //=======SETUP MIDDLEWARE===========
 router.use(express.json()); // Parse incoming request bodies in JSON format
+/*Built-Middleware function used to parse incoming requests with JSON payloads.
+Returns middleware that only parses JSON and only looks at requests where the
+Content-Type header matches the type option.*/
 router.use(cors()); //Enable Cross-Origin Resource sharing 
 
+//==========CUSTOM MIDDLEWARE=====================
 const authMiddleware = (req, res, next) => {
         // Retrieve the token from the Authorization header, if it exists, and remove the 'Bearer ' prefix
     const token = req.header('Authorization')?.replace('Bearer ', '');
