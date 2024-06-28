@@ -132,6 +132,7 @@ export default function Page4(//Export default Page4 function component
     setUpdateUser(userId === updateUser ? null : userId);
   };
 
+  //Function to toggle userDisplay
   const toggleViewUsers = () => {
     setViewUsers(!viewUsers);
   };
