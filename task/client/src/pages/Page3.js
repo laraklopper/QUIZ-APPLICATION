@@ -78,37 +78,38 @@ export default function Page3(//Export default Page3 function component
 
   // ---------------PUT-----------------------
   //Function to update a quiz
-  // const editQuiz = async (e) => {
-  //   e.preventDefault();
-  //   if (questions.length !== 5) {
-  //     setFormError('You must have exactly 5 questions.');
-  //     return;
-  //   }
-  //   try {
-  //     const token = localStorage.getItem('token');
-  //     const response = await fetch(`http://localhost:3001/quiz/editQuiz/${updateQuiz}`, {
-  //       method: 'PUT',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         'Authorization': token,
-  //       },
-  //       body: JSON.stringify({ quizName, questions })
-  //     });
+  const editQuiz = async (e) => {//Define an async function to edit a quiz
+    e.preventDefault();//prevent default form submission behaviour
+    if (questions.length !== 5) {
+      setFormError('You must have exactly 5 questions.');
+      return;
+    }
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`http://localhost:3001/quiz/editQuiz/${updateQuiz}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token,
+        },
+        body: JSON.stringify({ quizName, questions })
+      });
 
-  //     if (response.ok) {
-  //       const updatedQuiz = await response.json();
-  //       setQuizList(quizList.map(q => (q._id === updatedQuiz._id ? updatedQuiz : q)));
-  //       setQuizName('');
-  //       setQuestions([{ questionText: '', correctAnswer: '', options: ['', '', '', ''] }]);
-  //       setUpdateQuiz(null);
-  //       setFormError('');
-  //     } else {
-  //       throw new Error('Error editing quiz');
-  //     }
-  //   } catch (error) {
-  //     console.error(`Error editing the quiz: ${error}`);
-  //   }
-  // }
+      // Conditional rendering to check if the response indicates success (status code 200-299)
+      if (response.ok) {
+        const updatedQuiz = await response.json();
+        setQuizList(quizList.map(q => (q._id === updatedQuiz._id ? updatedQuiz : q)));
+        setQuizName('');
+        setQuestions([{ questionText: '', correctAnswer: '', options: ['', '', '', ''] }]);
+        setUpdateQuiz(null);
+        setFormError('');
+      } else {
+        throw new Error('Error editing quiz');
+      }
+    } catch (error) {
+      console.error(`Error editing the quiz: ${error}`);
+    }
+  }
 
   // ----------DELETE------------------
   // const deleteQuiz = async (id) => {
