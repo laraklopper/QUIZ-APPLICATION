@@ -5,14 +5,18 @@ import Button from 'react-bootstrap/Button';
 
 
 //EditQuizFunction
-export default function EditQuiz({ 
+export default function EditQuiz(
+  { //PROPS PASSED FROM PARENT COMPONENT
   quiz,
   newQuizName, 
   editQuiz,
   setNewQuestion,
   setNewQuizName,
-  newQuestion}) {
+  newQuestion
+  }
+) {
 
+  //==================EVENT LISTENERS===========================
  
  const handleQuestionChange = (index, event) => {
     const values = [...newQuestions];
@@ -24,12 +28,6 @@ export default function EditQuiz({
     }
     setNewQuestions(values);
   };
-  // Function to set the form inputs for editing a quiz
-  // const handleQuizUpdate = (quiz) => {
-  //   setQuizName(quiz.quizName);
-  //   setQuestions(quiz.questions);
-  //   setUpdateQuiz(quiz._id);
-  // };
 
   
 //==========JSX RENDERING===========================
