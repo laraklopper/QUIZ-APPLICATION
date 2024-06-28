@@ -6,15 +6,15 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';// React Router 
 //Bootstrap
 import Container from 'react-bootstrap/Container'; // Import the Container component from react-bootstrap
 //Pages
-import Login from './pages/Login';
-import Registration from './pages/Registration';
-import Page1 from './pages/Page1';
-import Page2 from './pages/Page2';
-import Page3 from './pages/Page3';
-import Page4 from './pages/Page4';
+import Login from './pages/Login';// Import the Login component {mainHeading='REGISTRATION'}
+import Registration from './pages/Registration';// Import the Registration Page {mainHeading='REGISTRATION'}
+import Page1 from './pages/Page1';// Importing the Page1 component {heading='HOME'}
+import Page2 from './pages/Page2';// Importing the Page2 component {heading='GAME'}
+import Page3 from './pages/Page3';// Importing the Page3 component {heading='ADD QUIZ'}
+import Page4 from './pages/Page4';// Importing the Page4 component {heading='USER ACCOUNT'}
 
 //App function component
-export default function App() {
+export default function App() {//Export default App function component
   //=======STATE VARIABLES===============
   //User variables
   const [users, setUsers] = useState([]);// State to store fetched users
@@ -49,10 +49,10 @@ export default function App() {
         const token = localStorage.getItem('token');// Retrieve token from localStorage
                 // Conditional rendering if token or login status is missing
         if (!token || !loggedIn) return;
-
+        //Send a POST request to the /findUsers endpoint
         const response = await fetch('http://localhost:3001/users/findUsers', {
           method: 'GET',//HTTP request method
-          mode: 'cors',
+          mode: 'cors',//Set the mode to cors, allowing cross-origin requests 
           headers: {
             'Content-Type': 'application/json',// Specify the Content-Type being sent in the request payload.
             'Authorization': `Bearer ${token}`,//Add the Authorization header containing the JWT token
@@ -78,6 +78,7 @@ export default function App() {
         const token = localStorage.getItem('token');// Retrieve token from localStorage
         if (!token) return;
 
+        //Send a GET request to the server to fetch the current user
         const response = await fetch('http://localhost:3001/users/userId', {
           method: 'GET',//HTTP request method
           mode: 'cors',
@@ -86,16 +87,17 @@ export default function App() {
             'Authorization': `Bearer ${token}`,//Add the Authorization header containing the JWT token
           }
         });
-
+        
+      // Conditional rendering to check if the response indicates success (status code 200-299)
         if (!response.ok) {
           throw new Error('Failed to fetch current user');//Throw an error message if GET request is unsuccessful
         }
 
-        const fetchedCurrentUser = await response.json();
-        setCurrentUser(fetchedCurrentUser);
+        const fetchedCurrentUser = await response.json();//Parse the response data
+        setCurrentUser(fetchedCurrentUser);// Update currentUser state
       } catch (error) {
         console.error('Error fetching current user', error.message);//Log an error message in the console for debugging purposes
-        setError('Error fetching current user');
+        setError('Error fetching current user');// Set error message in the error state
       }
     };
 
@@ -110,7 +112,7 @@ export default function App() {
 // Function to fetch quizzes
   const fetchQuizzes = async () => {//Define an async function to fetch quizzes
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token');//Retrieve the token from local storage
       const response = await fetch('http://localhost:3001/quiz/fetchQuizzes', {
         method: 'GET',//HTTP request method
         mode: 'cors',
@@ -119,12 +121,12 @@ export default function App() {
           'Authorization': `Bearer ${token}`,
         }
       });
-      // Condtitional rendering to check if if the response indicates success (status code 200-299)
+      // Condtitional rendering to check if the response indicates success (status code 200-299)
       if (!response.ok) {
         throw new Error('Failed to fetch quizzes');
       }
 
-      const quizData = await response.json();
+      const quizData = await response.json();//Parse the response data
       setQuizList(quizData);
     } catch (error) {
       console.error('Error fetching quizzes:', error);//Log an error message in the console for debugging purposes
@@ -164,7 +166,7 @@ export default function App() {
         throw new Error('Username or password are incorrect');// Throw an error if the POST request is unsuccessful
       }
     } catch (error) {
-      setError(`Login Failed: ${error.message}`);
+      setError(`Login Failed: ${error.message}`);// Set error state with error message
       console.log(`Login Failed: ${error.message}`);//Log an error message in the console for debugging purposes
       setLoggedIn(false);
     }
@@ -173,6 +175,7 @@ export default function App() {
   //Function to register a new user
   const addUser = async () => {//Define an async function to add a new user
     try {
+      //Send a POST request to the register endpoint
       const response = await fetch('http://localhost:3001/users/register', {
         method: 'POST',//HTTP request method
         mode: 'cors',
@@ -213,12 +216,12 @@ export default function App() {
 
   //Function to trigger logoutbtn
   const logout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('username');
-    localStorage.removeItem('loggedIn');
-    setLoggedIn(false);
-    setError('');
-    setUserData({ username: '', password: '' });
+    localStorage.removeItem('token');// Remove token from local storage
+    localStorage.removeItem('username');// Remove username from local storage
+    localStorage.removeItem('loggedIn'); // Remove login status from local storage
+    setLoggedIn(false);// Update loggedIn state
+    setError(''); // Clear error state
+    setUserData({ username: '', password: '' });// Clear userData state
   };
 
   //===========JSX RENDERING=============================
