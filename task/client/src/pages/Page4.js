@@ -91,17 +91,18 @@ export default function Page4(//Export default Page4 function component
 
   //-----------DELETE----------------------
   //Function to remove a user
-  const deleteUser = async (userId) => {
+  const deleteUser = async (userId) => {//Define an async function to remove a user
     try {
       //Send delete request to server
       const response = await fetch(`http://localhost:3001/users/${userId}`, {
-        method: 'DELETE',
-        mode: 'cors',
+        method: 'DELETE',//HTTP request method
+        mode: 'cors',//Set the mode to cors, allowing cross-origin requests 
         headers: {
           'Content-type': 'application/json',
         },
       });
 
+      // Conditional rendering to check if the response is successful (status code 200-299)
       if (!response.ok) {
         throw new Error('Failed to remove user');
       }
@@ -243,9 +244,11 @@ export default function Page4(//Export default Page4 function component
           )}
         </div>
       </section>
-      <footer>
+        {/*Footer*/}
+      <footer className='pageFooter'>
         <Row>
           <Col xs={12} md={8}></Col>
+            {/* Logout button */}
           <LogoutBtn logout={logout} />
         </Row>
       </footer>
