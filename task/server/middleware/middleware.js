@@ -1,4 +1,4 @@
-const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');// Import the 'jsonwebtoken' library for handling JSON Web Tokens
 
 // Middleware to verify JWT and extract user info
 const authenticateToken = (req, res, next) => {
