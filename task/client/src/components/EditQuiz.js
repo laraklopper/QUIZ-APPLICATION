@@ -2,13 +2,18 @@ import React, { useState } from 'react';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button'; 
-// import Form from 'react-bootstrap/Form';
 
 
 //EditQuizFunction
-export default function EditQuiz() {
- const [newQuizName, setNewQuizName] = useState(quiz.quizName);
-  const [newQuestions, setNewQuestions] = useState(quiz.questions);
+export default function EditQuiz({ 
+  quiz,
+  newQuizName, 
+  editQuiz,
+  setNewQuestion,
+  setNewQuizName,
+  newQuestion}) {
+
+ 
  const handleQuestionChange = (index, event) => {
     const values = [...newQuestions];
     if (event.target.name === 'newQuestionText' || event.target.name === 'newCorrectAnswer') {
@@ -27,88 +32,87 @@ export default function EditQuiz() {
   // };
 
   
-  //=============================================
+//==========JSX RENDERING===========================
+
   return (
     <div>
       <Row>
         <Col>
-          <h2>EDIT QUESTIONS</h2>
+          <h2 className='h3'>EDIT QUESTIONS</h2>
         </Col>
       </Row>
-      <form>
+      <form onSubmit={(e) => { e.preventDefault(); editQuiz(quiz._id); }}>
         <Row>
-          <Col xs={6} md={4}>
-            <label><p>QUIZ NAME:</p>
-            <input
-            placeholder='QUIZ NAME'
-            />
+          <Col xs={6} md={4} className='editQuizCol'>
+            <label htmlFor='newQuizName'>
+              <p className='labelText'>QUIZ NAME:</p>
+              <input
+                placeholder='QUIZ NAME'
+                onChange={(e) => setNewQuizName(e.target.value)}
+                value={newQuizName}
+                id='newQuizName'
+                type='text'
+              />
             </label>
           </Col>
-          <Col xs={12} md={8}>
-          </Col>
         </Row>
-          <div>
+        {newQuestion.map((question, index) => (
+          <div key={index}>
             <Row>
-              <Col xs={6} md={4}>
-              {/* select question number */}
-              </Col>
+              <Col xs={6} md={4}></Col>
               <Col xs={6} md={4}>
                 <label>
                   <p className='labelText'>QUESTION:</p>
                   <input
-                  type='text'
+                    type='text'
+                    placeholder='question'
+                    name='newQuestionText'
+                    value={question.newQuestionText}
+                    onChange={(e) => handleQuestionChange(index, e)}
                   />
                 </label>
               </Col>
+            </Row>
+            <Row>
+              <Col xs={6} md={4}></Col>
               <Col xs={6} md={4}>
-              <label>
-                <p className='labelText'>1. ALTERINATIVE ANSWER:</p>
-                <input 
-                type='text'
-                />
-              </label>
+                <label>
+                  <p className='labelText'>CORRECT ANSWER:</p>
+                  <input
+                    type='text'
+                    name='newCorrectAnswer'
+                    value={question.newCorrectAnswer}
+                    onChange={(e) => handleQuestionChange(index, e)}
+                  />
+                </label>
               </Col>
-          </Row>
-          <Row>
-            <Col xs={6} md={4}></Col>
-            <Col xs={6} md={4}>
-              <label>
-                <p className='labelText'>CORRECT ANSWER:</p>
-                <input 
-                type='text'
-                />
-              </label>
-              </Col>
-            <Col xs={6} md={4}>
-              <label>
-                <p className='labelText'>2. ALTERINATIVE ANSWER:</p>
-                <input 
-                
-                />
-              </label>            
-              </Col>
-          </Row>
-          <Row>
-            <Col xs={6} md={4}></Col>
-            <Col xs={6} md={4}></Col>
-            <Col xs={6} md={4}>
-              <label>
-                <p className='labelText'>3. ALTERINATIVE ANSWER:</p>
-                <input />
-              </label>           
-               </Col>
+            </Row>
+            {question.options.map((option, optIndex) => (
+              <Row key={optIndex}>
+                <Col xs={6} md={4}></Col>
+                <Col xs={6} md={4}>
+                  <label>
+                    <p className='labelText'>{optIndex + 1}. ALTERNATIVE ANSWER:</p>
+                    <input
+                      type='text'
+                      name={`option.${optIndex}`}
+                      value={option}
+                      onChange={(e) => handleQuestionChange(index, e)}
+                    />
+                  </label>
+                </Col>
               </Row>
-
+            ))}
           </div>
+        ))}
         <Row>
-          <Col xs={12} md={8}>
-          </Col>
+          <Col xs={12} md={8}></Col>
           <Col xs={6} md={4}>
+            <Button type="submit" variant="primary">Save Changes</Button>
           </Col>
         </Row>
-
       </form>
-    
     </div>
-  )
+  );
 }
+
