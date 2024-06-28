@@ -17,12 +17,18 @@ export default function Page3(//Export default Page3 function component
   fetchQuizzes
 }) {
   // ========STATE VARIABLES===============
+  //NewQuizVariables
   const [quizName, setQuizName] = useState('');//Stores the name of the new quiz
   const [questions, setQuestions] = useState([//State used to store an array of question objects, each containing questionText, correctAnswer, and options.
     { questionText: '', correctAnswer: '', options: ['', '', ''] }
   ]);
+  //Update quiz variables
+  const [updateQuiz, setUpdateQuiz] = useState(null);//State used to store the ID of the quiz being updated  
+  const [newQuizName, setNewQuizName] = useState('');
+  const [newQuestion, setNewquestion] = useState([
+    { newQuestionText: '', newCorrectAnswer: '', newOptions: ['', '', ''] }
+  ]);
   const [formError, setFormError] = useState('');//State used to store any error messages related to the form.
-  // const [updateQuiz, setUpdateQuiz] = useState(null);//State used to store the ID of the quiz being updated
 
   // useEffect to fetch quizzes when component mounts
   useEffect(() => {
@@ -71,6 +77,7 @@ export default function Page3(//Export default Page3 function component
   };
 
   // ---------------PUT-----------------------
+  //Function to update a quiz
   // const editQuiz = async (e) => {
   //   e.preventDefault();
   //   if (questions.length !== 5) {
@@ -174,6 +181,12 @@ export default function Page3(//Export default Page3 function component
     setFormError('');  // Clear any form error
 
   }
+
+  //Function to toggle editForm
+  const quizEdit = (quizId) => {
+    setUpdateQuiz(quizId === updateQuiz ? null : quizId)
+  }
+  
   //==============JSX RENDERING=================
   return (
     <>
@@ -190,11 +203,21 @@ export default function Page3(//Export default Page3 function component
         <div>
           {/* Display the list of quizes*/}
           {quizList.map((quiz) => (
-            <Row key={quiz._id} className='quizListRow'>
-              <Col className='quizRow'><p>Quiz Name: {quiz.quizName}</p></Col>
-              {/* <Col> <button onClick={() => setUpdateQuiz(quiz._id)}>EDIT</button></Col>
-              <Col><button onClick={() => deleteQuiz(quiz._id)}>DELETE</button></Col> */}
+          <div key={quiz._id} id="quizList">
+           <Row className='quizListRow'>
+              <Col className='quizRow'><p className="outputText">Quiz Name: {quiz.quizName}</p></Col>
+          {/* Toggle button to update QUIZ */}
+             <Col> 
+                <Button variant='primary' onClick={() => setUpdateQuiz(quiz._id)}>
+                          {updateQuiz === quiz._id ? 'EXIT': 'EDIT'}
+                </Button>
+              </Col>
+          {/* Toggle button to update QUIZ */}
+
+               {/* <Col><button onClick={() => deleteQuiz(quiz._id)}>DELETE</button></Col> */}
             </Row>
+          </div>
+           
           ))}
         </div>
       </section>
