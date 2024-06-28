@@ -54,10 +54,16 @@ const authMiddleware = (req, res, next) => {
 //Route to GET a specific quiz
 router.get('/quiz/:id', async (req, res) => {
     try {
-        const quiz = await Quiz.findById(req.params.id);
-        res.json(quiz)
+        const quiz = await Quiz.findById(req.params.id); // Attempt to find the quiz by its ID in the database 
+            //Conditional rendering to check if a quiz is found
+        if (!quiz) {
+                // If no quiz is found, return a 404 Not Found response
+            return res.status(404).json({ message: 'Quiz not found' });
+        }
+        res.json(quiz);// If quiz is found, return it as JSON response
     }
     catch (error) {
+    // If an error occurs during database operation, return a 500 Internal Server Error response
         res.status(500).json(
             { message: error.message }
         );
@@ -67,10 +73,15 @@ router.get('/quiz/:id', async (req, res) => {
 // Get all quizzes
 router.get('/findquizzes', async (req, res) => {
     try {
-        const quizzes = await Quiz.find({});
+        const quizzes = await Quiz.find({}); //find all quizzes in the database
         res.json(quizzes);
+            /*Send a JSON response containing an array 
+        of all quiz documents (quizzes) fetched from the database.*/
+            // console.log(quizzes);
     } 
     catch (error) {
+    /* If an error occurs during database operation, 
+    return a 500 Internal Server Error response*/
         res.status(500).json(
             { message: error.message }
         );
@@ -80,7 +91,7 @@ router.get('/findquizzes', async (req, res) => {
 
 //------------POST--------------
 // Save quiz results
-router.post('/user/:id/result', async (req, res) => {
+/*router.post('/user/:id/result', async (req, res) => {
     try {
         const { quizId, score } = req.body;
         // Logic to save results in the database
@@ -88,7 +99,7 @@ router.post('/user/:id/result', async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
-});
+});*/
 
 //Route to add new quiz
 router.post('/addQuiz', async (req, res) => {
@@ -126,40 +137,43 @@ router.post('/addQuiz', async (req, res) => {
 // Route to edit a quiz
 router.put('/editQuiz/:id', async (req, res) => {
     try {
-        const { id } = req.params;
+        const { id } = req.params; // Extract the quiz ID from the request parameters
         const updatedQuiz = await Quiz.findByIdAndUpdate(id, req.body, { new: true });
-        res.status(200).json(updatedQuiz);
-    } 
-    catch (error) {
-        console.error('Error editing quiz:', error);
-        return res.status(500).json(
-            { message: 'Internal Server Error' }
-        );
-    }
-});
-//--------DELETE---------------
-
-// Route to delete a quiz
-router.delete('/deleteQuiz/:id', async (req, res) => {
-    try {
-        const { id } = req.params;
-        await Quiz.findByIdAndDelete(id);
-
-        if (!removedQuiz) {
-            return res.status(404).json(
-                { message: 'Quiz not found' }
-            );
+        
+        // Conditional rendering to check if updatedQuiz is null (quiz not found)
+        if (!updatedQuiz) {
+            return res.status(404).json({ message: 'Quiz not found' });
         }
 
-        res.status(200).json(
-            { message: 'Quiz successfully deleted' }
-        );
-    } 
-    catch (error) {
-        console.error('Error deleting quiz:', error);
-        return res.status(500).json(
-            { message: 'Internal Server Error' }
-        );
+        // If quiz is updated successfully, respond with updated quiz data
+        res.status(200).json(updatedQuiz);
+    } catch (error) {
+        // If an error occurs during database operation or processing, log the error and return a 500 Internal Server Error response
+        console.error('Error editing quiz:', error);//Log an error in the console for debugging purposes
+        return res.status(500).json({ message: 'Internal Server Error' });//Send a 500 JSON response with an 'Internal Server Error' message.
+    }
+});
+
+//--------DELETE---------------
+
+// Route to delete a quiz by ID
+router.delete('/deleteQuiz/:id', async (req, res) => {
+    try {
+        const { id } = req.params; // Extract the quiz ID from the request parameters
+        const removedQuiz = await Quiz.findByIdAndDelete(id); // Find and delete the quiz by its ID
+
+        // Conditional rendering to check if removedQuiz is null (quiz not found)
+        if (!removedQuiz) {
+                //If the quiz is not found respond with a status 404 (Not Found) response
+            return res.status(404).json({ message: 'Quiz not found' });
+        }
+
+        // If quiz is successfully deleted, respond with success message
+        res.status(200).json({ message: 'Quiz successfully deleted' });
+    } catch (error) {
+        // If an error occurs during database operation or processing, log the error and return a 500 Internal Server Error response
+        console.error('Error deleting quiz:', error);//Log an error message in the console for debugging purposes
+        return res.status(500).json({ message: 'Internal Server Error' });// Return a 500 Internal Server Error response
     }
 });
 
