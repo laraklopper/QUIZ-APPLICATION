@@ -1,11 +1,24 @@
-import React from 'react'
+import React, { useState } from 'react';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button'; 
+// import Form from 'react-bootstrap/Form';
+
 
 //EditQuizFunction
 export default function EditQuiz() {
-
-
+ const [newQuizName, setNewQuizName] = useState(quiz.quizName);
+  const [newQuestions, setNewQuestions] = useState(quiz.questions);
+ const handleQuestionChange = (index, event) => {
+    const values = [...newQuestions];
+    if (event.target.name === 'newQuestionText' || event.target.name === 'newCorrectAnswer') {
+      values[index][event.target.name] = event.target.value;
+    } else {
+      const optionIndex = Number(event.target.name.split('.')[1]);
+      values[index].options[optionIndex] = event.target.value;
+    }
+    setNewQuestions(values);
+  };
   // Function to set the form inputs for editing a quiz
   // const handleQuizUpdate = (quiz) => {
   //   setQuizName(quiz.quizName);
