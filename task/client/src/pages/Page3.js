@@ -78,22 +78,21 @@ export default function Page3(//Export default Page3 function component
 
   // ---------------PUT-----------------------
   //Function to update a quiz
-  const editQuiz = async (e) => {//Define an async function to edit a quiz
-    e.preventDefault();//prevent default form submission behaviour
+  const editQuiz = async (quizId) => {//Define an async function to edit a quiz
     if (questions.length !== 5) {
       setFormError('You must have exactly 5 questions.');
       return;
     }
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:3001/quiz/editQuiz/${quiz._id}`, {
+      const response = await fetch(``http://localhost:3001/quiz/editQuiz/${quizId}``, {
         method: 'PUT',
         mode: 'cors',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({ quizName, questions })
+        body: JSON.stringify({ quizName: newQuizName, questions: newQuestion })
       });
 
       // Conditional rendering to check if the response indicates success (status code 200-299)
@@ -101,14 +100,13 @@ export default function Page3(//Export default Page3 function component
         const updatedQuiz = await response.json();
         setQuizList(quizList.map(q => (q._id === updatedQuiz._id ? updatedQuiz : q)));
         setQuizName('');
-        setQuestions([{ questionText: '', correctAnswer: '', options: ['', '', '', ''] }]);
         setUpdateQuiz(null);
-        setFormError('');
       } else {
         throw new Error('Error editing quiz');
       }
     } catch (error) {
       console.error(`Error editing the quiz: ${error}`);
+    //setError(`Error editing the quiz: ${error}`)
     }
   }
 
