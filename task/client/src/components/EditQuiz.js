@@ -1,3 +1,4 @@
+// Import necessary modules and packages
 import React from 'react';
 //Bootstrap
 import Row from 'react-bootstrap/Row'; // Import the Row component from react-bootstrap
@@ -5,7 +6,7 @@ import Col from 'react-bootstrap/Col'; // Import the Col component from react-bo
 import Button from 'react-bootstrap/Button';//Import Bootstrap Button component
 
 //EditQuizFunction
-export default function EditQuiz(
+export default function EditQuiz(//Export the default EditQuiz function component
   { //PROPS PASSED FROM PARENT COMPONENT
     quiz,
     newQuizName,
