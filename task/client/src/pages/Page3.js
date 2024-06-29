@@ -33,7 +33,7 @@ export default function Page3(//Export default Page3 function component
   // useEffect to fetch quizzes when component mounts
   useEffect(() => {
     fetchQuizzes()//call the fetchQuizzes function
-  })
+  },[fetchQuizzes])
   
   // ==============REQUESTS=======================
   // ----------POST-------------------
@@ -106,7 +106,7 @@ export default function Page3(//Export default Page3 function component
       }
     } catch (error) {
       console.error(`Error editing the quiz: ${error}`);
-    //setError(`Error editing the quiz: ${error}`)
+    setError(`Error editing the quiz: ${error}`)
     }
   }
 
@@ -188,59 +188,59 @@ export default function Page3(//Export default Page3 function component
   }
   
   //==============JSX RENDERING=================
+
   return (
     <>
-      {/* Header */}
       <Header heading='ADD QUIZ' />
-      {/* Section1 */}
       <section className='section1'>
         <Row className='quizRow'>
           <Col>
             <h2 className='h2'>QUIZZES</h2>
           </Col>
         </Row>
-        {/* QUIZ Output */}
         <div>
-          {/* Display the list of quizes*/}
           {quizList.map((quiz) => (
-          <div key={quiz._id} id="quizList">
-           <Row className='quizListRow'>
-              <Col className='quizRow'><p className="outputText">Quiz Name: {quiz.quizName}</p></Col>
-          {/* Toggle button to update QUIZ */}
-             <Col> 
-                <Button variant='primary' onClick={() => setUpdateQuiz(quiz._id)}>
-                          {updateQuiz === quiz._id ? 'EXIT': 'EDIT'}
-                </Button>
-              </Col>
-          {/* Toggle button to update QUIZ */}
-
-               {/* <Col><button onClick={() => deleteQuiz(quiz._id)}>DELETE</button></Col> */}
-            </Row>
-          </div>
+            <div key={quiz._id}>
+              <Row className='quizListRow'>
+                <Col className='quizRow'><p>Quiz Name: {quiz.quizName}</p></Col>
+                <Col> <Button variant='primary' type='button' onClick={() => toggleQuizUpdate(quiz._id)}>
+                  {updateQuiz === quiz._id ? 'EXIT' : 'EDIT'}</Button></Col>
+           
+              {updateQuiz === quiz._id && (
+                  <EditQuiz 
+                  quiz={quiz} 
+                  setQuizList={setQuizList} 
+                  quizList={quizList} 
+                  setUpdateQuiz={setUpdateQuiz} 
+                  setError={setError}
+                  newQuizName={newQuizName}
+                  setNewQuizName={setNewQuizName}      
+                  editQuiz={editQuiz}         
+                  />
+              )}
+                     {/* <Col><button onClick={() => deleteQuiz(quiz._id)}>DELETE</button></Col> */}
+                       </Row>
+            </div>
            
           ))}
         </div>
       </section>
-      {/* Section 2 */}
       <section id='page3Section2'>
-        {/* Form to Add Quiz */}
         <AddQuiz
-        addNewQuiz={addNewQuiz}
-        setQuizName={setQuizName}
-        quizList={quizList}
-        quizName={quizName}
-        handleAddQuestion={handleAddQuestion}
-        formError={formError}
-        handleChange={handleChange}
-        questions={questions}
-        nextQuestion={nextQuestion}
+          addNewQuiz={addNewQuiz}
+          setQuizName={setQuizName}
+          quizList={quizList}
+          quizName={quizName}
+          handleAddQuestion={handleAddQuestion}
+          formError={formError}
+          handleChange={handleChange}
+          questions={questions}
+          nextQuestion={nextQuestion}
         />
       </section>
-      {/* footer */}
       <footer className='pageFooter'>
         <Row>
           <Col xs={12} md={8}></Col>
-          {/* Logout Button */}
           <LogoutBtn />
         </Row>
       </footer>
