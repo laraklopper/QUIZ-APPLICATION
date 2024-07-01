@@ -8,10 +8,10 @@ import Container from 'react-bootstrap/Container'; // Import the Container compo
 //Pages
 import Login from './pages/Login';// Import the Login component {mainHeading='REGISTRATION'}
 import Registration from './pages/Registration';// Import the Registration Page {mainHeading='REGISTRATION'}
-import Page1 from './pages/Page1';// Importing the Page1 component {heading='HOME'}
-import Page2 from './pages/Page2';// Importing the Page2 component {heading='GAME'}
-import Page3 from './pages/Page3';// Importing the Page3 component {heading='ADD QUIZ'}
-import Page4 from './pages/Page4';// Importing the Page4 component {heading='USER ACCOUNT'}
+import Page1 from './pages/Page1';// Import the Page1 component {heading='HOME'}
+import Page2 from './pages/Page2';// Import the Page2 component {heading='GAME'}
+import Page3 from './pages/Page3';// Import the Page3 component {heading='ADD QUIZ'}
+import Page4 from './pages/Page4';// Import the Page4 component {heading='USER ACCOUNT'}
 
 //App function component
 export default function App() {//Export default App function component
@@ -35,6 +35,7 @@ export default function App() {//Export default App function component
   });
   //Quiz variables
   const [quizList, setQuizList] = useState([]); // State to store fetched quizzes
+    // const [quiz, setQuiz] = useState(null)
   //Event variables
   const [error, setError] = useState(null);// State to manage error messages
   //State variables to manage user Login
@@ -81,7 +82,7 @@ export default function App() {//Export default App function component
         //Send a GET request to the server to fetch the current user
         const response = await fetch('http://localhost:3001/users/userId', {
           method: 'GET',//HTTP request method
-          mode: 'cors',
+          mode: 'cors',//Set the mode to cors, allowing cross-origin requests 
           headers: {
             'Content-Type': 'application/json',// Specify the Content-Type being sent in the request payload.
             'Authorization': `Bearer ${token}`,//Add the Authorization header containing the JWT token
@@ -134,6 +135,36 @@ export default function App() {//Export default App function component
     }
   };
 
+  
+/*
+    // Function to fetch a single quiz by ID
+ const fetchQuiz = async (quizId) => {
+    try {
+      const token = localStorage.getItem('token')
+      const response = await fetch (`http://localhost:3001/quiz/${quizId}`,{
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch quiz');
+      }
+
+      const quizData = await response.json();
+      console.log(quizData);
+
+
+    } catch (error) {
+      console.error('Error fetching quiz:', error);
+      setError('Error fetching quiz');
+    }
+  }
+  */
+  
   //---------POST---------------------------
   //Function to submit Login
   const submitLogin = async (e) => {//Define an async function to submit login
@@ -165,10 +196,12 @@ export default function App() {//Export default App function component
       } else {
         throw new Error('Username or password are incorrect');// Throw an error if the POST request is unsuccessful
       }
-    } catch (error) {
+    } 
+    catch (error) {
       setError(`Login Failed: ${error.message}`);// Set error state with error message
       console.log(`Login Failed: ${error.message}`);//Log an error message in the console for debugging purposes
       setLoggedIn(false);
+      alert('Login Failed')
     }
   };
 
