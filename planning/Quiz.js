@@ -1,16 +1,16 @@
-# QUIZ
-
-```jsx
+//Quiz.js
 import React, { useState } from 'react';
 
-const Questions = ({ 
+export default function Quiz  ({ 
   questions, 
   handleNextQuestion, 
   currentQuestion, 
   handleAnswerClick, 
   timer, 
   isLastq 
-}) => {
+}
+) {
+
   const optionIds = ['A', 'B', 'C', 'D'];
   const [selectedOption, setSelectedOption] = useState(null);
   
@@ -30,10 +30,7 @@ const Questions = ({
         </h4>
         <div>
           {questions[currentQuestion].options.map((option, index) => (
-            <button
-              key={index}
-              onClick={() => handleOptionClick(option)}
-            >
+            <button key={index} onClick={() => handleOptionClick(option)}>
               {optionIds[index]}) {option}
             </button>
           ))}
@@ -60,5 +57,3 @@ const Questions = ({
   );
 };
 
-export default Questions;
-```
