@@ -1,13 +1,17 @@
 //Quiz.js
 import React, { useState } from 'react';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
 
+//Quiz function component
 export default function Quiz  ({ 
   questions, 
   handleNextQuestion, 
   currentQuestion, 
   handleAnswerClick, 
   timer, 
-  isLastq 
+  lastQuestion 
 }
 ) {
 
@@ -18,6 +22,8 @@ export default function Quiz  ({
     setSelectedOption(option);
     handleAnswerClick(option);
   };
+
+  //==========JSX RENDERING==============
   
   return (
     <div>
@@ -26,13 +32,14 @@ export default function Quiz  ({
           Time remaining: {timer}
         </p>
         <h4>
-          {questions[currentQuestion].id}) {questions[currentQuestion].question}
+          {questions[currentQuestion].id}
+          {questions[currentQuestion].question}
         </h4>
         <div>
           {questions[currentQuestion].options.map((option, index) => (
-            <button key={index} onClick={() => handleOptionClick(option)}>
+            <Button key={index} onClick={() => handleOptionClick(option)}>
               {optionIds[index]}) {option}
-            </button>
+            </Button>
           ))}
         </div>
         <br/>
@@ -41,7 +48,7 @@ export default function Quiz  ({
             Question {currentQuestion + 1} of {questions.length}
           </p>
           <div>
-            {isLastq ? (
+            {lastQuestion ? (
               <button onClick={handleNextQuestion}>
                 Submit
               </button>
