@@ -48,8 +48,14 @@ export default function App () {
 
   return (
     <div>
-      <h1>GeekForGeeks</h1>
-      <h3>Quiz App</h3>
+    <header>
+    <Row>
+        <h1 className='h1'>GAME</h1
+    </Row>
+    </header>
+    <section>
+    
+    </section>
       <div>
         {!quizStarted ? (
           <div>
@@ -59,7 +65,7 @@ export default function App () {
             </button>
           </div>
         ) : currentQuestion < questions.length ? (
-          <Questions
+          <Quiz
             questions={questions}
             handleNextQuestion={handleNextQuestion}
             currentQuestion={currentQuestion}
