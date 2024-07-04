@@ -11,6 +11,7 @@ const jwt = require('jsonwebtoken');
 //Schemas
 const Quiz = require('../models/quizSchema')// Import the quizSchema model
 const User = require('../models/userSchema')// Import the quizSchema model
+const {checkJwtToken} = require('../middleware/middleware')
 
 //=======SETUP MIDDLEWARE===========
 router.use(express.json()); // Parse incoming request bodies in JSON format
@@ -43,6 +44,8 @@ const authMiddleware = (req, res, next) => {
     }
 };
 //=============ROUTES=====================
+
+
 /*
 |================================================|
 | CRUD OPERATION | HTTP VERB | EXPRESS METHOD    |
@@ -60,7 +63,7 @@ const authMiddleware = (req, res, next) => {
 //------------------GET---------------
 //=> fetch score/s
 //Route to GET a specific quiz
-router.get('/quiz/:id', async (req, res) => {
+router.get('/quiz/:id', checkJwtToken, async (req, res) => {
     try {
         const quiz = await Quiz.findById(req.params.id); // Attempt to find the quiz by its ID in the database 
             //Conditional rendering to check if a quiz is found
@@ -78,13 +81,18 @@ router.get('/quiz/:id', async (req, res) => {
     }
 });
 
-// Get all quizzes
-router.get('/findquizzes', async (req, res) => {
+// Route to fetch all the quizzes from the database
+router.get('/findQuizzes', async (req, res) => {
     try {
-        const quizzes = await Quiz.find({}); //find all quizzes in the database
+        const quizzes = await Quiz.find({}); 
         res.json(quizzes);
-            /*Send a JSON response containing an array 
-        of all quiz documents (quizzes) fetched from the database.*/
+        /*
+        const {quizName} = req.query;                
+        const query = quizName ? {quizName} : {};
+        const quizzes = await Quiz.find(query);
+        res.status(200).json(quizzes);
+        */
+            /*Send a JSON response containing an array of all quiz documents (quizzes) fetched from the database.*/
             // console.log(quizzes);
     } 
     catch (error) {
@@ -109,7 +117,7 @@ router.get('/findquizzes', async (req, res) => {
     }
 });*/
 
-//Route to add new quiz
+//Route to add new quiz to the database
 router.post('/addQuiz', async (req, res) => {
     console.log(req.body);// Log the incoming request body in the console for debugging purposes
     console.log('Add Quiz');// Log a message in the console indicating the route is being accessed for debugging purposes
