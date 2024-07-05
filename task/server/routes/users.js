@@ -74,7 +74,7 @@ router.get('/findUsers', async (req, res) => {
         const query = username ? { username } : {};// Create a MongoDB query object based on whether username is provided or not
         const users = await User.find(query);// Using the User model to find users based on the query
     
-        console.log(users);Log the fetched users to the console for debugging purposes
+        console.log(users);//Log the fetched users to the console for debugging purposes
         res.status(200).json(users);// Send a JSON response with the found users and a 200 (OK) status code
     } 
     catch (error) {
