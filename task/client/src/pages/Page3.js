@@ -65,23 +65,27 @@ which is typical when it's passed as a prop and could change due to parent compo
           'Authorization': `Bearer ${token}`// Set authorization header with the JWT token
         },
         body: JSON.stringify(// Convert the quizName and questions state to a JSON string for the request body
-          { quizName, questions }
+          {
+            quizName: newQuizName, // The new name for the quiz
+            questions: newQuestion // The updated list of questions for the quiz
+          }
         )
       });
 
       //Response handling
-      // Conditional rendering to check if the response is not okay (status code not in 200-299 range)
+      // Condtitional rendering to check if if the response indicates success (status code 200-299)
       if (!response.ok) {
-        throw new Error('There was an error creating the quiz');//Throw an error message if the POST request is unsuccessful
-      }
-
-      const quiz = await response.json();// Parse the JSON response to get the created quiz
-      //Reset the Form fields
-      setQuizList([...quizList, quiz]);// Update the quiz list state with the new quiz
+        const quiz = await response.json();// Parse the JSON response to get the created quiz
+         setQuizList([...quizList, quiz]);// Update the quiz list state with the new quiz
+         //Reset the Form fields
       setQuizName('');//Reset the quizName
       setQuestions([{ questionText: '', correctAnswer: '', options: ['', '', '', ''] }]);//Reset the questions
       setFormError('');// Clear any existing error messages
       console.log('Quiz created:', quiz);// Log the created quiz to the console for debugging purposes
+      }
+      else{
+        throw new Error('There was an error creating the quiz');//Throw an error message if the POST request is unsuccessful
+      }
 
     } catch (error) {
       console.error('There was an error creating the quiz:', error);//Log an error message in the console for debugging purposes
@@ -92,14 +96,16 @@ which is typical when it's passed as a prop and could change due to parent compo
   // ---------------PUT-----------------------
   //Function to update a quiz
   const editQuiz = async (quizId) => {//Define an async function to edit a quiz
-    if (questions.length !== 5) {
-      setFormError('You must have exactly 5 questions.');
-      return;
-    }
-
     try {
-      const token = localStorage.getItem('token');
-      //Send a PUT request to the server
+         //Conditional rendering to ensure exacly 5 questions are added
+        if (questions.length !== 5) {
+          setFormError('You must have exactly 5 questions.');
+          return;//Exit the function
+        }
+      
+      const token = localStorage.getItem('token');    // Retrieve the JWT token from local storage
+      //Request
+      //Send a PUT request to the server to edit an existing quiz
       const response = await fetch(`http://localhost:3001/quiz/editQuiz/${quizId}`, {
         method: 'PUT',//HTTP request method
         mode: 'cors',// Enable Cross-Origin Resource Sharing (CORS)
@@ -120,7 +126,12 @@ which is typical when it's passed as a prop and could change due to parent compo
         const updatedQuiz = await response.json(); // Parse the response as JSON
                /* Update the quizList state by mapping through the current list (quizList.map) and replacing 
        the quiz with matching ID (q._id === updatedQuiz._id) with the updated quiz (updatedQuiz).*/
-        setQuizList(quizList.map(q => (q._id === updatedQuiz._id ? updatedQuiz : q)));
+        setQuizList(
+          quizList.map(//create a new array by applying a given function to each element of the original array
+            q => (q._id === updatedQuiz._id  ? updatedQuiz : q))); //For each quiz object q,  checks if the _id property of q matches the _id of the updatedQuiz
+                //The conditional operator (? :) is used to choose between two values. 
+        //If the condition (q._id === updatedQuiz._id) is true, it returns updatedQuiz. Otherwise, it returns q.
+        
         // Reset form fields and state
         setQuizName('');//Clear the newQuizName input field
         setUpdateQuiz(null);// Clear the quizToUpdate state to exit edit mode
@@ -139,8 +150,8 @@ which is typical when it's passed as a prop and could change due to parent compo
 //Function to delete a quiz
   const deleteQuiz = async (quizId) => {//Define an async function to delete a quiz
     try {
-      const token = localStorage.getItem('token');//Retrieve the authentucation token from localStorage
-      //Send a DELETE request to server
+      const token = localStorage.getItem('token');//Retrieve the authentication token from localStorage
+      //Send a DELETE request to server to delete a quiz
       const response = await fetch(`http://localhost:3001/quiz/deleteQuiz/${quizId}`, {
         method: 'DELETE',//HTTP request method
         mode: 'cors',// Enable Cross-Origin Resource Sharing (CORS)
@@ -156,8 +167,8 @@ which is typical when it's passed as a prop and could change due to parent compo
               // If successful, update the quizList state by filtering out the deleted quiz
         setQuizList(quizList.filter(q => q._id !== quizId));
         /*The filter method iterates through each quiz in quizList. For each quiz q, it checks if q._id is not equal to quizId. 
-        If q._id is not equal to quizId, the quiz is included in the new array.*/
-        //setQuizList(...): Updates the state with the new array that excludes the deleted quiz.
+        If q._id is not equal to quizId, the quiz is included in the new array.
+        setQuizList(...): Updates the state with the new array that excludes the deleted quiz.*/
       } else {
         throw new Error('Error deleting quiz');//Throw an error message if the DELETE request is unsuccessful
       }
@@ -175,20 +186,19 @@ const handleChange = (index, event) => {
 
   // Conditional rendering to if the target name is 'questionText' or 'correctAnswer'
   if (event.target.name === "questionText" || event.target.name === "correctAnswer") {
-    // Update the questionText or correctAnswer of the question at the specified index
-    values[index][event.target.name] = event.target.value;
-  } else {
+    values[index][event.target.name] = event.target.value; // Update the questionText or correctAnswer of the question at the specified index
+  } 
+  else {
     // If the target name is an option (e.g., options.0, options.1, options.2)
     const optionIndex = Number(event.target.name.split('.')[1]);    // Extract the option index from the event target name
-/*The string.split() method takes a pattern and divides the string into an ordered list of substrings 
-by searching for the pattern, puts these substrings into an array, and returns the array.*/
     values[index].options[optionIndex] = event.target.value;// Update the option value in the options array of the question at the specified index
   }
 
   // Update the state (questions) with the updated values array
   setQuestions(values);
 };
-
+/*The string.split() method takes a pattern and divides the string into an ordered list of substrings 
+by searching for the pattern, puts these substrings into an array, and returns the array.*/
 
   //Function to add a new question
 const handleAddQuestion = () => {
