@@ -21,16 +21,29 @@ export default function Page3(//Export default Page3 function component
 }) {
   //=========STATE VARIABLES
   // State variables for managing quiz creation and editing
-const [quizName, setQuizName] = useState('');//State used to store the name of the new quiz
-  const [questions, setQuestions] = useState([//State used to store an array of question objects, each containing questionText, correctAnswer, and options.
-    { questionText: '', correctAnswer: '', options: ['', '', ''] }
-  ]);
+  // const [quizName, setQuizName] = useState('');//State used to store the name of the new quiz
+ 
+  //State used to store an array of question objects for a new, each containing questionText, correctAnswer, and options.
+
+  // const [questions, setQuestions] = useState([//State used to store an array of question objects, each containing questionText, correctAnswer, and options.
+  //   { questionText: '', correctAnswer: '', options: ['', '', ''] }
+  // ]);
+   //NewQuiz Variables
+  const [newQuizName, setNewQuizName] = useState('');
+  const [newQuestions, setNewQuestions] = useState([]);
+  const [newQuizIndex, setNewQuizIndex] = useState({
+    newQuestionText: '',
+    newCorrectAnswer: '',
+    newOptions: ['', '', '']
+  });
+  //Update quiz variables
   const [update, setUpdate] = useState(false);// State used to flag the toggle quiz update mode
   const [quizToUpdate, setQuizToUpdate] = useState(null);//State used to store the ID of the quiz being updated 
-  const [newQuizName, setNewQuizName] = useState('');//State used to store the new updated name of a quiz being edited
-  const [newQuestion, setNewQuestion] = useState([// Array of new questions when editing a quiz
-    { newQuestionText: '', newCorrectAnswer: '', newOptions: ['', '', ''] }
+  const [editQuizName, setEditQuizName] = useState('');//State used to store the new updated name of a quiz being edited
+  const [editQuizIndex, setQuizIndex] = useState([// Array of new questions when editing a quiz
+    { editQuestionText: '', editCorrectAnswer: '', editOptions: ['', '', ''] }
   ]);
+  //Error
   const [formError, setFormError] = useState('');//State used to store any error messages related to the form.
   
 //========================================================
@@ -55,7 +68,6 @@ which is typical when it's passed as a prop and could change due to parent compo
       // If the validation passes, proceed with adding the quiz
     try {
       const token = localStorage.getItem('token');//Retrieve the authentication token from local storage
-      /*Retrieves the authentication token from local storage for use in the request header*/
       //Send a POST request to the server
       const response = await fetch('http://localhost:3001/quiz/addQuiz', {
         method: 'POST',//HTTP request method
