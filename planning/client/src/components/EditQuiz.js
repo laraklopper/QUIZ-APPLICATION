@@ -12,12 +12,16 @@ export default function Edit({
   editQuiz,
   quiz
 }) {
+
+  //=========EVENTS====================
   const handleEditQuestion = (index, field, value) => {
     const updatedQuestions = [...newQuestion];
     updatedQuestions[index][field] = value;
     setNewQuestion(updatedQuestions);
   };
 
+  //===========JSX RENDERING===================
+  
   return (
     <Row>
       <Col>
