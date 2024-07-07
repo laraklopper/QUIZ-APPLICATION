@@ -1,10 +1,13 @@
+// Import necessary modules and packages
 import React from 'react';
+//Bootstrap
 import Row from 'react-bootstrap/Row'; 
 import Col from 'react-bootstrap/Col'; 
 import Form from 'react-bootstrap/Form'; 
 import Button from 'react-bootstrap/Button';
 
-export default function Edit({
+//EditQuiz function component
+export default function EditQuiz({
   newQuestion,
   setNewQuestion,
   newQuizName,
@@ -50,7 +53,6 @@ export default function Edit({
                   onChange={(e) => handleEditQuestion(index, 'editQuestionText', e.target.value)}
                 />
               </Form.Group>
-
               {/* Edit Options */}
               {question.editOptions.map((option, optIndex) => (
                 <Form.Group controlId={`editOption-${index}-${optIndex}`} key={optIndex}>
@@ -66,7 +68,6 @@ export default function Edit({
                   />
                 </Form.Group>
               ))}
-
               {/* Edit Correct Answer */}
               <Form.Group controlId={`editCorrectAnswer-${index}`}>
                 <Form.Label>Edit Correct Answer</Form.Label>
@@ -80,7 +81,7 @@ export default function Edit({
           ))}
 
           {/* Submit Edit */}
-          <Button variant='primary' type='submit'>
+          <Button variant='primary' type='submit' id="editButton">
             Submit Edit
           </Button>
         </Form>
