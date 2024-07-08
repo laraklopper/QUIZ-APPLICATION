@@ -91,7 +91,7 @@ which is typical when it's passed as a prop and could change due to parent compo
          setQuizList([...quizList, quiz]);// Update the quiz list state with the new quiz
          //Reset the Form fields
       setQuizName('');//Reset the quizName
-      setQuestions([{ questionText: '', correctAnswer: '', options: ['', '', '', ''] }]);//Reset the questions
+      setQuestions([{ questionText: '', correctAnswer: '', options: ['', '', ''] }]);//Reset the questions
       setFormError('');// Clear any existing error messages
       console.log('Quiz created:', quiz);// Log the created quiz to the console for debugging purposes
       }
