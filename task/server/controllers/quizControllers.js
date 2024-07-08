@@ -16,7 +16,7 @@ const Quiz = require('../models/quizSchema');
 */
 
 //==========POST=============================
-//Function to add a new quiz
+//Controller function to add a new quiz
 const createQuiz = async (req, res) => {
     console.log(req.body);
     try {
@@ -25,8 +25,8 @@ const createQuiz = async (req, res) => {
 
         const createdQuiz = await newQuiz.save();
         
-        res.status(201).json({message: 'Quiz successfully created'})
-
+        res.status(201).json({ message: 'Quiz successfully created', quiz: createdQuiz })
+        
     } 
     catch (error) {
         console.error('Error creating quiz:',error);
@@ -34,36 +34,42 @@ const createQuiz = async (req, res) => {
     }
 }
 //=============GET=====================
-//Function to get a single quiz
+//Controller function to get a single quiz
 const getQuiz = async (req, res) => {
-
     try {
-        const quiz = await Quiz.findOne();
-        res.json(quizzes)
-        console.log(quizzes);
+        const {id} = req.params;
+        const quiz = await Quiz.findOne(id);
+        if(!quiz){
+            return res.status(404).json({ error: 'Quiz not found' });
+        }
+        res.status(200).json(quiz);
+        console.log(quiz);
     } catch (error) {
-        console.error('Error finding quizzes');
-        res.status(500).json({ error: error.message })
+        console.error('Error finding quiz:', error);
+        res.status(500).json({ error: 'Error finding quiz' });
     }
 }
 
-//Function to fetch all quizzes
+//Controller function to fetch all quizzes
 const getQuizzes = async (req, res) => {
   try {
     const quizzes = await Quiz.find({});
     res.status(200).json(quizzes);
-  } catch (error) {
+      console.log(quizzes)
+  } 
+  catch (error) {
     console.error('Error fetching quizzes:', error);
     res.status(500).json({ error: 'Error fetching quizzes' });
   }
 };
 
 //============PUT==================
-//Function to edit a quiz
-exports.editQuiz = async (req, res) => {
+//Controller function to edit a quiz
+const editQuiz = async (req, res) => {
   try {
     const { id } = req.params;
     const { quizName, questions } = req.body;
+      
     const updatedQuiz = await Quiz.findByIdAndUpdate(
       id,
       { quizName, questions },
@@ -72,7 +78,9 @@ exports.editQuiz = async (req, res) => {
     if (!updatedQuiz) {
       return res.status(404).json({ error: 'Quiz not found' });
     }
+      
     res.status(200).json(updatedQuiz);
+      console.log(updatedQuiz)
   } catch (error) {
     console.error('Error updating quiz:', error);
     res.status(500).json({ error: 'Error updating quiz' });
@@ -89,10 +97,11 @@ const deleteQuiz = async (req, res) => {
       return res.status(404).json({ error: 'Quiz not found' });
     }
     res.status(200).json({ message: 'Quiz deleted successfully' });
-  } catch (error) {
+  } 
+  catch (error) {
     console.error('Error deleting quiz:', error);
     res.status(500).json({ error: 'Error deleting quiz' });
   }
 };
 
-module.exports = { createQuiz, getQuiz, getQuizzes, editQuiz,deleteQuiz}
+module.exports = { createQuiz, getQuiz, getQuizzes, editQuiz, deleteQuiz };
