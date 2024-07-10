@@ -6,15 +6,18 @@ To use a single header component that adjusts based on whether the user is logge
 Create a single header component that takes `loggedIn` and `heading` as props and adjusts the navigation links accordingly.
 
 ```jsx
-// Header.jsx
+//Header.js
 import React from 'react';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { Link } from 'react-router-dom';
 
+//Header function component
 export default function Header({ loggedIn, heading }) {
+
+//================================================
   return (
-    <header className='header'>
+    <header className='header'>{/*Header*/}
       <Row className='headingRow'>
         <Col className='headingCol'>
           <h1 className='h1'>{heading}</h1>
