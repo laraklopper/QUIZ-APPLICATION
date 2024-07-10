@@ -1,6 +1,6 @@
 // Import necessary modules and packages
 import React from 'react';// Import the React module to use React functionalities
-import '../CSS/Page3.css'
+import '../CSS/Page3.css'//CSS styling sheet
 //Bootstrap
 import Row from 'react-bootstrap/Row'; // Import the Row component from react-bootstrap
 import Col from 'react-bootstrap/Col'; // Import the Col component from react-bootstrap
@@ -8,174 +8,136 @@ import Button from 'react-bootstrap/Button'; // Import the Button component from
 
 // AddQuiz function component
 export default function AddQuiz(
-  {//PROPS PASSED FROM PARENT COMPONENT 
-  addNewQuiz, 
-  setQuizName, 
-  quizName, 
-  handleAddQuestion,
+  {//PROPS PASSED FROM PARENT COMPONENT
+  addNewQuiz,
+  newQuizName,
+  setNewQuizName,
   formError,
-  handleChange,
-  questions,
-  nextQuestion
-}
-) {
+  newQuestions,
+  setNewQuestions
+}) {
 
-  //=============JSX RENDERING=============
-  
+  //======EVENT LISTENERS==========
+  // Function to add a new question
+  const handleAddQuestion = () => {
+    if (newQuestions.length >= 5) {
+      setFormError('You cannot add more than 5 questions.');
+      return;
+    }
+    setNewQuestions([
+      ...newQuestions,
+      { questionText: '', correctAnswer: '', options: ['', '', ''] }
+    ]);
+  };
+
+  const handleQuestionChange = (index, field, value) => {
+    const updatedQuestions = [...newQuestions];
+    updatedQuestions[index][field] = value;
+    setNewQuestions(updatedQuestions);
+  };
+
+  const handleOptionChange = (qIndex, optIndex, value) => {
+    const updatedQuestions = [...newQuestions];
+    updatedQuestions[qIndex].options[optIndex] = value;
+    setNewQuestions(updatedQuestions);
+  };
+
+  //===============JSX RENDERING=========================
   return (
     <div id='addQuiz'>
-      <Row>
-        <h2 className='h2'>ADD QUIZ</h2>
-      </Row>
-      {/* Form to add newQuiz */}
+    {/* Form to add a newQuiz */}
       <form onSubmit={addNewQuiz} id='newQuizForm'>
         <Row className='quizFormRow'>
-          <Col xs={6} className='quizFormCol'>
-          {/* Quiz Name Input */}
-            <label className='addQuizLabel'>
+          <Col xs={12} md={8} className='quizFormCol'>
+            <label className='addQuizLabel' htmlFor='quizName'>
               <p className='labelText'>QUIZ NAME:</p>
               <input
                 className='quizInput'
                 type='text'
-                value={quizName}
-                onChange={(e) => setQuizName(e.target.value)}
+                name='quizName'
+                value={newQuizName}
+                onChange={(e) => setNewQuizName(e.target.value)}
                 autoComplete='off'
                 placeholder='Quiz Name'
+                id='quizName'
                 required
               />
             </label>
           </Col>
         </Row>
-        {/* Card to add a new question */}
-        {questions.map((question, index) => (
-          <div key={index} id='questionsInput' >
-            <Row className='quizFormRow'>
-              <Col xs={6} className='quizFormCol'>
-              {/* Question Input */}
+        <div>
+          <Row>
+            <Col>
+              <h3 className='h3'>ADD QUESTIONS</h3>
+            </Col>
+          </Row>
+          {newQuestions.map((question, index) => (
+            <Row className='quizFormRow' key={index}>
+              <Col xs={12} md={8} className='quizFormCol'>
                 <label className='addQuizLabel'>
                   <p className='labelText'>QUESTION:</p>
                   <input
-                    className='quizInput'
                     type='text'
+                    className='quizInput'
                     name='questionText'
                     value={question.questionText}
-                    onChange={(e) => handleChange(index, e)}
+                    onChange={(e) => handleQuestionChange(index, 'questionText', e.target.value)}
                     autoComplete='off'
-                    placeholder='QUESTION'
                     required
+                    placeholder='QUESTION'
                   />
                 </label>
               </Col>
-              <Col xs={6} className='quizFormCol'>
-                <label className='addQuizLabel'>
-                  {/* Alternative question input */}
-                  <p className='labelText'>1. ALTERNATIVE ANSWER:</p>
-                  <input
-                    className='quizInput'
-                    type='text'
-                    name='options.0'
-                    placeholder='OPTION 1'
-                    value={question.options[0]}
-                    autoComplete='off'
-                    onChange={(e) => handleChange(index, e)}
-                  />
-                </label>
-              </Col>
-            </Row>
-            <Row className='quizFormRow'>
-              <Col xs={6}>
-              {/* Correct answer input */}
+              <Col xs={12} md={8} className='quizFormCol'>
                 <label className='addQuizLabel'>
                   <p className='labelText'>CORRECT ANSWER:</p>
                   <input
-                    className='quizInput'
                     type='text'
+                    className='quizInput'
                     name='correctAnswer'
                     value={question.correctAnswer}
-                    onChange={(e) => handleChange(index, e)}
+                    onChange={(e) => handleQuestionChange(index, 'correctAnswer', e.target.value)}
                     autoComplete='off'
+                    required
                     placeholder='CORRECT ANSWER'
                   />
                 </label>
               </Col>
-              <Col xs={6} className='quizFormCol'>
-              {/* Alternative answer Input */}
-                <label className='addQuizLabel'>
-                  <p className='labelText'>2. ALTERNATIVE ANSWER:</p>
-                  <input
-                    className='quizInput'
-                    type='text'
-                    name='options.1'
-                    value={question.options[1]}
-                    onChange={(e) => handleChange(index, e)}
-                    placeholder='OPTION 2'
-                    autoComplete='off'
-                    required
-                  />
-                </label>
-              </Col>
+              {question.options.map((option, optIndex) => (
+                <Col xs={12} md={8} className='quizFormCol' key={optIndex}>
+                  <label className='addQuizLabel'>
+                    <p className='labelText'>{`${optIndex + 1}) ALTERNATIVE ANSWER:`}</p>
+                    <input
+                      type='text'
+                      className='quizInput'
+                      name={`option${optIndex}`}
+                      value={option}
+                      onChange={(e) => handleOptionChange(index, optIndex, e.target.value)}
+                      autoComplete='off'
+                      required
+                      placeholder={`ALTERNATIVE ANSWER ${optIndex + 1}`}
+                    />
+                  </label>
+                </Col>
+              ))}
             </Row>
-            <Row className='quizFormRow'>
-              <Col xs={6}></Col>
-              <Col xs={6} className='quizFormCol'>
-              {/* Alternative answer Input */}
-                <label className='addQuizLabel'>
-                  <p className='labelText'>3. ALTERNATIVE ANSWER:</p>
-                  <input
-                    className='quizInput'
-                    type='text'
-                    name='options.2'
-                    value={question.options[2]}
-                    onChange={(e) => handleChange(index, e)}
-                    autoComplete='off'
-                    placeholder='OPTION 3'
-                    required
-                  />
-                </label>
-              </Col>
-            </Row>
-          </div>
-        ))}
-        {formError && (
-          <Row>
-            <Col>
-              <p className='error'>{formError}</p>
-            </Col>
-          </Row>
-        )}
-        <Row className='quizFormRow'>
-          <Col xs={6} md={8} className='quizFormCol'>
-          </Col>
-          <Col xs={6} md={4} className='quizFormCol'>
-            <Button variant='primary' type="button" onClick={nextQuestion}>
-              NEXT
-            </Button>
-            <Button 
-            variant='primary' 
-            type="button" 
+          ))}
+          <Button
+            variant='primary'
+            type='button'
             onClick={handleAddQuestion}
-            >
-              Add Question
-            </Button>
-          </Col>
-        </Row>      
-        <Row>
-          <Col xs={6} md={8}>
-            <ul id='quizQuestionRules'>
-              <li>
-                <p className='labelText'>TOTAL OF 5 QUESTIONS ARE REQUIRED</p>
-              </li>
-              <li>
-                <p className='labelText'>QUIZ NAME MUST BE RELATED TO QUESTION TYPES</p>
-              </li>
-            </ul>
-          </Col>
-          <Col xs={6} md={4}>
-            <Button variant="primary" type="submit" id='addQuizBtn'>
-              ADD QUIZ
-            </Button>
-          </Col>
-        </Row>
+          >
+            ADD QUESTION
+          </Button>
+        </div>
+        {formError && <p className='error'>{formError}</p>}
+        <Button
+          variant='primary'
+          type='submit'
+          disabled={newQuestions.length !== 5}
+        >
+          ADD QUIZ
+        </Button>
       </form>
     </div>
   );
