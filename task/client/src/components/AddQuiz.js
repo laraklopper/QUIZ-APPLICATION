@@ -1,12 +1,12 @@
 // Import necessary modules and packages
-import React from 'react';
+import React from 'react';// Import necessary modules and packages
 //Bootstrap
 import Row from 'react-bootstrap/Row'; 
 import Col from 'react-bootstrap/Col'; 
 import Button from 'react-bootstrap/Button'; 
 
 // AddQuiz function component
-export default function AddQuiz(
+export default function AddQuiz(//Export default AddQuiz function component
   {//PROPS PASSED FROM PARENT COMPONENT
   addNewQuiz,
   newQuizName,
@@ -19,10 +19,13 @@ export default function AddQuiz(
   //======EVENT LISTENERS==========
   // Function to add a new question
   const handleAddQuestion = () => {
+    // Conditional rendering to check if the number of questions is already 5
     if (newQuestions.length >= 5) {
+      // Set an error message if there are already 5 questions
       setFormError('You cannot add more than 5 questions.');
       return;
     }
+    // Add a new question with default values
     setNewQuestions([
       ...newQuestions,
       { questionText: '', correctAnswer: '', options: ['', '', ''] }
@@ -32,16 +35,18 @@ export default function AddQuiz(
   /* Function to handle changes in the question 
   text or correct answer*/
   const handleQuestionChange = (index, field, value) => {
-    const updatedQuestions = [...newQuestions];
+    const updatedQuestions = [...newQuestions];// Copy the existing questions
+    // Update the specified field of the question at the given index
     updatedQuestions[index][field] = value;
-    setNewQuestions(updatedQuestions);
+    setNewQuestions(updatedQuestions);// Update the state with the new questions array
   };
 
   // Function to handle changes in the alternative answers
   const handleOptionChange = (qIndex, optIndex, value) => {
-    const updatedQuestions = [...newQuestions];
+    const updatedQuestions = [...newQuestions];// Copy the existing questions
+    // Update the specified field of the question at the given index
     updatedQuestions[qIndex].options[optIndex] = value;
-    setNewQuestions(updatedQuestions);
+    setNewQuestions(updatedQuestions);// Update the state with the new questions array
   };
 
   //===============JSX RENDERING=========================
@@ -74,7 +79,7 @@ export default function AddQuiz(
               <h3 className='h3'>ADD QUESTIONS</h3>
             </Col>
           </Row>
-          {newQuestions.map((question, index) => (
+          {newQuestions.map((question, index) => (// Iterate over the list of questions
             <Row className='quizFormRow' key={index}>
               <Col xs={12} md={8} className='quizFormCol'>
                 <label className='addQuizLabel'>
@@ -83,7 +88,7 @@ export default function AddQuiz(
                     type='text'
                     className='quizInput'
                     name='questionText'
-                    value={question.questionText}
+                    value={question.questionText}// Bind the input value to the question's text
                     onChange={(e) => handleQuestionChange(
                       index, 'questionText', e.target.value)}
                     autoComplete='off'
