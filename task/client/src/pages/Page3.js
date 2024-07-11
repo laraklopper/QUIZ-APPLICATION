@@ -25,12 +25,12 @@ export default function Page3(
   logout
 }) {
   // ========STATE VARIABLES===============
-  const [newQuizName, setNewQuizName] = useState('');
-  const [newQuestions, setNewQuestions] = useState([]);
-  const [update, setUpdate] = useState(false);
-  const [quizToUpdate, setQuizToUpdate] = useState(null);
-  const [editQuizIndex, setEditQuizIndex] = useState(
-    [{ questionText: '', correctAnswer: '', options: ['', '', ''] }]);
+  const [newQuizName, setNewQuizName] = useState('');//State used for quiz being created
+  const [newQuestions, setNewQuestions] = useState([]);//State used to store the list of newQuestions being added to the quiz
+  const [update, setUpdate] = useState(false);//State to toggle between update and non-update mode.
+  const [quizToUpdate, setQuizToUpdate] = useState(null);//State to store the ID of the quiz being updated.
+  const [editQuizIndex, setEditQuizIndex] = useState(// State to store the questions for the quiz being edited.
+    [{ questionText: '', correctAnswer: '', options: ['', '', ''] }]);//State used to store any form error messages
   const [formError, setFormError] = useState('');
 
   //========================================================
@@ -51,11 +51,12 @@ export default function Page3(
     }
 
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token');//Retrieve the authentication token from local storage
       //Send a POST request to the server to add a new quiz
       const response = await fetch('http://localhost:3001/quiz/addQuiz', {
         method: 'POST',
-        mode: 'cors',
+        mode: 'cors',// Enable Cross-Origin Resource Sharing
+
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
@@ -63,6 +64,7 @@ export default function Page3(
         body: JSON.stringify({ quizName: newQuizName, questions: newQuestions })
       });
 
+      //Response handling
       if (response.ok) {
         const createdQuiz = await response.json();
         setQuizList([...quizList, createdQuiz]);
