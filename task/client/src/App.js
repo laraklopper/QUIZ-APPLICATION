@@ -18,7 +18,7 @@ export default function App() {//Export default App function component
   //=======STATE VARIABLES===============
   //User variables
   const [users, setUsers] = useState([]);// State to store fetched users
-  const [currentUser, setCurrentUser] = useState(null);// State to store current user
+  const [currentUser, setCurrentUser] = useState(null);// State to store current logged in user
   const [userData, setUserData] = useState({// State to manage user login data
     username: '',
     email: '',
@@ -35,7 +35,10 @@ export default function App() {//Export default App function component
   });
   //Quiz variables
   const [quizList, setQuizList] = useState([]); // State to store fetched quizzes
-    // const [quiz, setQuiz] = useState(null)
+  const [quizName, setQuizName] = useState('');//State to store the quizName
+  const [questions, setQuestions] = useState([
+    { questionText: '', correctAnswer: '', options: ['', '', '',' '] }
+  ]);
   //Event variables
   const [error, setError] = useState(null);// State to manage error messages
   //State variables to manage user Login
