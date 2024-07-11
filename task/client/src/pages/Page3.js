@@ -29,7 +29,8 @@ export default function Page3(
   const [newQuestions, setNewQuestions] = useState([]);
   const [update, setUpdate] = useState(false);
   const [quizToUpdate, setQuizToUpdate] = useState(null);
-  const [editQuizIndex, setEditQuizIndex] = useState([{ questionText: '', correctAnswer: '', options: ['', '', ''] }]);
+  const [editQuizIndex, setEditQuizIndex] = useState(
+    [{ questionText: '', correctAnswer: '', options: ['', '', ''] }]);
   const [formError, setFormError] = useState('');
 
   //========================================================
