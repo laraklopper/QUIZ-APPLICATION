@@ -52,6 +52,7 @@ export default function Page3(
 
     try {
       const token = localStorage.getItem('token');
+      //Send a POST request to the server to add a new quiz
       const response = await fetch('http://localhost:3001/quiz/addQuiz', {
         method: 'POST',
         mode: 'cors',
@@ -86,6 +87,7 @@ export default function Page3(
     }
     try {
       const token = localStorage.getItem('token');
+      //Send a PUT request to the server to edit a quiz
       const response = await fetch(`http://localhost:3001/quiz/editQuiz/${quizId}`, {
         method: 'PUT',
         mode: 'cors',
@@ -101,10 +103,13 @@ export default function Page3(
         setQuizList(quizList.map(q => (q._id === updatedQuiz._id ? updatedQuiz : q)));
         setEditQuizIndex([{ questionText: '', correctAnswer: '', options: ['', '', ''] }]);
         setQuizToUpdate(null);
-      } else {
+      } 
+      else {
         throw new Error('Error editing quiz');
       }
-    } catch (error) {
+    } 
+    catch (error) {
+      console.error(`Error editing the quiz: ${error}`);
       setError(`Error editing the quiz: ${error}`);
     }
   };
@@ -114,7 +119,7 @@ export default function Page3(
   const deleteQuiz = async (quizId) => {
     try {
       const token = localStorage.getItem('token');
-      //Send a DELETE request to server
+      //Send a DELETE request to server to delete a quiz
       const response = await fetch(`http://localhost:3001/quiz/deleteQuiz/${quizId}`, {
         method: 'DELETE',
         mode: 'cors',
