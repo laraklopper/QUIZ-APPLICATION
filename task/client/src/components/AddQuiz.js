@@ -1,10 +1,9 @@
 // Import necessary modules and packages
-import React from 'react';// Import the React module to use React functionalities
-import '../CSS/Page3.css'//CSS styling sheet
+import React from 'react';
 //Bootstrap
-import Row from 'react-bootstrap/Row'; // Import the Row component from react-bootstrap
-import Col from 'react-bootstrap/Col'; // Import the Col component from react-bootstrap
-import Button from 'react-bootstrap/Button'; // Import the Button component from react-bootstrap
+import Row from 'react-bootstrap/Row'; 
+import Col from 'react-bootstrap/Col'; 
+import Button from 'react-bootstrap/Button'; 
 
 // AddQuiz function component
 export default function AddQuiz(
@@ -30,12 +29,15 @@ export default function AddQuiz(
     ]);
   };
 
+  /* Function to handle changes in the question 
+  text or correct answer*/
   const handleQuestionChange = (index, field, value) => {
     const updatedQuestions = [...newQuestions];
     updatedQuestions[index][field] = value;
     setNewQuestions(updatedQuestions);
   };
 
+  // Function to handle changes in the alternative answers
   const handleOptionChange = (qIndex, optIndex, value) => {
     const updatedQuestions = [...newQuestions];
     updatedQuestions[qIndex].options[optIndex] = value;
@@ -43,6 +45,7 @@ export default function AddQuiz(
   };
 
   //===============JSX RENDERING=========================
+  
   return (
     <div id='addQuiz'>
     {/* Form to add a newQuiz */}
@@ -81,7 +84,8 @@ export default function AddQuiz(
                     className='quizInput'
                     name='questionText'
                     value={question.questionText}
-                    onChange={(e) => handleQuestionChange(index, 'questionText', e.target.value)}
+                    onChange={(e) => handleQuestionChange(
+                      index, 'questionText', e.target.value)}
                     autoComplete='off'
                     required
                     placeholder='QUESTION'
@@ -96,7 +100,8 @@ export default function AddQuiz(
                     className='quizInput'
                     name='correctAnswer'
                     value={question.correctAnswer}
-                    onChange={(e) => handleQuestionChange(index, 'correctAnswer', e.target.value)}
+                    onChange={(e) => handleQuestionChange(
+                      index, 'correctAnswer', e.target.value)}
                     autoComplete='off'
                     required
                     placeholder='CORRECT ANSWER'
@@ -106,13 +111,16 @@ export default function AddQuiz(
               {question.options.map((option, optIndex) => (
                 <Col xs={12} md={8} className='quizFormCol' key={optIndex}>
                   <label className='addQuizLabel'>
-                    <p className='labelText'>{`${optIndex + 1}) ALTERNATIVE ANSWER:`}</p>
+                    <p className='labelText'>
+                        {`${optIndex + 1}) ALTERNATIVE ANSWER:`}
+                    </p>
                     <input
                       type='text'
                       className='quizInput'
                       name={`option${optIndex}`}
                       value={option}
-                      onChange={(e) => handleOptionChange(index, optIndex, e.target.value)}
+                      onChange={(e) => handleOptionChange(
+                        index, optIndex, e.target.value)}
                       autoComplete='off'
                       required
                       placeholder={`ALTERNATIVE ANSWER ${optIndex + 1}`}
@@ -125,12 +133,13 @@ export default function AddQuiz(
           <Button
             variant='primary'
             type='button'
-            onClick={handleAddQuestion}
-          >
-            ADD QUESTION
+            onClick={handleAddQuestion}>
+                ADD QUESTION
           </Button>
         </div>
-        {formError && <p className='error'>{formError}</p>}
+        {formError && <p className='error'>
+            {formError}
+          </p>}
         <Button
           variant='primary'
           type='submit'
