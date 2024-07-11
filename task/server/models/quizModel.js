@@ -1,6 +1,12 @@
 // quizSchema.js
 const mongoose = require('mongoose');
 
+let quizSchema = new mongoose.Schema({
+  quizName: {
+    type: String,
+    
+  }
+})
 const optionSchema = new mongoose.Schema({
   text: { type: String, required: true },
   isCorrect: { type: Boolean, default: false }
