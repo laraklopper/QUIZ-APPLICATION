@@ -68,7 +68,12 @@ const quizSchema = new mongoose.Schema({
         ],
         required: true,
         validate: [arrayLimit5, '{PATH} must have exactly 5 questions']
-    }
+    }/*,
+     user: {
+         type: mongoose.Schema.Types.ObjectId,
+         ref: 'users',
+         required: true
+    }*/
 }, { timestamps: true });
 
 function arrayLimit(val) {
