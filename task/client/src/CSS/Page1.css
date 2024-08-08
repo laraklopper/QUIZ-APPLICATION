@@ -1,0 +1,74 @@
+/* PAGE1 */
+#page1Section1{
+    margin: 0px;
+    padding: 5px;
+     background-color: #0095C7;
+}
+/* Welcome message */
+#welcome{
+        margin: 0px;
+            padding: 10px;
+            display: block;
+}
+.welcomeRow{
+    margin: 0px;
+    display: flex;
+    padding: 10px;
+}
+
+#welcomeMsg{
+    text-align: left;
+    margin: 0px;
+    padding: 0px;
+    display: flex;
+}
+#welcomeLabel{
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    margin: 5px;
+}
+#welcomeHeading{
+    font-weight: 800;
+    margin-right: 10px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-left: 0px;
+}
+#username{
+    font-weight: 800;
+    margin-right: 10px;
+        margin-top: 0px;
+        margin-bottom: 0px;
+        margin-left: 0px;
+        text-transform: uppercase;
+
+}
+/* Instructions */
+#instructionsHeading{
+    font-weight: 700;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    font-size: 28px;
+}
+#instructions{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 0px;
+    padding: 10px;
+    border: black;
+        border-style: solid;
+            background-color: #0086b3;
+}
+#instructText{
+font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+font-weight: 500;
+}
+.pageFooter {
+    background-color: #0095C7;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 0px;
+    margin-right: 0px;
+}
