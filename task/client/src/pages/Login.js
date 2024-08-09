@@ -22,7 +22,7 @@ export default function Login(
       //=============REQUESTS==================
       //-------------POST------------------------------
       //Function to submitLogin
-  const submitLogin = async () => {
+  const submitLogin = async () => {//
     try {
       //Send a POST request to the server
       const response = await fetch('http://localhost:3001/users/login', {
