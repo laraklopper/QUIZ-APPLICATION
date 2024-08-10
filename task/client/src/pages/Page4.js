@@ -1,18 +1,18 @@
 // Import necessary modules and packages
-import React, { useState } from 'react';
-import '../CSS/Page4.css'
+import React, { useState } from 'react';// Import the React module to use React functionalities
+import '../CSS/Page4.css'//Import CSS stylesheet
 //Bootstrap
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Button from 'react-bootstrap/Button';
+import Row from 'react-bootstrap/Row'; // Import the Row component from react-bootstrap
+import Col from 'react-bootstrap/Col'; // Import the Col component from react-bootstrap
+import Button from 'react-bootstrap/Button'; // Import the Button component from react-bootstrap
 //Components
-import Header from '../components/Header';
-import EditUser from '../components/EditUser';
-import Footer from '../components/Footer';
-import UserViewBtn from '../components/UserViewBtn';
+import Header from '../components/Header';//Import Header function component
+import EditUser from '../components/EditUser';//Import EditUser function component
+import Footer from '../components/Footer';//Import Footer function component
+import UserViewBtn from '../components/UserViewBtn';//Import UserViewBtn function component
 
 //Page 4 function component
-export default function Page4(
+export default function Page4(//Export default Page4 function component
   {//PROPS PASSED FROM PARENT COMPONENT
     logout, 
     currentUser, 
@@ -230,11 +230,11 @@ const toggleViewUsers = () => {
           </div>
         )}
       </section>
+        {/*section2*/}
       <section className='section2'>
         <div>
-          {/* Display all USERS  */}
+          {/* Display all USERS if user is an admin user */}
           {!viewUsers ? (
-
             <Row>
               {/* Button to display all users */}
               <UserViewBtn toggleViewUsers={toggleViewUsers}/>
