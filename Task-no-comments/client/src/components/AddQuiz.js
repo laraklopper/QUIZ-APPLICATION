@@ -5,7 +5,6 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 
-
 //Add quiz function component
 export default function AddQuiz(
   {//PROPS PASSED FROM PARENT COMPONENT
@@ -16,10 +15,8 @@ export default function AddQuiz(
   addNewQuiz,
   currentQuestion,
   setCurrentQuestion,
-  // userData,
 }) {
   //===========STATE VARIABLES====================
-  // State to manage the error message displayed to the user
   const [errorMessage, setErrorMessage] = useState('');
 
   //============EVENT LISTENERS=========================
@@ -28,11 +25,11 @@ export default function AddQuiz(
     if (questions.length >= 5) {
       alert('You must add up to 5 questions.'); 
       console.log('You must add up to 5 questions.');
-      return;// Exit the function to prevent adding more questions
+      return;
     }
     if (!currentQuestion.questionText || !currentQuestion.correctAnswer || currentQuestion.options.some(opt => !opt)) {
       setErrorMessage('Please fill in all fields before adding a question.');
-      return;// Exit the function to prevent adding incomplete questions
+      return;
     }
     setQuestions([...questions, currentQuestion]);
     setCurrentQuestion(  
@@ -41,16 +38,15 @@ export default function AddQuiz(
 
   // Function to delete a question
   const deleteNewQuestion =(index) => {
-    // Create a new array excluding the question at the specified index
     const newQuestions = questions.filter((_, i) => i !== index); 
-    setQuestions(newQuestions)// Update the state with the new array of questions
+    setQuestions(newQuestions)
   }
 
   // Function to handle form submission
   const handleAddNewQuiz = () => {
     if (!quizName || questions.length === 0) {
       setErrorMessage('Please enter a quiz name and add at least one question.');
-      return;// Exit the function to prevent further execution
+      return;
     }
     // Call the addNewQuiz function passed as a prop
     addNewQuiz();
@@ -126,12 +122,10 @@ export default function AddQuiz(
                   value={currentQuestion.correctAnswer} 
                   /* Handle the change event to update the state 
                   when the input value changes*/
-                onChange={(e) => setCurrentQuestion(
-                  {
+                onChange={(e) => setCurrentQuestion({
                     ...currentQuestion, 
                     correctAnswer: e.target.value
-                  }
-                  )}
+                  })}
                   autoComplete='off'
                   placeholder='CORRECT ANSWER' 
                   required
@@ -155,14 +149,10 @@ export default function AddQuiz(
                   name='options[0]'
                   value={currentQuestion.options[0]}
                   onChange={(e) => {
-                    const options = [
-                      ...currentQuestion.options
-                    ]
+                    const options = [...currentQuestion.options]
                     options[0] = e.target.value;
-                      setCurrentQuestion({
-                          ...currentQuestion,
-                          options
-                        }
+                      setCurrentQuestion(
+                        {...currentQuestion, options}
                       )}}
                   autoComplete='off'
                   placeholder='ALTENATIVE ANSWER 1'
@@ -183,9 +173,7 @@ export default function AddQuiz(
                   type='text'
                   value={currentQuestion.options[1]}
             onChange={(e) => {
-              const options = [
-                ...currentQuestion.options
-              ]
+              const options = [...currentQuestion.options]
               options[1] = e.target.value;
               setCurrentQuestion(
                 {
@@ -216,8 +204,7 @@ export default function AddQuiz(
             onChange={(e) => {
                 const options = [...currentQuestion.options]
                 options[2] = e.target.value;
-                setCurrentQuestion(
-                    {
+                setCurrentQuestion({
                       ...currentQuestion, 
                       options 
                     })
