@@ -23,89 +23,113 @@ export default function Page4(
    }
   ) {
   //===========STATE VARIABLES===============
-  const [editUserData, setEditUserData] = useState({
-    editUsername: '',
-    editUserEmail: ''
-  });
-  const [updateUser, setUpdateUser] = useState(null);
-  const [viewUsers, setViewUsers] = useState(false);
-
+// State to store and manage the input data for editing a user
+const [editUserData, setEditUserData] = useState({
+  editUsername: '', // Initial value for the username input field
+  editUserEmail: '' // Initial value for the email input field
+});
+const [updateUser, setUpdateUser] = useState(null); // State to track which user's details are being updated
+const [viewUsers, setViewUsers] = useState(false); // Boolean to toggle the visibility of the users list
   //---------------------------------------
 
-  //Function to specify the date format
-  const dateDisplay = (dateString) => {
-    const options = {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
-    };
-    return new Date(dateString).toLocaleDateString('en-GB', options);
-  }
+  // Function to specify the date format
+const dateDisplay = (dateString) => {
+  // Define the options for formatting the date
+  const options = {
+    day: '2-digit',   // Display the day with two digits (e.g., 05)
+    month: '2-digit', // Display the month with two digits (e.g., 09)
+    year: 'numeric'   // Display the full year (e.g., 2024)
+  };
+  /* Convert the date string into a Date object and format it according 
+  to the 'en-GB' locale (UK format: DD/MM/YYYY)*/
+  return new Date(dateString).toLocaleDateString('en-GB', options);
+};
+
   //======REQUESTS===============
   //--------PUT---------------
-  //Function to edit a user 
-  const editUser = async (userId) => {
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        throw new Error('No token available');
-      }
-      const response = await fetch(`http://localhost:3001/users/editAccount/${userId}`, {
-        method: 'PUT',
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          username: editUserData.editUsername,
-          email: editUserData.editUserEmail,
-        })
-      });
-      if (!response.ok) {
-        throw new Error('Failed to update user account');
-      }
-      const updatedAccount = await response.json();
+  // Function to edit a user
+const editUser = async (userId) => {//Define an async function to edit user data
+  try {
+    
+    const token = localStorage.getItem('token');// Retrieve the authentication token from local storage
+    //Conditional rendering to check if the token is present
+    if (!token) {
+      throw new Error('No token available');// If there is no token, throw an error
 
-      setUsers((prevUsers) =>
-        prevUsers.map((user) => user._id === userId ? updatedAccount : user)
-      );
-
-      setEditUserData({ editUsername: '', editUserEmail: '' });
-      setUpdateUser(null);
-      setLoggedIn(true);
-
-      console.log('User account successfully updated');
-    } catch (error) {
-      console.error(`Error updating user account: ${error.message}`);
-      setError(`Error updating user account: ${error.message}`);
     }
-  };
+
+    // Send a PUT request to the server to update the user account
+    const response = await fetch(`http://localhost:3001/users/editAccount/${userId}`, {
+      method: 'PUT', // HTTP request method 
+      mode: 'cors',  // Enable CORS for Cross-Origin Resource Sharing mode
+      headers: {
+        'Content-Type': 'application/json', // Specify the Content-Type being sent in the request payload
+        'Authorization': `Bearer ${token}`, // Pass the JWT token in Authorization header
+      },
+      body: JSON.stringify({// Convert data to JSON string and include it in the request body
+        username: editUserData.editUsername, // Include the updated username in the request body
+        email: editUserData.editUserEmail,   // Include the updated email in the request body
+      })
+    });
+
+    // Conditional rendering to check if the response is not OK (status code outside the range 200-299)
+    if (!response.ok) {
+      throw new Error('Failed to update user account');//Throw an error message if the PUT request is unsuccessful
+    }
+   
+    const updatedAccount = await response.json();// Parse the JSON response to get the updated user account data
+    setUsers((prevUsers) =>// Update the state with the new user data, replacing the old user data
+    prevUsers.map((user) => 
+    /* If the current user's ID matches the ID of the user being updated,
+    replace that user with the updated account information. Otherwise, 
+    return the user unchanged.*/
+    user._id === userId ? updatedAccount : user
+  )
+);
+
+
+    // Reset the edit form fields and clear the updateUser state
+    setEditUserData({ editUsername: '', editUserEmail: '' });
+    setUpdateUser(null);
+
+    
+    setLoggedIn(true);// Ensure the user is still logged in after the update
+    console.log('User account successfully updated'); // Log a success message in the console for debugging purposes
+  } 
+  catch (error) {
+    // Handle any errors that occur during the update process
+    console.error(`Error updating user account: ${error.message}`);//Log an error message in the console for debugging purpose
+    setError(`Error updating user account: ${error.message}`);//Set the error state with an error message
+  }
+};
+
+  
 
   //-----------DELETE----------------------
   //Function to remove a user
   const deleteUser = async (userId) => {
     try {
-      //Send delete request to server
+// Send a DELETE request to the server to remove the user with the specified ID
       const response = await fetch(`http://localhost:3001/users/deleteUser/${userId}`, {
-        method: 'DELETE',
-        mode: 'cors',
+        method: 'DELETE',//HTTP request method
+        mode: 'cors',// Enable CORS for Cross-Origin Resource Sharing mode
         headers: {
-          'Content-type': 'application/json',
+          'Content-type': 'application/json',// Specify the Content-Type being sent in the request payload 
         },
       });
-
+    // Conditional rendering to check if the response indicates success (status code 200-299)
       if (!response.ok) {
-        throw new Error('Failed to remove user');
+        throw new Error('Failed to remove user');//Throw a error message if the DELETE request is unsuccessful
       }
-      setUsers((prevUsers) =>
-        prevUsers.filter((user) => user._id !== userId)
-      );
-      console.log('User Successfully removed');
+       // Update the state by filtering out the deleted user
+    setUsers((prevUsers) =>
+      prevUsers.filter((user) => user._id !== userId) // Return a new array excluding the user with the given ID
+    );
+      console.log('User Successfully removed');//Log a message in the console for debugging purposes
     }
     catch (error) {
-      setError('Error removing user', error);
-      console.error('Error removing user:', error.message);
+      setError('Error removing user', error);//Set the error state with an error message
+      console.error('Error removing user:', error.message);//Log an error message in the console for debugging purposes
     }
   };
 
@@ -119,28 +143,41 @@ export default function Page4(
     }));
   };
 
+  // Function to handle input changes in the update form
+const handleInputChange = (event) => {
+  // Extract the name and value from the event's target (the input field)
+  const { name, value } = event.target;
+    // Update the state for editUserData to reflect the changes in the form fields
+  setEditUserData((prevData) => ({
+    ...prevData,       // Spread the previous data to retain other unchanged fields
+    [name]: value,    // Update the specific field (e.g., editUsername or editUserEmail) with the new value
+  }));
+};
   //Function to toggle the update form
-  const updateAccount = (userId) => {
-    setUpdateUser(userId === updateUser ? null : userId);
-  };
+const updateAccount = (userId) => {
+  // If the current userId matches the updateUser state, set it to null (hide the form)
+  // Otherwise, set it to the current userId (show the form for this user)
+  setUpdateUser(userId === updateUser ? null : userId);
+};
 
   /* Function to toggle the display of the users list if 
-  the current user is an admin user*/
-  const toggleViewUsers = () => {
-    if (currentUser.admin) {
-      setViewUsers(!viewUsers);
-    }
-    else{
-      console.log('Unauthorized');
-      alert('Unauthorized')
-    }
-  };
+   the current user is an admin user */
+const toggleViewUsers = () => {
+  // Conditional rendering to check if the current user has admin privileges
+  if (currentUser.admin) {
+    setViewUsers(!viewUsers);// Toggle the visibility of the users list
+  } else {
+    console.log('Unauthorized');//Log an error message in the console for debugging purposes    
+    alert('Unauthorized');//Display an alert if the user is not an admin
+  }
+};
   //=======JSX RENDERING==================
 
   return (
     <>
     {/* Header */}
       <Header heading='USER ACCOUNT' />
+    {/*Section1*/}
       <section className="page4Section1">
         {/* Current User output */}
         {currentUser && (
@@ -148,24 +185,24 @@ export default function Page4(
             <Row className='userOutputRow'>
               <Col xs={6} md={4} className='userOutputCol'>
               {/* Current user username */}
-                <label>USERNAME:</label>
+                <label className='userDataLabel'>USERNAME:</label>
                 <p className='outputText'>{currentUser.username}</p>
               </Col>
               <Col xs={6} md={4} className='userOutputCol'>
               {/* Current user email */}
-                <label>EMAIL:</label>
+                <label className='userDataLabel'>EMAIL:</label>
                 <p className='outputText'>{currentUser.email}</p>
               </Col>
               <Col xs={6} md={4} className='userOutputCol'>
               {/* current user Date of Birth */}
-                <label>DATE OF BIRTH:</label>
+                <label className='userDataLabel'>DATE OF BIRTH:</label>
                 <p className='outputText'>{dateDisplay(currentUser.dateOfBirth)}</p>
               </Col>
             </Row>
             <Row className='userOutputRow'>
               <Col xs={6} md={4} className='userOutputCol'>
               {/* Output to state if the current user is an admin user */}
-                <label>ADMIN:</label>
+                <label className='userDataLabel'>ADMIN:</label>
                 <p className='outputText'>{currentUser.admin ? 'Yes' : 'No'}</p>
               </Col>
               <Col xs={6} md={4}></Col>
