@@ -1,8 +1,9 @@
+// Import necessary modules and packages
 import React from 'react'
 //Bootstrap
-import Row from 'react-bootstrap/Row'; // Import the Row component from react-bootstrap
-import Col from 'react-bootstrap/Col'; // Import the Col component from react-bootstrap
-import Button from 'react-bootstrap/Button';//Import Bootstrap Button component
+import Row from 'react-bootstrap/Row'; 
+import Col from 'react-bootstrap/Col'; 
+import Button from 'react-bootstrap/Button';
 
 //Edit User function component
 export default function EditUser(
@@ -14,6 +15,7 @@ export default function EditUser(
 ){
 
   //=========EVENT LISTENERS================
+  // Function to handle form submission
   const handleUpdate = (e) => {
     e.preventDefault()
     console.log('Edit user account');
