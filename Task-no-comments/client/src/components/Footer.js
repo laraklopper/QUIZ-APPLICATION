@@ -1,3 +1,4 @@
+// Import necessary modules and packages
 import React from 'react'
 //Bootstrap
 import Row from 'react-bootstrap/Row';
@@ -13,6 +14,7 @@ export default function Footer(
   //==============JSX RENDERING=============
 
   return (
+    //Footer
     <footer className='pageFooter'>
           <Row>
               <Col xs={12} md={8}>
