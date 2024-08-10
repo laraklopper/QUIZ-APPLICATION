@@ -52,7 +52,7 @@ export default function Page3(
   // ==============REQUESTS=======================
   // ----------POST-------------------
   //Function to add a new quiz
-  const addNewQuiz = async () => {//Define an async function to add a new Quiz
+  const addNewQuiz = async () => {
     
     if (questions.length !== 5) {
       alert('You must add exactly 5 questions.');
@@ -192,7 +192,8 @@ export default function Page3(
           </Col>
         </Row>
         <div id='quizOutput'>
-          {quizList.map((quiz) => (//Iterate over the quizList
+    {/*Map over quizList */}
+          {quizList.map((quiz) => (
             <div className='quizItem' key = {quiz._id}>
               <Row className='quizListRow'>
                 <Col className='quizCol' md={3}>
@@ -200,7 +201,7 @@ export default function Page3(
                    <p className='itemText'>QUIZ NAME: {quiz.name}</p>
                 </Col>
                 <Col md={3}>
-                {/* username of the user who created the quiz */}
+                {/* Username of the user who created the quiz */}
                   {/* <p className='itemText'>USERNAME: {quiz.user}</p> */}
               </Col>
                 <Col  md={3} className='buttonCol'> 
