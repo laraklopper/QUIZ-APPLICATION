@@ -1,3 +1,4 @@
+// Import necessary modules and packages
 import React from 'react';
 //Bootstrap
 import Row from 'react-bootstrap/Row';
@@ -25,7 +26,6 @@ export default function Header(
             <Col className='navCol'>
             {/* Navigation */}
             <nav className='navigation'>
-                {/* Unordered list to hold the navigation links */}
                 <ul className='navbar'>
                     <li className='linkItem'>
                         {/* Link to HOME PAGE */}
