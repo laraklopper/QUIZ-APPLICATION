@@ -17,34 +17,28 @@ import Page4 from './pages/Page4';
 export default function App() {
   //=======STATE VARIABLES===============
   //User variables
-  const [users, setUsers] = useState([]);
-  const [currentUser, setCurrentUser] = useState(null);
-  const [userData, setUserData] = useState({
-    username: '',
-    email: '',
-    dateOfBirth: '',
-    admin: '',
-    password: '',
-  });
-  const [newUserData, setNewUserData] = useState({
-    newUsername: '',
-    newEmail: '',
-    newDateOfBirth: '',
-    newAdmin: false,
-    newPassword: ''
-  });
-  //Quiz variables
-  const [quizList, setQuizList] = useState([]); 
-  const [questions, setQuestions] = useState([])
-  const [quiz, setQuiz] = useState(null);
-  const [quizName, setQuizName] = useState('');
-  const [currentQuestion, setCurrentQuestion] = useState(
+  const [users, setUsers] = useState([]);// State to store an array of the list of users
+  const [currentUser, setCurrentUser] = useState(null);// State to store the currently logged-in user's details.
+const [newUserData, setNewUserData] = useState({
+  newUsername: '', // Username for a new user during registration
+  newEmail: '', // Email for a new user during registration
+  newDateOfBirth: '', // Date of birth for a new user during registration
+  newAdmin: false, // Admin status for the new user (false by default)
+  newPassword: '' // Password for a new user during registration
+});
+// Quiz management state
+const [quizList, setQuizList] = useState([]); // State to store an array of the list of quizzes
+const [questions, setQuestions] = useState([]); // Array to store questions for the current quiz
+const [quiz, setQuiz] = useState(null); // Object to store the currently selected quiz
+const [quizName, setQuizName] = useState(''); // String to store the name of the current quiz
+  /*State used to store the details of 
+  the current question including text, correct answer, and options.*/
+  const [currentQuestion, setCurrentQuestion] = useState
     { questionText: '', correctAnswer: '', options: ['', '', ''] })
   //Event variables
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(null); // Variable to store error messages
   //State variables to manage user Login
-  const [loggedIn, setLoggedIn] = useState(false);
-
+  const [loggedIn, setLoggedIn] = useState(false); // Boolean value to manage the login status of the user
   //============USE EFFECT HOOK TO FETCH USERS======================
   //Fetch users when the component mounts or when loggedIn changes
   useEffect(() => {
