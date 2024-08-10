@@ -97,7 +97,7 @@ export default function Page2(
   const fetchQuiz = useCallback(async (quizId) => {
     try {
      
-      if (!quizId) return;// If no quiz ID is selected, exit the function
+      if (!quizId) return;
       const token = localStorage.getItem('token');
       if(!token) return
       // Send a GET request to fetch quiz data from the server
@@ -115,10 +115,8 @@ export default function Page2(
         throw new Error('Failed to fetch quiz');
       }
 
-      // Parse the JSON response to get the quiz data
       const fetchedQuiz = await response.json();
       // Shuffle the questions to randomize their order
-      // const shuffledQuestions = shuffleArray(fetchedQuiz.questions);
       const shuffledQuestions = fetchedQuiz.questions.map(question => {
         const optionsWithCorrectAnswer = [...question.options, question.correctAnswer];
         const shuffledOptions = shuffleArray(optionsWithCorrectAnswer);
