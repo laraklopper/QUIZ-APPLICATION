@@ -27,18 +27,18 @@ export default function Page2(
     }
 ) {
   // =========STATE VARIABLES====================
-  const [selectedQuizId, setSelectedQuizId] = useState('');
+  const [selectedQuizId, setSelectedQuizId] = useState('');// State for the selected quiz ID
+  // State for the current quiz index (question index in the quiz)
   const [quizIndex, setQuizIndex] = useState(0);
-  const [startQuiz, setQuizStarted] = useState(false)
-  const [questionIndex, setQuestionIndex] = useState(null)
+  const [startQuiz, setQuizStarted] = useState(false);// State to control whether the quiz has started
+  const [questionIndex, setQuestionIndex] = useState(null);// State for the current question index  
   //Score variables
-  const [score, setScore] = useState(0);
+  const [score, setScore] = useState(0);  // State for tracking the user's score
   //Timer variables
-  const [timer, setTimer] = useState(null);
-  const [quizTimer, setQuizTimer] = useState(false);
+  const [timer, setTimer] = useState(null);  // State for the quiz timer
+  const [quizTimer, setQuizTimer] = useState(false);// State to control whether the timer is active
 
-  
-  
+
   //============USE EFFECT HOOK==================
   /* useEffect to fetch quizzes when the component 
   mounts or when fetchQuizzes changes*/
@@ -49,44 +49,54 @@ export default function Page2(
 //==========================================
   // Fisher-Yates shuffle algorithm to randomize array elements
   const shuffleArray = (array) => {
-    let shuffledArray = array.slice(); 
-    for (let i = shuffledArray.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1)); 
+    let shuffledArray = array.slice(); // Create a copy of the array to avoid mutating the original array
+    //  Create a shallow copy of the original array so that the shuffle doesn't alter the original array
+    for (let i = shuffledArray.length - 1; i > 0; i--) {// Loop from the end of the array to the beginning
+      const j = Math.floor(Math.random() * (i + 1));     // Generate a random index from 0 to i
+
+      // Swap the element at index i with the element at the random index j
       [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
     }
     return shuffledArray;  // Return the shuffled array
   };
 
 
+
   //=======EVENT LISTENERS============
   // Function to handle quiz selection
   const handleSelectQuiz = (event) => {
-    setSelectedQuizId(event.target.value);
+    setSelectedQuizId(event.target.value); // Update the selected quiz ID
   };
 
-
-  // Function to move to the next question
-  const handleNextQuestion = useCallback(() => {
-    if (quizIndex < quiz.questions.length - 1) {
-      setQuizIndex(quizIndex + 1); 
-      if (quizTimer) setTimer(30);
-    } 
-    else {
-      setQuizStarted(false)
-      setQuiz(null);   
-      setSelectedQuizId('')
-      setTimer(null); 
-      setQuestionIndex(null)
+// Function to move to the next question
+const handleNextQuestion = useCallback(() => {
+  // Conditional rendering if the current quiz index is less than the last question index
+  if (quizIndex < quiz.questions.length - 1) {
+    // Move to the next question by incrementing the quizIndex
+    setQuizIndex(quizIndex + 1); 
+    
+    // Reset the timer if the quizTimer is enabled
+    if (quizTimer) {
+      setTimer(30); // Set the timer to 30 seconds
     }
-  },[ quiz, quizTimer, setQuiz, quizIndex]);
+  } else {
+    // Actions to perform when all questions have been answered
+    setQuizStarted(false); // Stop the quiz
+    setQuiz(null); // Clear the current quiz data
+    setSelectedQuizId(''); // Reset the selected quiz ID
+    setTimer(null); // Clear the timer
+    setQuestionIndex(null); // Reset the question index
+  }
+}, [quiz, quizTimer, quizIndex]); 
+  // Dependencies: Only re-create the function if quiz, quizTimer, or quizIndex changes
 
   // Function to restart the quiz
   const handleRestart = () => {
-    setQuizIndex(0); 
-    setScore(0); 
-    setTimer(null); 
+    setQuizIndex(0); // Reset quiz index to start
+    setScore(0); // Reset score
+    setTimer(null); // Reset timer
     if (quizTimer) {
-      handleQuizStart(); 
+      handleQuizStart(); // Restart quiz if timer is enabled
     }
   };
 
@@ -94,48 +104,47 @@ export default function Page2(
   //=========REQUEST================
   //-----------GET-----------------------
   // Function to fetch a single quiz
-  const fetchQuiz = useCallback(async (quizId) => {
+  const fetchQuiz = useCallback(async (quizId) => {//Define an async function to fetch a single quiz
     try {
      
       if (!quizId) return;// If no quiz ID is selected, exit the function
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token');// Exit if no token is available
       if(!token) return
       // Send a GET request to fetch quiz data from the server
       const response = await fetch(`http://localhost:3001/quiz/findQuiz/${quizId}`, {
-        method: 'GET',
-        mode: 'cors',
+        method: 'GET',//HTTP request method
+        mode: 'cors',//Enable CORS
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',//Specify the Content-Type as JSON
+          'Authorization': `Bearer ${token}`, // Include token for authorization
         }
       })
 
       //Response handling
       if (!response.ok) {
-        throw new Error('Failed to fetch quiz');
+        throw new Error('Failed to fetch quiz');//Throw an error message if the GET request is unsuccessful
       }
-
-      // Parse the JSON response to get the quiz data
-      const fetchedQuiz = await response.json();
+    
+    const fetchedQuiz = await response.json();// Parse the JSON response to get the quiz data
       // Shuffle the questions to randomize their order
       // const shuffledQuestions = shuffleArray(fetchedQuiz.questions);
       const shuffledQuestions = fetchedQuiz.questions.map(question => {
-        const optionsWithCorrectAnswer = [...question.options, question.correctAnswer];
-        const shuffledOptions = shuffleArray(optionsWithCorrectAnswer);
-        return { ...question, options: shuffledOptions };
+        // Combine options and correct answer
+        const optionsWithCorrectAnswer = [...question.options, question.correctAnswer];    
+        const shuffledOptions = shuffleArray(optionsWithCorrectAnswer); // Shuffle the options
+        return { ...question, options: shuffledOptions }; // Return the question with shuffled options
       });
-
-
+ // Update quiz list and state
       setQuizList(prevQuizList =>
         prevQuizList.map((q) => (q._id === quizId ? fetchedQuiz : q))
-      );
-      setQuizName(fetchedQuiz.quizName);
-      setQuestions(shuffledQuestions)
-      setQuiz(fetchedQuiz)
+      );// Update the quiz list with the fetched quiz
+    setQuizName(fetchedQuiz.quizName); // Set the quiz name
+    setQuestions(shuffledQuestions); // Set the shuffled questions
+    setQuiz(fetchedQuiz); // Set the current quiz
     } 
     catch (error) {
-      setError(`Error fetching quiz: ${error.message}`);
-      console.error(`Error fetching quiz: ${error.message}`);
+      setError(`Error fetching quiz: ${error.message}`);// Set an error message to be displayed
+      console.error(`Error fetching quiz: ${error.message}`);//Log an error message in the console for debugging purposes
     }
   }, [setQuizList, setError, setQuestions, setQuizName, setQuiz])
 
@@ -145,7 +154,7 @@ export default function Page2(
     try {
 
         const response = await fetch('http://localhost:3001/quiz/addScore', {
-          method: 'POST',
+          method: 'POST',//HTTP request method
           mode: 'cors',
           headers: {
             'Content-Type': 'application/json',
@@ -169,20 +178,19 @@ export default function Page2(
     }
   }*/
   
-  // Function to start the quiz
-  const handleQuizStart = useCallback(async(e) => {
-    e.preventDefault()
-    if (!selectedQuizId) return;
-    await fetchQuiz(selectedQuizId)
-    setQuizStarted(true)
+   // Function to start the quiz
+  const handleQuizStart = useCallback(async (e) => {
+    e.preventDefault(); // Prevent default form submission
+    if (!selectedQuizId) return; // Exit if no quiz ID is selected
+    await fetchQuiz(selectedQuizId); // Fetch quiz data
+    setQuizStarted(true); // Start the quiz
 
-    setQuizIndex(0);
-    setScore(0);
+    setQuizIndex(0); // Reset quiz index
+    setScore(0); // Reset score
     if (quizTimer) {
-      setTimer(30);
+      setTimer(30); // Start timer if enabled
     }
   }, [selectedQuizId, quizTimer, fetchQuiz]);
-
 
 
   // ==========JSX RENDERING==========
