@@ -20,11 +20,10 @@ export default function Quiz(
   }) {
 
     //=============STATE VARIABLES=====================
-  
-    const [timeLeft, setTimeLeft] = useState(timer);// State to keep track of the time left for the countdown  
-    const [selectedOption, setSelectedOption] = useState(null);// State to keep track of the selected option  
+    const [timeLeft, setTimeLeft] = useState(timer); 
+    const [selectedOption, setSelectedOption] = useState(null);
 
-    const optionIds = ['A', 'B', 'C', 'D'];// Option identifiers (e.g., A, B, C, D)
+    const optionIds = ['A', 'B', 'C', 'D'];
 
     //========USE EFFECT HOOK==================
       // Effect hook to manage countdown timer
@@ -54,15 +53,13 @@ export default function Quiz(
     return <div>Loading...</div>
   }
 
+  //====================================================
   // Function to format the timer into mm:ss format
-  /*Converts a given number of seconds into a string formatted as MM:SS.
-  If the time is null, the function returns '00:00'. The function handles padding to ensure 
-  minutes and seconds are always displayed as 2 digits*/
   const formatTimer = (time) => {
-    if (time === null) return '00:00';// Return default if time is null
-    const minutes = Math.floor(time / 60);// Calculate minutes
-    const seconds = time % 60;  // Calculate seconds
-    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;//Format timer
+    if (time === null) return '00:00';
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;  
+    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   };
   //============EVENT LISTENERS=================
   // Function to handle answer selection and update the score if correct
