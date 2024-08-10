@@ -1,3 +1,4 @@
+// Import necessary modules and packages
 import React, { useState } from 'react';
 //Bootstrap
 import Row from 'react-bootstrap/Row'; 
@@ -20,7 +21,6 @@ export default function EditQuiz(
 }
 ) {
   //=============STATE VARIABLES======================
-  // State to keep track of the current question index
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   
   //============EVENT LISTENERS=================
@@ -30,18 +30,11 @@ export default function EditQuiz(
     const updatedQuestions = [...newQuestions];
     updatedQuestions[currentQuestionIndex] = { ...editQuizIndex };
     setNewQuestions(updatedQuestions);
-
-    setQuizList(
-      quizList.map(q =>
-        q._id === quiz._id ? {
-           ...q, questions: updatedQuestions, name: newQuizName } : q
-      )
-    );
+    setQuizList(quizList.map(q => q._id === quiz._id ? ...q, questions: updatedQuestions, name: newQuizName } : q));
   };
 
   //=========JSX RENDERING===================
 
- 
   return (
     // Form to edit quiz
     <div id='editQuizForm'>
@@ -129,18 +122,13 @@ export default function EditQuiz(
           <label className='editQuizLabel'>
             <p className='labelText'>1.ALTENATIVE ANSWER:</p>
             <input
-               type='text'//Specify the input type
-                name='options[0]'// Input name for identification
+               type='text'
+                name='options[0]'
                 value={editQuizIndex.options[0] || ''}
                 onChange={(e) => 
                   setEditQuizIndex({ 
-                    // Spread the current state to retain other properties
                     ...editQuizIndex, 
-                    options: [
-                      e.target.value, // Update the first option with the new value
-                      editQuizIndex.options[1], // Keep the second option unchanged
-                      editQuizIndex.options[2]// Keep the third option unchanged
-                  ] 
+                    options: [e.target.value, editQuizIndex.options[1], editQuizIndex.options[2]] 
                 })}
                 autoComplete='off'
                 placeholder={quiz.questions[currentQuestionIndex]?.options[0] || ''}
@@ -158,18 +146,9 @@ export default function EditQuiz(
                 value={editQuizIndex.options[1] || ''} 
                 onChange={(e) => 
                   setEditQuizIndex({ 
-                    // Spread the current state to retain other properties
                     ...editQuizIndex, 
-                    options: [
-                      editQuizIndex.options[0], 
-                      // Keep the first option unchanged
-                      e.target.value,  
-                      // Update the second option with the new value
-                      editQuizIndex.options[2]
-                      // Keep the third option unchanged
-                    ] })}
+                    options: [editQuizIndex.options[0],e.target.value, editQuizIndex.options[2]]})}
                 autoComplete='off'
-                // Placeholder for current value or empty string
                 placeholder={quiz.questions[currentQuestionIndex]?.options[1] || ''}
                 className='editQuizInput'
               />
@@ -190,11 +169,7 @@ export default function EditQuiz(
                 onChange={(e) => 
                   setEditQuizIndex({ 
                     ...editQuizIndex, 
-                    options: [
-                      editQuizIndex.options[0],  // Preserve the first option
-                      editQuizIndex.options[1], // Preserve the second option
-                      e.target.value// Update the third option with the new value
-                  ] 
+                    options: [editQuizIndex.options[0], editQuizIndex.options[1], e.target.value]                           
                 })}
                 autoComplete='off'
                 placeholder={quiz.questions[currentQuestionIndex]?.options[2] || ''} 
@@ -209,7 +184,6 @@ export default function EditQuiz(
           {/* Button to edit question */}
             <Button 
               variant="primary"  
-              // Calls the handleEditQuestion function on click
               onClick={handleEditQuestion}
               className='editQuestionBtn' 
             >
@@ -220,13 +194,8 @@ export default function EditQuiz(
           {/* Button to move to previous question */}
           <Button 
           variant='secondary' //Bootstrap variant
-          onClick={() => {//Event type
-            /*/ Conditional rendering to check if the current 
-            question index is greater than 0*/
-            if (currentQuestionIndex > 0) {
-              // Decreases the index to move to the previous question
-              setCurrentQuestionIndex(currentQuestionIndex - 1)
-            }
+          onClick={() => {
+            if (currentQuestionIndex > 0) {setCurrentQuestionIndex(currentQuestionIndex - 1)}
           }}
               className='previousQuestionBtn'
           >
@@ -236,12 +205,9 @@ export default function EditQuiz(
           <Col xs={6} md={4} className='editQuizCol'>
           {/* Button to move to next question */}
             <Button
-              variant='secondary'//Bootstrap variant
-              onClick={() => {//Event type
-                /*/ Conditional rendering to check if the current question 
-                index is less than the last question index*/
+              variant='secondary'
+              onClick={() => {
                 if (currentQuestionIndex < quiz.questions.length - 1)
-                  // Increase the index to move to the next question
                   setCurrentQuestionIndex(currentQuestionIndex + 1);
               }}>
               NEXT QUESTION
@@ -253,7 +219,6 @@ export default function EditQuiz(
           {/* Button to edit quiz */}
             <Button 
               variant='primary'
-              // Call the editQuiz function with the quiz ID on click
               onClick={() => editQuiz(quiz._id)}
               >
               EDIT QUIZ
