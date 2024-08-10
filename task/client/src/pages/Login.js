@@ -14,22 +14,20 @@ export default function Login(
         setError,
         setLoggedIn
     }) {
-
-      
       //=========STATE VARIABLES===============
-      const [showPassword, setShowPassword] = useState(false);
+      const [showPassword, setShowPassword] = useState(false);// State to toggle password visibility
 
       //=============REQUESTS==================
       //-------------POST------------------------------
       //Function to submitLogin
-  const submitLogin = async () => {//
+  const submitLogin = async () => {//Define an async function to submitLogin
     try {
       //Send a POST request to the server
       const response = await fetch('http://localhost:3001/users/login', {
-        method: 'POST',
-        mode: 'cors',
+        method: 'POST',//HTTP request method
+        mode: 'cors',//Enable CORS
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json',//Specigy the Content-Type in request body
         },
         body: JSON.stringify({
           username: userData.username,
@@ -39,24 +37,27 @@ export default function Login(
 
       //Response handling
       if (response.ok) {
-        const data = await response.json();
+        const data = await response.json();// Parse JSON response to get token
+          // Store authentication data in localStorage
         localStorage.setItem('username', userData.username);
         localStorage.setItem('loggedIn', true);
         localStorage.setItem('token', data.token);
+          // Update state to reflect successful login
         setLoggedIn(true);
         setError(null);
+          // Clear user data from state
         setUserData({
           username: '',
           password: '',
         });
       } else {
-        throw new Error('Username or password are incorrect');
+        throw new Error('Username or password are incorrect');//Throw an error message if the Username or password is incorrect
       }
     } catch (error) {
-      setError(`Login Failed: ${error.message}`);
-      console.log(`Login Failed: ${error.message}`);
-      setLoggedIn(false);
-      alert('LOGIN FAILED');
+      setError(`Login Failed: ${error.message}`);//Set the Error state with and error message
+      console.log(`Login Failed: ${error.message}`);//Log an error message in the console for debugging purpose
+      setLoggedIn(false);//Set the logged in State to false
+      alert('LOGIN FAILED');// Notify the user of failure
     }
   };
  
