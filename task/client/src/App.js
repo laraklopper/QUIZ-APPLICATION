@@ -49,14 +49,14 @@ export default function App() {
   //Fetch users when the component mounts or when loggedIn changes
   useEffect(() => {
     //Function to fetch users
-    const fetchUsers = async () => {
+    const fetchUsers = async () => {//Function to fetch all users
       try {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('token');//Retrieve token from localStorage
         if (!token || !loggedIn) return;
 
         //Send a GET request to the server 
         const response = await fetch('http://localhost:3001/users/findUsers', {
-          method: 'GET',
+          method: 'GET',//HTTP request method
           mode: 'cors',
           headers: {
             'Content-Type': 'application/json',
@@ -79,9 +79,9 @@ export default function App() {
     };
 
     //Function to fetch the current user details
-    const fetchCurrentUser = async () => {
+    const fetchCurrentUser = async () => {//Define an async function to fetch a single user 
       try {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('token');//Retrieve token from localStorage
         if (!token) return;
 
         //Send a GET request to the server to fetch the current user id
@@ -117,7 +117,8 @@ export default function App() {
   //==============REQUESTS========================
   //-----------GET-------------------------
 // Function to fetch quizzes
-  const fetchQuizzes = useCallback(async () => {//=>useCallback to stop infinite loop
+  const fetchQuizzes = useCallback(async () => {//Define an async function to fetch all quizzes
+    //=>useCallback to stop infinite loop
     try {
       const token = localStorage.getItem('token');
       //Send a GET request to the server to find all quizzes
