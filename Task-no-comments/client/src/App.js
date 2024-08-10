@@ -1,6 +1,6 @@
 // Import necessary modules and packages
 import React, { useEffect, useState, useCallback } from 'react';
-import './App.css';//Import CSS stylesheet
+import './App.css';
 // React Router components
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 //Bootstrap
@@ -117,7 +117,7 @@ export default function App() {
   //==============REQUESTS========================
   //-----------GET-------------------------
 // Function to fetch quizzes
-  const fetchQuizzes = useCallback(async () => {//=>useCallback to stop infinite loop
+  const fetchQuizzes = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
       //Send a GET request to the server to find all quizzes
