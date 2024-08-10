@@ -17,7 +17,7 @@ export default function LoginForm(
 ) {
 
   //============EVENT LISTENER===============
-  // Event listener for handling user login data changes
+  // Function to handle user login data changes
   const handleUserLogin = (event) => {
     const { name, value } = event.target;
     // Update userData state with new values
