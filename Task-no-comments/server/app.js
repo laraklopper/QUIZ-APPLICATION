@@ -1,6 +1,6 @@
 // Import required modules
-const express = require('express');// Import Express Web framework
-const mongoose = require('mongoose');//Import the Mongoose library
+const express = require('express');
+const mongoose = require('mongoose');
 const cors = require('cors');
 //Import routes
 const userRouter = require('./routes/users');
@@ -47,13 +47,11 @@ mongoose.connect(uri, {
     })
 
 //==========MONGODB CONNECTION EVENT HANDLERS==========
-// Set up an event listener for the 'error' event on the Mongoose connection
 // Function executed when there is an error in the MongoDB connection
 mongoose.connection.on('error', (error) => {
     console.error('Could not connection the database. Exiting now...', error);
     process.exit(1);
 })
-// Set up an event listener for the 'open' event on the Mongoose connection
 // Function executed when the MongoDB connection is successfully open
 mongoose.connection.once('open', () => {
     console.log('Successfully connected to the database');
