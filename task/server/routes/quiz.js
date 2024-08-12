@@ -41,8 +41,20 @@ const checkJwtToken = (req, res, next) => {
     }
 }
 
-
 //=============ROUTES====================
+/*
+|================================================|
+| CRUD OPERATION | HTTP VERB | EXPRESS METHOD    |
+|================|===========|===================|
+|CREATE          | POST      |  router.post()    |
+|----------------|-----------|-------------------|
+|READ            | GET       |  router.get()     |  
+|----------------|-----------|-------------------|     
+|UPDATE          | PUT       |  router.put()     |
+|----------------|-----------|-------------------|
+|DELETE          | DELETE    |  router.delete()  |
+|================|===========|===================|
+*/
 //------------------GET---------------
 //Route to GET a specific quiz using the quiz Id
 router.get('/findQuiz/:id', checkJwtToken, async (req, res) => {
