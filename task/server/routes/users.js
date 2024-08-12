@@ -4,14 +4,17 @@ const router = express.Router();
 // Import the 'jsonwebtoken' library for handling JSON Web Tokens
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
+const bcrypt = require('bcrypt');
 //Schemas
 const User = require ('../models/userSchema');
-// const {authenticateToken} = require('./middleware');
+// const {authenticateToken, checkAge} = require('./middleware');
 
 //=======SETUP MIDDLEWARE===========
 router.use(cors());
 router.use(express.json());
-
+/*Built-in middleware function in Express. It parses 
+incoming requests with JSON payloads and is based on body-parser*/
+//=======CUSTOM MIDDLEWARE============
 // Middleware to verify JWT and extract user info
 const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
@@ -27,6 +30,17 @@ const authenticateToken = (req, res, next) => {
             next();
         });
 };
+
+/*
+//Middleware to only grant admin users authorisation to view all user data
+const adminAuthorization = (req, res, next) => {
+    if (req.user && req.user.admin) {
+        next();
+    } else {
+        return res.status(403).json({ message: 'Forbidden: Admin access required' });
+    }
+};
+*/
 
 //Middleware function to check that admin user is 18 years or older
 const checkAge = (req, res, next) => {
