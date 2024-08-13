@@ -22,7 +22,13 @@ export default function EditQuiz(
   //=============STATE VARIABLES======================
   // State to keep track of the current question index
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  
+
+  //============================================
+   useEffect(() => {
+    if (quiz.questions.length > 0) {
+      setEditQuizIndex(quiz.questions[currentQuestionIndex]);
+    }
+  }, [currentQuestionIndex, quiz, setEditQuizIndex]);
   //============EVENT LISTENERS=================
 
 //Function to edit a question
@@ -37,6 +43,16 @@ export default function EditQuiz(
            ...q, questions: updatedQuestions, name: newQuizName } : q
       )
     );
+  };
+
+    const handleNavigation = (direction) => {
+    setCurrentQuestionIndex(prev => {
+      if (direction === 'next') {
+        return Math.min(prev + 1, newQuestions.length - 1);
+      } else if (direction === 'prev') {
+        return Math.max(prev - 1, 0);
+      }
+    });
   };
 
   //=========JSX RENDERING===================
@@ -85,14 +101,7 @@ export default function EditQuiz(
                 type='text' //Specify input type
                 name='questionText'
                 value={editQuizIndex.questionText}
-                onChange={(e) =>
-                  setEditQuizIndex({
-                    // Preserve other properties
-                    ...editQuizIndex, 
-                    // Update questionText with the new value
-                    questionText: e.target.value 
-                  })
-                }
+                onChange={(e) => setEditQuizIndex({...editQuizIndex, questionText: e.target.value})               }
                 autoComplete='off'
                 placeholder={quiz.questions[currentQuestionIndex]?.questionText || ''}
                 className='editQuizInput' 
