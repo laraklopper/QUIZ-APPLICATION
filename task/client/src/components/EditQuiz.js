@@ -24,11 +24,7 @@ export default function EditQuiz(
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
   //============================================
-   useEffect(() => {
-    if (quiz.questions.length > 0) {
-      setEditQuizIndex(quiz.questions[currentQuestionIndex]);
-    }
-  }, [currentQuestionIndex, quiz, setEditQuizIndex]);
+
   //============EVENT LISTENERS=================
 
 //Function to edit a question
@@ -45,15 +41,6 @@ export default function EditQuiz(
     );
   };
 
-    const handleNavigation = (direction) => {
-    setCurrentQuestionIndex(prev => {
-      if (direction === 'next') {
-        return Math.min(prev + 1, newQuestions.length - 1);
-      } else if (direction === 'prev') {
-        return Math.max(prev - 1, 0);
-      }
-    });
-  };
 
   //=========JSX RENDERING===================
 
