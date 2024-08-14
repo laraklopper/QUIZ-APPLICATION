@@ -305,10 +305,10 @@ export default function EditQuiz(
   setNewQuestions
 }) {
   //=============STATE VARIABLES======================
+// State to keep track of the current question index
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
   //============EVENT LISTENERS=================
-
   // Function to edit a question
   const handleEditQuestion = () => {
     const updatedQuestions = [...newQuestions];
