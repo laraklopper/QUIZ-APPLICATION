@@ -1,4 +1,7 @@
+# Edit Quiz 
+
 ```
+// Import necessary modules and packages
 import React, { useState } from 'react';
 //Bootstrap
 import Row from 'react-bootstrap/Row'; 
@@ -263,3 +266,261 @@ export default function EditQuiz(
 }
 
 ```
+## Modified-Code
+1. **State Handling**:
+   - When updating the `editQuizIndex` state, there seems to be a confusion between the value of `editQuizIndex` and `setEditQuizIndex`. 
+	You are trying to use `setEditQuizIndex` directly in the `value` attribute of some inputs, which should actually reference `editQuizIndex`.
+
+2. **Correcting `handleEditQuestion`**:
+   - The `handleEditQuestion` function is currently updating the question in `newQuestions`, but it uses `editQuizIndex` 
+	which should actually contain the current question object, not just the index. Ensure that `editQuizIndex` holds 
+	the current question object to avoid confusion.
+
+3. **Input Values**:
+   - The input for `correctAnswer` is trying to use `setEditQuizIndex.correctAnswer` 
+	instead of `editQuizIndex.correctAnswer`. 
+	The same issue is present in other places where you access the values for `options`. 
+
+**Updated version of your component with these corrections:**
+
+```javascript
+import React, { useState } from 'react';
+//Bootstrap
+import Row from 'react-bootstrap/Row'; 
+import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button'; 
+
+//EditQuiz Function component
+export default function EditQuiz(
+  {//PROPS PASSED FROM PARENT COMPONENT
+  quiz, 
+  setQuizList,  
+  quizList,
+  editQuizIndex,
+  setEditQuizIndex,
+  editQuiz,
+  setNewQuizName,
+  newQuizName,
+  newQuestions, 
+  setNewQuestions
+}) {
+  //=============STATE VARIABLES======================
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+
+  //============EVENT LISTENERS=================
+
+  // Function to edit a question
+  const handleEditQuestion = () => {
+    const updatedQuestions = [...newQuestions];
+    updatedQuestions[currentQuestionIndex] = { ...editQuizIndex };
+    setNewQuestions(updatedQuestions);
+
+    setQuizList(
+      quizList.map(q =>
+        q._id === quiz._id
+          ? { ...q, questions: updatedQuestions, name: newQuizName }
+          : q
+      )
+    );
+  };
+
+  //=========JSX RENDERING===================
+
+  return (
+    <div id='editQuizForm'>
+      <Row className='formRow'>
+        <Col>
+          <h2 className='h2'>EDIT QUIZ</h2>
+        </Col>
+      </Row>
+      <Row className='editQuizRow'>
+        <Col xs={6} md={4} className='editQuizCol'>
+          <label className='editQuizLabel'>
+            <p className='labelText'>QUIZ NAME:</p>
+            <input
+              type='text'
+              name='newQuizName' 
+              value={newQuizName}
+              onChange={(e) => setNewQuizName(e.target.value)} 
+              autoComplete='off'
+              placeholder={quiz.name}
+              className='editQuizInput'
+            />
+          </label>
+        </Col>
+      </Row>
+      <div className='editQuestions'>
+        <Row>
+          <Col className='editQuestionHead'>
+            <h3 className='h3'>EDIT QUESTIONS</h3>
+          </Col>
+        </Row>
+        <Row className='editQuizRow'>
+          <Col xs={6} className='editQuizCol'>
+            <label className='editQuizLabel'>
+              <p className='labelText'>QUESTION:</p>
+              <input
+                type='text'
+                name='questionText'
+                value={editQuizIndex.questionText}
+                onChange={(e) =>
+                  setEditQuizIndex({
+                    ...editQuizIndex,
+                    questionText: e.target.value,
+                  })
+                }
+                autoComplete='off'
+                placeholder={quiz.questions[currentQuestionIndex]?.questionText || ''}
+                className='editQuizInput'
+              />
+            </label>
+          </Col>
+          <Col xs={6} className='editQuizCol'>
+            <label className='editQuizLabel'>
+              <p className='labelText'>CORRECT ANSWER:</p>
+              <input
+                type='text'
+                name='correctAnswer'
+                value={editQuizIndex.correctAnswer} 
+                onChange={(e) =>
+                  setEditQuizIndex({
+                    ...editQuizIndex,
+                    correctAnswer: e.target.value,
+                  })
+                }
+                autoComplete='off'
+                placeholder={quiz.questions[currentQuestionIndex]?.correctAnswer || ''}
+                className='editQuizInput'
+              />
+            </label>
+          </Col>
+        </Row>
+        <Row className='editQuizRow'>
+          <Col xs={6} className='editQuizCol'>
+            <label className='editQuizLabel'>
+              <p className='labelText'>1. ALTERNATIVE ANSWER:</p>
+              <input
+                type='text'
+                name='options[0]'
+                value={editQuizIndex.options[0] || ''}
+                onChange={(e) =>
+                  setEditQuizIndex({
+                    ...editQuizIndex,
+                    options: [
+                      e.target.value,
+                      editQuizIndex.options[1],
+                      editQuizIndex.options[2],
+                    ],
+                  })
+                }
+                autoComplete='off'
+                placeholder={quiz.questions[currentQuestionIndex]?.options[0] || ''}
+                className='editQuizInput'
+              />
+            </label>
+          </Col>
+          <Col xs={6} className='editQuizCol'>
+            <label className='editQuizLabel'>
+              <p className='labelText'>2. ALTERNATIVE ANSWER:</p>
+              <input
+                type='text'
+                name='options[1]'
+                value={editQuizIndex.options[1] || ''}
+                onChange={(e) =>
+                  setEditQuizIndex({
+                    ...editQuizIndex,
+                    options: [
+                      editQuizIndex.options[0],
+                      e.target.value,
+                      editQuizIndex.options[2],
+                    ],
+                  })
+                }
+                autoComplete='off'
+                placeholder={quiz.questions[currentQuestionIndex]?.options[1] || ''}
+                className='editQuizInput'
+              />
+            </label>
+          </Col>
+        </Row>
+        <Row className='editQuizRow'>
+          <Col xs={6} className='editQuizCol'>
+            <label className='editQuizLabel'>
+              <p className='labelText'>3. ALTERNATIVE ANSWER:</p>
+              <input
+                type='text'
+                name='options[2]'
+                value={editQuizIndex.options[2] || ''}
+                onChange={(e) =>
+                  setEditQuizIndex({
+                    ...editQuizIndex,
+                    options: [
+                      editQuizIndex.options[0],
+                      editQuizIndex.options[1],
+                      e.target.value,
+                    ],
+                  })
+                }
+                autoComplete='off'
+                placeholder={quiz.questions[currentQuestionIndex]?.options[2] || ''}
+                className='editQuizInput'
+              />
+            </label>
+          </Col>
+        </Row>
+        <Row className='editQuizRow'>
+          <Col xs={6} md={4} className='editQuizCol'>
+            <Button
+              variant='primary'
+              onClick={handleEditQuestion}
+              className='editQuestionBtn'
+            >
+              EDIT QUESTION
+            </Button>
+          </Col>
+          <Col xs={6} md={4} className='editQuizCol'>
+            <Button
+              variant='secondary'
+              onClick={() => {
+                if (currentQuestionIndex > 0) {
+                  setCurrentQuestionIndex(currentQuestionIndex - 1);
+                }
+              }}
+              className='previousQuestionBtn'
+            >
+              PREVIOUS QUESTION
+            </Button>
+          </Col>
+          <Col xs={6} md={4} className='editQuizCol'>
+            <Button
+              variant='secondary'
+              onClick={() => {
+                if (currentQuestionIndex < quiz.questions.length - 1) {
+                  setCurrentQuestionIndex(currentQuestionIndex + 1);
+                }
+              }}
+              className='nextQuestionBtn'
+            >
+              NEXT QUESTION
+            </Button>
+          </Col>
+        </Row>
+        <Row className='editQuizRow'>
+          <Col xs={12} className='editQuizCol'>
+            <Button
+              variant='primary'
+              onClick={() => editQuiz(quiz._id)}
+            >
+              EDIT QUIZ
+            </Button>
+          </Col>
+        </Row>
+      </div>
+    </div>
+  );
+}
+```
+
+**Key Changes:**
+- Corrected the `value` attributes to use `editQuizIndex` instead of `setEditQuizIndex`.
+- Made sure that the `editQuizIndex` object holds the correct data structure to reflect the current question being edited.
