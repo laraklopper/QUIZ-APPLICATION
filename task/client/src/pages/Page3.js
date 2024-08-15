@@ -33,11 +33,11 @@ export default function Page3(
   
   // ========STATE VARIABLES===============
   //Edit Quiz variables
-  const [newQuizName, setNewQuizName] = useState('');
-  const [update, setUpdate] = useState(false);
-  const [newQuestions, setNewQuestions] = useState([])
-  const [quizToUpdate, setQuizToUpdate] = useState(null);
-  const [editQuizIndex, setEditQuizIndex] = useState(
+  const [newQuizName, setNewQuizName] = useState('');//State to store the new quizName
+  const [update, setUpdate] = useState(false);//Boolean to toggle the edit quizForm
+  const [newQuestions, setNewQuestions] = useState([]);// State to store the array of Questions for the new or updated quiz
+  const [quizToUpdate, setQuizToUpdate] = useState(null);// ID of the quiz being edited
+  const [editQuizIndex, setEditQuizIndex] = useState(// Details for editing a specific question
     { questionText: '', correctAnswer: '', options: ['', '', ''] });
     //Form error message variables
   const [formError, setFormError] = useState(null);
@@ -46,47 +46,52 @@ export default function Page3(
   /* useEffect to fetch quizzes when the component mounts
  or when fetchQuizzes function changes*/
   useEffect(() => {
-      fetchQuizzes()
-  }, [fetchQuizzes])
+      fetchQuizzes()// Call the fetchQuizzes function to retrieve quizzes from the server
+  }, [fetchQuizzes]);
+  // Dependency array: the effect will re-run when fetchQuizzes changes
 
   // ==============REQUESTS=======================
   // ----------POST-------------------
   //Function to add a new quiz
   const addNewQuiz = async () => {
     
+      // Conditional rendering to check if the number of questions is exactly 5
     if (questions.length !== 5) {
-      alert('You must add exactly 5 questions.');
-      return;
+      // If not, alert the user and exit the function
+      alert('You must add exactly 5 questions.'); // Ensure exactly 5 questions
+      return; // Exit the function to prevent further execution
     }
+    
     // Create a quiz object to send to the server
     const quiz = {
-      name: quizName, 
-      questions, 
-      username: currentUser
-    }
+      name: quizName, // The name of the quiz
+      questions,     // The array of questions
+      username: currentUser // The username of the current user
+    };
+
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token');//Retrieve the JWT token from localStorage
       //Send a POST request to the server to add a new quiz
       const response = await fetch('http://localhost:3001/quiz/addQuiz', {
-        method: 'POST',
-        mode: 'cors',
+        method: 'POST',//HTTP request method
+        mode: 'cors',//Enable CORS for cross-origin resourcing
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json',//Specify the Content-Type
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify(quiz)
+        body: JSON.stringify(quiz) // Convert quiz object to JSON
       });
   
       //Response handling
       if (response.ok) {
-        alert('New Quiz successfully added')
+        alert('New Quiz successfully added')//Display a success message if the quiz is successfy
         const newQuiz = await response.json(); 
         setQuizList((prevQuizList) => [...prevQuizList, newQuiz]);
         setQuizName('');     
         setQuestions([]);
       } 
       else {
-        throw new Error('There was an error creating the quiz');
+        throw new Error('There was an error creating the quiz');//Throw an error message if the POST request is unsuccessful
       }
 
     } 
