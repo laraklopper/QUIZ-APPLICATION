@@ -26,7 +26,7 @@ export default function Page3(
   currentQuestion,
   setCurrentQuestion,
   questions,
-  // currentUser,
+  currentUser,
   setQuestions  
 }
 ) {
@@ -62,7 +62,14 @@ const [formError, setFormError] = useState(null); // Form error message variable
       return;// Exit the function early if the condition is not met
     }
   // Create a quiz object with the name and questions to send to the server
-    const quiz = {name: quizName, questions}
+    // const quiz = {name: quizName, questions}
+    // Create a quiz object to send to the server
+    const quiz = {
+      name: quizName, // The name of the quiz
+      questions,     // The array of questions
+      username: currentUser // The username of the current user
+    };
+
     try {
       const token = localStorage.getItem('token');// Retrieve the JWT token from localStorage for authentication
       //Send a POST request to the server to add a new quiz
@@ -188,7 +195,6 @@ const [formError, setFormError] = useState(null); // Form error message variable
     //Function to toggle editForm
   const toggleQuizUpdate = (quizId) => {
     setUpdate(!update)  // Toggle the update state between true and false
-
     setQuizToUpdate(quizId);// Set the quiz ID to be updated
   };
 
@@ -215,7 +221,7 @@ const [formError, setFormError] = useState(null); // Form error message variable
                 </Col>
                 <Col md={3}>
                 {/* username of the user who created the quiz */}
-                  {/* <p className='itemText'>USERNAME: {quiz.user}</p> */}
+                   <p className='itemText'>USERNAME: {quiz.username}</p> 
               </Col>
                 <Col  md={3} className='buttonCol'> 
                   <div>
