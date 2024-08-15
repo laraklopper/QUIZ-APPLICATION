@@ -86,7 +86,11 @@ export default function Page3(
       if (response.ok) {
         alert('New Quiz successfully added')//Display a success message if the quiz is successfy
         const newQuiz = await response.json(); 
-        setQuizList((prevQuizList) => [...prevQuizList, newQuiz]);
+        // setQuizList((prevQuizList) => [...prevQuizList, newQuiz]);
+         setQuizList((prevQuizList) => [
+              ...prevQuizList, 
+                { ...newQuiz, currentUser: userData.username }
+            ]);
         setQuizName('');     
         setQuestions([]);
       } 
