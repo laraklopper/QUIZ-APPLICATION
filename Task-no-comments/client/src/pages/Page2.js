@@ -137,36 +137,7 @@ export default function Page2(
     }
   }, [setQuizList, setError, setQuestions, setQuizName, setQuiz])
 
-  //----------POST--------------------------------
-    //Function to save score
-  /*const addScore = async() => {
-    try {
-
-        const response = await fetch('http://localhost:3001/quiz/addScore', {
-          method: 'POST',
-          mode: 'cors',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            username: userData.username,
-            quizName: quizName,
-            score: score
-          })
-        }
-    )
-
-    if (!response.ok) {
-      throw new Error('Error saving user score')
-    }
-    //logic to save new score
-    } 
-    catch (error) {
-      console.error('Error saving score');
-      setError('Error saving score' + error.message)
-    }
-  }*/
-  
+  //=======Event Listeners==============
   // Function to start the quiz
   const handleQuizStart = useCallback(async(e) => {
     e.preventDefault()
