@@ -18,11 +18,10 @@ export default function Quiz(
     quizTimer,
     timer
   }) {
-
     //=============STATE VARIABLES=====================
     const [timeLeft, setTimeLeft] = useState(timer); 
-    const [selectedOption, setSelectedOption] = useState(null);
-
+    const [selectedOption, setSelectedOption] = useState(null);  
+    // Option identifiers (e.g., A, B, C, D)
     const optionIds = ['A', 'B', 'C', 'D'];
 
     //========USE EFFECT HOOK==================
@@ -32,6 +31,7 @@ export default function Quiz(
 
     setTimeLeft(timer);
     const interval = setInterval(() => {
+      // Initialize the timeLeft state with the provided timer value
       setTimeLeft((prevTime) => {
         if (prevTime <= 1) {
           clearInterval(interval);
@@ -53,13 +53,14 @@ export default function Quiz(
     return <div>Loading...</div>
   }
 
-  //====================================================
+  //========Utility functions====================
   // Function to format the timer into mm:ss format
   const formatTimer = (time) => {
     if (time === null) return '00:00';
     const minutes = Math.floor(time / 60);
     const seconds = time % 60;  
-    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    return `${minutes.toString().padStart(2, '0')}:
+    ${seconds.toString().padStart(2, '0')}`;
   };
   //============EVENT LISTENERS=================
   // Function to handle answer selection and update the score if correct
@@ -82,19 +83,19 @@ export default function Quiz(
     // Selected quiz
     <div id='quizDisplay'>
       <Row>
-        <Col>
+        <Col id='quizHeading'>
           {/* Display quiz name */}
             <h3 className='h3'>{selectedQuiz.quizName}</h3> 
         </Col>
       </Row>
       <div>
-        <Row>
+        <Row className='quizRow'>
           <Col xs={6} md={4} id='questionCol'>
           {/* Display question number */}
             <div id='questionNumber'>
-              <h3 className='h3'>
-                QUESTION {quizIndex + 1} of {selectedQuiz.questions.length} 
-              </h3>
+              <label>
+                <p className='number'>QUESTION {quizIndex + 1} of {selectedQuiz.questions.length} </p>
+              </label>
             </div>     
           </Col>
           <Col xs={6} md={4}></Col>
@@ -103,42 +104,47 @@ export default function Quiz(
             {quizTimer && <div id='timer'>TIMER: {formatTimer(timeLeft)}</div>}
           </Col>
         </Row>
-        <div>
+        {/* Question */}
+        <div className='question'>
           <Row>
-            <Col md={2}></Col>
-            <Col md={7}>
+            <Col md={9} className='questionCol'>
             {/* Display current question text */}
-            <h3 className='h3'>
-              {questions[quizIndex].questionText}
-            </h3>
+            <label className='questionLabel'>
+                <h6 className='h6'>{questions[quizIndex].questionText}</h6>
+            </label>
             </Col>
             <Col md={3}></Col>
           </Row>
           {/* Map through and randomize options */}
-          <Row>
-          <Col>
           {questions[quizIndex].options.map((option, index)=> (
             <div key={index}>
+              <Row> 
+                <Col xs={6} md={4}></Col>
+          <Col md={4} className='optionCol'>
               {/* Render radio buttons for each option */}
+              <div className='options'>             
               <input 
               type='radio'
               name='answer'
               value={option}
                 checked={selectedOption === option} 
                 onChange={() => handleOptionClick(option)} 
+                className='answerOption'
                 />
               {/* Display option label with identifier*/}
-              {optionIds[index]} {option} 
+              <p>{optionIds[index]} {option}</p>  
+              </div>
+                </Col>
+                <Col xs={6} md={4}></Col>
+                </Row>
             </div> 
-          ))}</Col></Row>
+          ))}
         </div>
         <Row>
           <Col xs={6} md={4}>
           <div>
             {/* Display the current score */}
-            <p id='resultText'>
-              RESULT: {score} of {selectedQuiz.questions.length}
-            </p>
+            <p id='resultText'>RESULT: {score} of {selectedQuiz.questions.length}</p>
           </div>
           </Col>
           <Col xs={6} md={4}></Col>
@@ -161,6 +167,5 @@ export default function Quiz(
         </Row>
       </div>
     </div>
-
   );
 }
