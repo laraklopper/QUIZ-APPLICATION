@@ -8,11 +8,11 @@ const quizSchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
-    // Username of the person who created the quiz
+    /* Username of the person who created the quiz
     username: {
         type: String, 
         required: true, 
-    },
+    },*/
     //Field for questions containing an array of objects
     questions: {
         type: [
@@ -39,16 +39,24 @@ const quizSchema = new mongoose.Schema({
         ],
         required: true,
         validate: [arrayLimit5, '{PATH} must have exactly 5 questions']
-    },/*
+    },
     // Username of the person who created the quiz
     username:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true,
     },
-    */
+    
 }, { timestamps: true });
 
+Quiz.findOne()
+    .populate('username')
+    .exec((err, username)=>{
+        if(!err){
+            console.log(username)
+        }
+        process.exit(0)
+    })
 // Custom validation function to ensure each question has exactly 3 options
 function arrayLimit(val) {
     return val.length === 3;
