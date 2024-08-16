@@ -11,8 +11,7 @@ const Quiz = require('../models/quizModel');
 //=======SETUP MIDDLEWARE===========
 router.use(cors());
 router.use(express.json());
-mongoose.set('strictPopulate', false)
-
+mongoose.set('strictPopulate', false);
 
 //==============CUSTOM MIDDLEWARE======================
 //Middleware to verify the JWT token
@@ -23,11 +22,7 @@ const checkJwtToken = (req, res, next) => {
             {message: 'Access denied. No token provided.'})
     }
     const token = authHeader.split(' ')[1];
- 
-    if (!token) {
-        return res.status(401).json(
-            { message: 'Access denied. No token provided.' });
-    }
+
     try {
         const decoded = jwt.verify( token,'secretKey',);
         req.user = decoded;
@@ -42,19 +37,6 @@ const checkJwtToken = (req, res, next) => {
 }
 
 //=============ROUTES====================
-/*
-|================================================|
-| CRUD OPERATION | HTTP VERB | EXPRESS METHOD    |
-|================|===========|===================|
-|CREATE          | POST      |  router.post()    |
-|----------------|-----------|-------------------|
-|READ            | GET       |  router.get()     |  
-|----------------|-----------|-------------------|     
-|UPDATE          | PUT       |  router.put()     |
-|----------------|-----------|-------------------|
-|DELETE          | DELETE    |  router.delete()  |
-|================|===========|===================|
-*/
 //------------------GET---------------
 //Route to GET a specific quiz using the quiz Id
 router.get('/findQuiz/:id', checkJwtToken, async (req, res) => {
@@ -73,11 +55,14 @@ router.get('/findQuiz/:id', checkJwtToken, async (req, res) => {
     }
 });
 
+
+
+
+
 // Route to fetch all the quizzes from the database
 router.get('/findQuizzes', checkJwtToken,  async (req, res) => {
     console.log('Finding Quizzes')
-    try {
-    
+    try {   
         const quizzes = await Quiz.find({}).populate('user');
         res.json({quizList: quizzes})  
         console.log(quizzes);
@@ -96,20 +81,26 @@ router.get('/findQuizzes', checkJwtToken,  async (req, res) => {
 router.post('/addQuiz', async (req, res) => {
     console.log(req.body);
     
-    const { name, questions } = req.body;   
-    if (!name || !questions) {      
-        return res.status(400).json(
-            { message: 'Quiz name and questions are required' }
-        )
+    const { name, questions, username } = req.body;   
+    if (!name || !questions ) {      
+        return res.status(400).json({ 
+            message: 'Quiz name and questions are required' 
+        })
     } 
     
     try {       
         // Create a new quiz object
-        const newQuiz = new Quiz({ name, questions});
-      
+        const newQuiz = new Quiz({ 
+            name, 
+            questions, 
+            username
+        });
+
+        
         const existingQuiz = await Quiz.findOne({name});
         if (existingQuiz) {
-            return res.status(400).json({message: 'Quiz name already exists'})
+            return res.status(400).json(
+                {message: 'Quiz name already exists'})
         }
 
         const savedQuiz = await newQuiz.save();
@@ -119,9 +110,8 @@ router.post('/addQuiz', async (req, res) => {
 
     } 
     catch (error) {
-        alert('Error occurred while adding new quiz:', error)
         console.error('Error occurred while adding new quiz:', error);
-        res.status(400).json({ error: error.message });
+        res.status(500).json({ error: error.message });
     }
 })
 
@@ -131,35 +121,43 @@ router.put('/editQuiz/:id', checkJwtToken,  async (req, res) => {
     const { id } = req.params;
     const { name, questions } = req.body;
 
-    if (!name || !questions ) {
+    if (!name || !Array.isArray(questions) || !questions !== 5 ) {
         return res.status(400).json(
             { message: 'Quiz name, and  questions are required' }
         );
     }
 
     try {
-        
+        //Validate that each question has exactly 3 options
+        for(const question of questions){
+            if (question.options.length !== 3) {
+                return res.status(400).json({
+                    message: 'Each question must have exactly 3 options',
+                });
+            }
+        }
+
+        // Update the quiz
         const updatedQuiz = await Quiz.findByIdAndUpdate(
             id, 
             { name, questions },
             { 
                 new: true, 
-                runValidators: true 
-            })
+            }
+        );
 
-        if (!updatedQuiz) {
-            
+        if (!updatedQuiz) {            
             return res.status(404).json({ message: 'Quiz not found' });
         }
 
-        res.json(updatedQuiz)
+        res.json({updatedQuiz})
     } 
     catch (error) {
         console.error('Error editing quiz:', error);
-        return res.status(500).json(
-            { error: error.message });
-    }
+        return res.status(500).json({ error: error.message });
+    };
 });
+
 
 //--------DELETE---------------
 // Route to delete a quiz
@@ -168,7 +166,6 @@ router.delete('/deleteQuiz/:id', async (req, res) => {
     
     try {
         const deletedQuiz = await Quiz.findByIdAndDelete(id);
-
         
         if (!deletedQuiz) {
             return res.status(404).json
@@ -186,5 +183,5 @@ router.delete('/deleteQuiz/:id', async (req, res) => {
     }
 });
 
-// Export the router to be used in other parts of the application
+
 module.exports = router; 
