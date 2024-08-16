@@ -16,103 +16,103 @@ import Page4 from './pages/Page4';
 //App function component
 export default function App() {
   //=======STATE VARIABLES===============
-  //User variables
-  const [users, setUsers] = useState([]);
-  const [currentUser, setCurrentUser] = useState(null);
-  const [userData, setUserData] = useState({
-    username: '',
-    email: '',
-    dateOfBirth: '',
-    admin: '',
-    password: '',
-  });
-  const [newUserData, setNewUserData] = useState({
-    newUsername: '',
-    newEmail: '',
-    newDateOfBirth: '',
-    newAdmin: false,
-    newPassword: ''
-  });
-  //Quiz variables
-  const [quizList, setQuizList] = useState([]); 
-  const [questions, setQuestions] = useState([])
-  const [quiz, setQuiz] = useState(null);
-  const [quizName, setQuizName] = useState('');
-  const [currentQuestion, setCurrentQuestion] = useState(
-    { questionText: '', correctAnswer: '', options: ['', '', ''] })
-  //Event variables
-  const [error, setError] = useState(null);
-  //State variables to manage user Login
-  const [loggedIn, setLoggedIn] = useState(false);
+   //User variables
+const [users, setUsers] = useState([]);
+const [currentUser, setCurrentUser] = useState(null);
+const [userData, setUserData] = useState({
+  username: '',
+  email: '',
+  dateOfBirth: '',
+  admin: '',
+  password: '',
+});
 
-  //============USE EFFECT HOOK TO FETCH USERS======================
+ const [newUserData, setNewUserData] = useState({
+  newUsername: '',
+  newEmail: '',
+  newDateOfBirth: '',
+  newAdmin: false,
+  newPassword: '',
+});
+  //Quiz variables
+  const [quizList, setQuizList] = useState([]);
+const [questions, setQuestions] = useState([]);
+const [quiz, setQuiz] = useState(null);
+const [quizName, setQuizName] = useState('');
+const [currentQuestion, setCurrentQuestion] = useState({
+  questionText: '',
+  correctAnswer: '',
+  options: ['', '', '']
+});
+// Event and UI-related states
+const [error, setError] = useState(null);
+const [loggedIn, setLoggedIn] = useState(false);
+
+   //============USE EFFECT HOOK TO FETCH USERS======================
   //Fetch users when the component mounts or when loggedIn changes
   useEffect(() => {
-    //Function to fetch users
-    const fetchUsers = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        if (!token || !loggedIn) return;
+  const fetchUsers = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token || !loggedIn) return;
 
-        //Send a GET request to the server 
-        const response = await fetch('http://localhost:3001/users/findUsers', {
-          method: 'GET',
-          mode: 'cors',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-          }
-        });
-
-        //Response handling
-        if (!response.ok) {
-          throw new Error('Failed to fetch users');
+      // Send a GET request to the server to fetch users
+      const response = await fetch('http://localhost:3001/users/findUsers', {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         }
+      });
 
-        const fetchedUsers = await response.json();
-        setUsers(fetchedUsers);
-      } 
-      catch (error) {
-        console.error('Error fetching users', error.message);
-        setError('Error fetching users');
+      //Response handling
+      if (!response.ok) {
+        throw new Error('Failed to fetch users');
       }
-    };
 
-    //Function to fetch the current user details
-    const fetchCurrentUser = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        if (!token) return;
-
-        //Send a GET request to the server to fetch the current user id
-        const response = await fetch('http://localhost:3001/users/userId', {
-          method: 'GET',
-          mode: 'cors',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-          }
-        });
-
-        //Response handling 
-        if (!response.ok) {
-          throw new Error('Failed to fetch current user');
-        }
-
-        const fetchedCurrentUser = await response.json();
-        setCurrentUser(fetchedCurrentUser);
-      } 
-      catch (error) {
-        console.error('Error fetching current user', error.message);
-        setError('Error fetching current user');
-      }
-    };
-
-    if (loggedIn) {
-      fetchUsers();
-      fetchCurrentUser();
+      const fetchedUsers = await response.json();
+      setUsers(fetchedUsers);
+    } catch (error) {
+      console.error('Error fetching users', error.message);
+      setError('Error fetching users');
     }
-  }, [loggedIn]);
+  };
+    
+//Function to fetch the current user details
+  const fetchCurrentUser = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+    //Send a GET request to the server to fetch the current user id
+      const response = await fetch('http://localhost:3001/users/userId', {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        }
+      });
+
+      //Response handling
+      if (!response.ok) {
+        throw new Error('Failed to fetch current user');
+      }
+
+      const fetchedCurrentUser = await response.json();
+      setCurrentUser(fetchedCurrentUser);
+    } catch (error) {
+      console.error('Error fetching current user', error.message);
+      setError('Error fetching current user');
+    }
+  };
+
+  if (loggedIn) {
+    fetchUsers();
+    fetchCurrentUser();
+  }
+}, [loggedIn]);
+
 
   //==============REQUESTS========================
   //-----------GET-------------------------
@@ -136,30 +136,31 @@ export default function App() {
       }
       const quizData = await response.json();
 
+      // Conditional rendering to check if quiz data is available
       if (quizData && quizData.quizList) {
         setQuizList(quizData.quizList);
         // console.log(quizData);
       }
-
-      
     } 
     catch (error) {
       console.error('Error fetching quizzes:', error);
       setError('Error fetching quizzes');
     }
   },[]);
+  // The useCallback hook ensures that the function is not recreated on every render
     
 //===========EVENT LISTENERS============================
 
-  //Function to trigger logoutbtn
+  // Function to handle user logout
   const logout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('username');
-    localStorage.removeItem('loggedIn');
+    localStorage.removeItem('token'); 
+    localStorage.removeItem('username'); 
+    localStorage.removeItem('loggedIn'); 
     setLoggedIn(false);
-    setError('');
-    setUserData({ username: '', password: '' });
+    setError(''); 
+    setUserData({ username: '', password: '' }); 
   };
+
 
   //===========JSX RENDERING=============================
 
@@ -171,83 +172,89 @@ export default function App() {
           <Routes>
             {loggedIn ? (
               <>
-                <Route path='/' element={
-                  //Page1: HOME
-                  <Page1
-                    logout={logout}
-                    error={error}
-                    currentUser={currentUser}
-                  />}
+                {/* Route for Page1: HOME */}
+                <Route  path='/' element={
+                    <Page1
+                      logout={logout} 
+                      error={error} 
+                      currentUser={currentUser} 
+                    />
+                  }
                 />
+                {/* Route for Page2: GAME */}
                 <Route path='/page2' element={
-                  //Page2: GAME
-                  <Page2
-                    logout={logout}
-                    fetchQuizzes={fetchQuizzes}
-                    setError={setError}
-                    quizList={quizList}
-                    quiz={quiz}      
-                    setQuizName={setQuizName}
-                    setQuiz={setQuiz}
-                    setQuizList={setQuizList}
-                    currentQuestion={currentQuestion}
-                    setCurrentQuestion={setCurrentQuestion}   
-                    questions={questions}
-                    setQuestions={setQuestions}               
-                  />}
+                    <Page2
+                      logout={logout} 
+                      fetchQuizzes={fetchQuizzes} 
+                      setError={setError} 
+                      quizList={quizList}
+                      quiz={quiz} 
+                      setQuizName={setQuizName}
+                      setQuiz={setQuiz} 
+                      setQuizList={setQuizList} 
+                      currentQuestion={currentQuestion} 
+                      setCurrentQuestion={setCurrentQuestion} 
+                      questions={questions} 
+                      setQuestions={setQuestions} 
+                    />
+                  }
                 />
+                {/* Route for Page3: Add Questions */}
                 <Route path='/page3' element={
-                  //Page3: Add Questions
-                  <Page3 
-                    quizName={quizName}
-                    setQuizName={setQuizName}
-                    quizList={quizList}
-                    loggedIn={loggedIn}
-                    logout={logout}
-                    setError={setError}
-                    setQuizList={setQuizList}
-                    fetchQuizzes={fetchQuizzes}       
-                    error={error}  
-                    currentUser={currentUser}
-                    setCurrentUser={setCurrentUser}
-                    currentQuestion={currentQuestion}
-                    setCurrentQuestion={setCurrentQuestion}  
-                    userData={userData}
-                    questions={questions}
-                    setQuestions={setQuestions}
-                    setUserData={setUserData}  
-                  />}
+                    <Page3
+                      quizName={quizName} 
+                      setQuizName={setQuizName} 
+                      quizList={quizList} 
+                      loggedIn={loggedIn} 
+                      logout={logout} 
+                      setError={setError} 
+                      setQuizList={setQuizList} 
+                      fetchQuizzes={fetchQuizzes} 
+                      error={error}
+                      currentUser={currentUser}
+                      setCurrentUser={setCurrentUser}
+                      currentQuestion={currentQuestion} 
+                      setCurrentQuestion={setCurrentQuestion}
+                      userData={userData}
+                      questions={questions} 
+                      setQuestions={setQuestions}
+                      setUserData={setUserData}
+                    />
+                  }
                 />
+                {/* Route for Page4: User Account*/}
                 <Route path='/page4' element={
-                  <Page4
-                    setError={setError}
-                    logout={logout}
-                    currentUser={currentUser}
-                    setUsers={setUsers}
-                    setLoggedIn={setLoggedIn}
-                    users={users}
-                  />}
+                    <Page4
+                      setError={setError} 
+                      logout={logout} 
+                      currentUser={currentUser} 
+                      setUsers={setUsers} 
+                      setLoggedIn={setLoggedIn} 
+                      users={users} 
+                    />
+                  }
                 />
               </>
             ) : (
               <>
+                {/* Route for Login */}
                 <Route exact path='/' element={
-                  //Login
-                  <Login
-                    userData={userData}
-                    setUserData={setUserData}
-                    setLoggedIn={setLoggedIn}
-                    setError={setError}
-
-                  />}
+                    <Login
+                      userData={userData} 
+                      setUserData={setUserData} 
+                      setLoggedIn={setLoggedIn} 
+                      setError={setError} 
+                    />
+                  }
                 />
+                {/* Route for Registration */}
                 <Route path='/reg' element={
-                  //Registration
-                  <Registration
-                    newUserData={newUserData}
-                    setNewUserData={setNewUserData}
-                    setError={setError}
-                  />}
+                    <Registration
+                      newUserData={newUserData}
+                      setNewUserData={setNewUserData} 
+                      setError={setError} 
+                    />
+                  }
                 />
               </>
             )}
