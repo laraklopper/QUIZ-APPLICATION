@@ -40,9 +40,9 @@ const checkJwtToken = (req, res, next) => {
 //------------------GET---------------
 //Route to GET a specific quiz using the quiz Id
 router.get('/findQuiz/:id', checkJwtToken, async (req, res) => {
-    console.log('Finding Quiz');
+    // console.log('Finding Quiz');
     try {
-        const quiz = await Quiz.findById(req.params.id).populate('user');
+        const quiz = await Quiz.findById(req.params.id).populate('username');
         if (!quiz) {
             return res.status(404).json({ message: 'Quiz not found' });
         }
@@ -56,14 +56,11 @@ router.get('/findQuiz/:id', checkJwtToken, async (req, res) => {
 });
 
 
-
-
-
 // Route to fetch all the quizzes from the database
 router.get('/findQuizzes', checkJwtToken,  async (req, res) => {
-    console.log('Finding Quizzes')
+    // console.log('Finding Quizzes')
     try {   
-        const quizzes = await Quiz.find({}).populate('user');
+        const quizzes = await Quiz.find({}).populate('username');
         res.json({quizList: quizzes})  
         console.log(quizzes);
     } 
@@ -79,30 +76,57 @@ router.get('/findQuizzes', checkJwtToken,  async (req, res) => {
 //------------POST--------------
 //Route to add new quiz
 router.post('/addQuiz', async (req, res) => {
+    console.log(req.body)
+     // const { name, questions, username } = req.body;
+  try {
+    // const token = req.headers.authorization.split(' ')[1];
+    // const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    const { name, questions, username } = req.body;
+
+    if (!name || !Array.isArray(questions) || questions.length !== 5) {
+      return res.status(400).json({ success: false, message: 'Invalid quiz data' });
+    }
+
+    // Conditional rendering to check if username exists
+    if (!mongoose.Types.ObjectId.isValid(username)) {
+      return res.status(400).json({ success: false, message: 'Invalid user ID' });
+    }
+
+    const newQuiz = new Quiz({ name, questions, username });
+    await newQuiz.save();
+    res.status(201).json(newQuiz);
+  } catch (error) {
+    console.error('Error adding quiz:', error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+router.post('/addQuiz', async (req, res) => {
     console.log(req.body);
     
     const { name, questions, username } = req.body;   
-    if (!name || !questions ) {      
-        return res.status(400).json({ 
-            message: 'Quiz name and questions are required' 
-        })
-    } 
-    
-    try {       
-        // Create a new quiz object
-        const newQuiz = new Quiz({ 
-            name, 
-            questions, 
-            username
-        });
+   if(!name || !questions || questions.length !== 5) {
+        return res.status(400).json({ message: 'Quiz name and exactly 5 questions are required' });
+    }
 
-        
+
+      // Conditional rendering to check that each question has exactly 3 options
+    for (const question of questions) {
+        if (question.options.length !== 3) {
+            return res.status(400).json({
+                message: 'Each question must have exactly 3 options',
+            });
+        }
+    }
+    try {       
         const existingQuiz = await Quiz.findOne({name});
         if (existingQuiz) {
             return res.status(400).json(
                 {message: 'Quiz name already exists'})
-        }
-
+        }        
+        
+        // Create a new quiz object
+        const newQuiz = new Quiz({ name, questions, username});
         const savedQuiz = await newQuiz.save();
         res.status(201).json(savedQuiz);
 
