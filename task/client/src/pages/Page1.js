@@ -1,20 +1,20 @@
 // Import necessary modules and packages
-import React from 'react';
-import '../CSS/Page1.css'
+import React from 'react';// Import the React module to use React functionalities
+import '../CSS/Page1.css'// Import CSS file for styling
 //Bootstrap
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col'; 
-import Button from 'react-bootstrap/Button';
+import Row from 'react-bootstrap/Row'; // Import Row component from Bootstrap
+import Col from 'react-bootstrap/Col'; // Import Col component from Bootstrap
+import Button from 'react-bootstrap/Button'; // Import Button component from Bootstrap
 //Components
-import Header from '../components/Header'
-import Footer from '../components/Footer';
+import Header from '../components/Header';// Import Header component
+import Footer from '../components/Footer';// Import Footer component
 
 //Page1 function component
 export default function Page1(
   { //PROPS PASSED FROM PARENT COMPONENT 
-    logout,
-     error, 
-     currentUser
+    logout,// Function to handle user logout
+    error, // Error state
+     currentUser//Current user state
     }
   ) {
  
@@ -27,6 +27,7 @@ export default function Page1(
   return (
     <>
     {/* HEADER */}
+      {/* Render the Header component with a heading prop */}
     <Header heading='HOME'/>
     {/* Section1 */}
     <section id='page1Section1'>
@@ -35,17 +36,18 @@ export default function Page1(
         <Col xs={6}>
         {/* Display an error message if user is not found */}
         {error ? (
-          <p className='errorMessage'>{error}</p>
-
+              <p className='errorMessage'>{error}</p>// Show the error message if there's an error
         ):(
           <div id='welcomeMsg'>
             <label id='welcomeLabel'>
               <h2 id='welcomeHeading'>WELCOME:</h2>
+                    {/* Display the current user's username */}
               <h3 id='username'>{currentUser?.username}</h3>
             </label>
           </div>
         )}
         </Col>
+        {/* Instructions Section */}
           <Col xs={6} id='instructions'>
             <h2 id='instructionsHeading'>HOW TO PLAY:</h2>
             {/* Explain how the application works */}
@@ -62,7 +64,7 @@ export default function Page1(
           </Col>
       </Row>
     </section>
-    {/* Section2 */}
+    {/* Section2 - Displays a users past scores*/}
     <section className='section2'>
       <Row>
         {/* Past Scores */}
