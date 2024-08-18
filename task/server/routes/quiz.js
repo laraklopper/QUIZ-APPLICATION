@@ -43,6 +43,9 @@ router.get('/findQuiz/:id', checkJwtToken, async (req, res) => {
     // console.log('Finding Quiz');
     try {
         const quiz = await Quiz.findById(req.params.id).populate('username');
+        // if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+        //     return res.status(400).json({ success: false, message: 'Invalid quiz ID' });
+        // }
         if (!quiz) {
             return res.status(404).json({ message: 'Quiz not found' });
         }
@@ -60,7 +63,10 @@ router.get('/findQuiz/:id', checkJwtToken, async (req, res) => {
 router.get('/findQuizzes', checkJwtToken,  async (req, res) => {
     // console.log('Finding Quizzes')
     try {   
-        const quizzes = await Quiz.find({}).populate('username');
+        // if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+        //     return res.status(400).json({ success: false, message: 'Invalid quiz ID' });
+        // }
+        const quizzes = await Quiz.find({}).populate('user')//populate('username');
         res.json({quizList: quizzes})  
         console.log(quizzes);
     } 
