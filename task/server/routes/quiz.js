@@ -42,7 +42,7 @@ const checkJwtToken = (req, res, next) => {
 router.get('/findQuiz/:id', checkJwtToken, async (req, res) => {
     // console.log('Finding Quiz');
     try {
-        const quiz = await Quiz.findById(req.params.id).populate('username');
+        const quiz = await Quiz.findById(req.params.id).populate('user')//('username');
         // if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
         //     return res.status(400).json({ success: false, message: 'Invalid quiz ID' });
         // }
