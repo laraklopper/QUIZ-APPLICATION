@@ -1,10 +1,9 @@
 // Import necessary modules and packages
-const express = require('express'); 
-const router = express.Router();
-const cors = require('cors');
-// Import JSON Web Token for authentication
-const jwt = require('jsonwebtoken');
-const mongoose = require('mongoose');
+const express = require('express'); // Import Express Web framework 
+const router = express.Router();// Create an Express router
+const cors = require('cors'); // Import CORS to handle cross-origin requests
+const jwt = require('jsonwebtoken');// Import JSON Web Token for authentication
+const mongoose = require('mongoose'); // Import Mongoose for MongoDB interaction
 //Schemas
 const Quiz = require('../models/quizModel');
 
