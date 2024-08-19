@@ -19,8 +19,6 @@ export default function Page3(
   setError, 
   fetchQuizzes, 
   logout, 
-  userData,
-  setUserData,
   quizName,
   setQuizName,
   currentQuestion,
@@ -38,9 +36,8 @@ export default function Page3(
   const [newQuestions, setNewQuestions] = useState([]);// State to store the array of Questions for the new or updated quiz
   const [quizToUpdate, setQuizToUpdate] = useState(null);// ID of the quiz being edited
   const [editQuizIndex, setEditQuizIndex] = useState(// Details for editing a specific question
-    { questionText: '', correctAnswer: '', options: ['', '', ''] });
-    //Form error message variables
-  const [formError, setFormError] = useState(null);
+    { editQuestionText: '', editCorrectAnswer: '', editOptions: ['', '', ''] });
+  const [formError, setFormError] = useState(null);//Form error message variables
   
   //====================USE EFFECT HOOK===================
   /* useEffect to fetch quizzes when the component mounts
@@ -54,7 +51,6 @@ export default function Page3(
   // ----------POST-------------------
   //Function to add a new quiz
   const addNewQuiz = async () => {
-    
       // Conditional rendering to check if the number of questions is exactly 5
     if (questions.length !== 5) {
       // If not, alert the user and exit the function
@@ -77,7 +73,7 @@ export default function Page3(
         mode: 'cors',//Enable CORS for cross-origin resourcing
         headers: {
           'Content-Type': 'application/json',//Specify the Content-Type
-          'Authorization': `Bearer ${token}`,
+          'Authorization': token,// Pass the JWT token in Authorization header
         },
         body: JSON.stringify(quiz) // Convert quiz object to JSON
       });
@@ -86,11 +82,7 @@ export default function Page3(
       if (response.ok) {
         alert('New Quiz successfully added')//Display a success message if the quiz is successfy
         const newQuiz = await response.json(); 
-        // setQuizList((prevQuizList) => [...prevQuizList, newQuiz]);
-         setQuizList((prevQuizList) => [
-              ...prevQuizList, 
-                { ...newQuiz, currentUser: userData.username }
-            ]);
+        setQuizList((prevQuizList) => [...prevQuizList, newQuiz]);
         setQuizName('');     
         setQuestions([]);
       } 
@@ -116,11 +108,11 @@ export default function Page3(
       const token = localStorage.getItem('token');
       //Send a PUT request to the server to edit a quiz
       const response = await fetch(`http://localhost:3001/quiz/editQuiz/${quizId}`, {
-        method: 'PUT',
-        mode: 'cors',
+        method: 'PUT',//HTTP request method
+        mode: 'cors',// Set the mode to 'cors' to allow cross-origin requests
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',//Specify Content-Type in payload
+          'Authorization': token,// Pass the JWT token in Authorization header
         },
         body: JSON.stringify({
             name: newQuizName, 
@@ -161,7 +153,7 @@ export default function Page3(
         mode: 'cors',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          'Authorization': token,// Pass the JWT token in Authorization header
         }
       });
       //Response handling
@@ -269,8 +261,6 @@ export default function Page3(
           setQuizName={setQuizName}
           currentQuestion={currentQuestion}
           setCurrentQuestion={setCurrentQuestion}
-          userData={userData}
-          setUserData={setUserData}
         />
       </section>
       {/* Footer Component */}
