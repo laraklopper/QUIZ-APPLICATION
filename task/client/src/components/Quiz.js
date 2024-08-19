@@ -1,5 +1,5 @@
 // Import necessary modules and packages
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 // Bootstrap
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col'; 
@@ -22,6 +22,9 @@ export default function Quiz(
     //=============STATE VARIABLES=====================
   // State to keep track of the time left for the countdown
   const [timeLeft, setTimeLeft] = useState(timer);
+  const [startTime, setStartTime] = useState(null);
+  const [now, setNow] = useState(null)
+  const intervalRef=useRef(null);
   // State to keep track of the selected option
     const [selectedOption, setSelectedOption] = useState(null)
     
@@ -55,6 +58,20 @@ export default function Quiz(
     return <div>Loading...</div>
   }
 
+  // const startTimer = () => {
+  //   setStartTime(Date.now());
+  //   setNow(Date.now())
+
+  //   clearInterval()
+  //   intervalRef.current = setInterval(() => {
+  //     setNow(Date.now());
+  //   },10)
+  // }
+
+  // let secondsPassed = 0 
+  // if(startTime!= null && now != null){
+  //   secondsPassed = (now - startTime)/ 1000
+  // }
   // Function to format the timer into mm:ss format
   const formatTimer = (time) => {
     if (time === null) return '00:00'; // Return default if time is null
@@ -103,6 +120,7 @@ export default function Quiz(
           <Col xs={6} md={4} id='timerCol'>
             {/* Display timer if enabled */}
             {quizTimer && <div id='timer'>TIMER: {formatTimer(timeLeft)}</div>}
+             {/*<h4>TimePassed: {secondsPassed.toFixed(3)}</h4>*/}
           </Col>
         </Row>
         <div>
