@@ -92,7 +92,7 @@ export default function EditQuiz(
               <input
                 type='text'
                 name='questionText'
-                value={editQuizIndex.questionText}
+                value={editQuizIndex.editQuestionText}
                 onChange={(e) =>
                   setEditQuizIndex({
                     ...editQuizIndex,
@@ -113,7 +113,7 @@ export default function EditQuiz(
               <input
                 type='text'
                 name='correctAnswer'
-                value={editQuizIndex.correctAnswer}
+                value={editQuizIndex.editCorrectAnswer}
                 onChange={(e) =>
                   setEditQuizIndex({
                     ...editQuizIndex,
@@ -136,14 +136,14 @@ export default function EditQuiz(
               <input
                 type='text'
                 name='options[0]'
-                value={editQuizIndex.options[0] || ''}
+                value={editQuizIndex.editOptions[0] || ''}
                 onChange={(e) =>
                   setEditQuizIndex({
                     ...editQuizIndex,
-                    options: [
+                    editOptions: [
                       e.target.value,
-                      editQuizIndex.options[1],
-                      editQuizIndex.options[2],
+                      editQuizIndex.editOptions[1],
+                      editQuizIndex.editOptions[2],
                     ],
                   })
                 }
@@ -161,14 +161,14 @@ export default function EditQuiz(
               <input
                 type='text'
                 name='options[1]'
-                value={editQuizIndex.options[1] || ''}
+                value={editQuizIndex.editOptions[1] || ''}
                 onChange={(e) =>
                   setEditQuizIndex({
                     ...editQuizIndex,
                     options: [
-                      editQuizIndex.options[0],
+                      editQuizIndex.editOptions[0],
                       e.target.value,
-                      editQuizIndex.options[2],
+                      editQuizIndex.editOptions[2],
                     ],
                   })
                 }
@@ -188,13 +188,13 @@ export default function EditQuiz(
               <input
                 type='text'
                 name='options[2]'
-                value={editQuizIndex.options[2] || ''}
+                value={editQuizIndex.editOptions[2] || ''}
                 onChange={(e) =>
                   setEditQuizIndex({
                     ...editQuizIndex,
                     options: [
-                      editQuizIndex.options[0],
-                      editQuizIndex.options[1],
+                      editQuizIndex.editOptions[0],
+                      editQuizIndex.editOptions[1],
                       e.target.value,
                     ],
                   })
