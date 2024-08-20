@@ -61,7 +61,18 @@ export default function Page2(
   };
 
 
-
+  //Function to calculate the score
+  // const calculateScore = () => {
+  //   let score = 0;
+  //   questions.forEach((question, index)=> {
+  //     if (answers[index] === question.correctAnswer) {
+  //       score++
+  //     }
+  //   });
+  //   setScore(score)
+  //   showScore(true)//display the score when quiz is comleted
+  // }
+  
   //=======EVENT LISTENERS============
   // Function to handle quiz selection
   const handleSelectQuiz = (event) => {
