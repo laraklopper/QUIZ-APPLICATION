@@ -4,7 +4,7 @@ const router = express.Router();
 // Import the 'jsonwebtoken' library for handling JSON Web Tokens
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
-// const bcrypt = require('bcrypt');
+
 //Schemas
 const User = require ('../models/userSchema');
 // const {authenticateToken, checkAge} = require('./middleware');
@@ -33,16 +33,7 @@ const authenticateToken = (req, res, next) => {
         });
 };
 
-/*
-//Middleware to only grant admin users authorisation to view all user data
-const adminAuthorization = (req, res, next) => {
-    if (req.user && req.user.admin) {
-        next();
-    } else {
-        return res.status(403).json({ message: 'Forbidden: Admin access required' });
-    }
-};
-*/
+
 //Middleware function to check that admin user is 18 years or older
 const checkAge = (req, res, next) => {
     const { dateOfBirth } = req.body;
@@ -145,24 +136,6 @@ router.post('/login', async (req, res) => {
             throw new Error('User not found')
         }
 
-        // const isMatch = await bcrypt.compare(password, user.password);
-        // if (!isMatch) {
-        //     return res.status(401).json({ message: 'User not authenticated' });
-        // }
-
-        // // Generate a JWT token for authentication
-        //     const jwtToken = jwt.sign(
-        //         { userId: user._id },
-        //                 'secretKey',
-        //                 /*process.env.JWT_SECRET,*/
-        //                 {
-        //                     expiresIn: '12h',
-        //                     algorithm: 'HS256',
-        //                 }
-        //             );
-        //     // Send the generated JWT token as a JSON response
-        //     res.json({ 'token': jwtToken })
-
         if (password === user.password) {
             // Generate a JWT token for authentication
             const jwtToken = jwt.sign(
@@ -208,14 +181,13 @@ router.post('/register', checkAge, async (req, res) => {
             );
         };
 
-        const hashedPassword = await bcypt.hash(password, 10)
 
         const newUser = new User({
             username,
             email,
             dateOfBirth,
             admin,
-            password : hashedPassword 
+            password 
         });
 
         const savedUser = await newUser.save();
