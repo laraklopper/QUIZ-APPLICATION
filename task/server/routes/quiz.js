@@ -144,6 +144,7 @@ router.post('/addQuiz', async (req, res) => {
     }
 })
 
+
 //-------------------PUT--------------------------
 // Route to edit a quiz
 router.put('/editQuiz/:id', checkJwtToken,  async (req, res) => {
