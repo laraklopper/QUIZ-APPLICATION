@@ -161,33 +161,32 @@ const handleNextQuestion = useCallback(() => {
 
   //----------POST--------------------------------
     //Function to save score
-  /*const addScore = async() => {
+  const addScore = async () => {//Define an async function to add userScores
     try {
-
-        const response = await fetch('http://localhost:3001/quiz/addScore', {
-          method: 'POST',//HTTP request method
-          mode: 'cors',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            username: userData.username,
-            quizName: quizName,
-            score: score
-          })
-        }
-    )
-
-    if (!response.ok) {
-      throw new Error('Error saving user score')
+      const token = localStorage.getItem('token')
+      const response = await fetch('http://localhost:3001/quiz/addScore', {
+        method: 'POST',//HTTP request method
+        mode: 'cors',//Enable CORS
+        headers: {
+          'Content-Type': 'application/json',//Specify the Content-Type as JSON
+          'Authorization': `Bearer ${token}`, // Include token for authorization
+        },
+        body: JSON.stringify({
+          username: currentUser, // Pass current user's name
+          quizName: quizName, // Pass quiz name
+          score, // Pass the current score
+        })
+      });
+      if (response.ok) {
+        const userScore = await response.json(); // Parse the response data
+      } else {
+        throw new Error('Error saving user score'); // Throw an error message if the POST request is not successful
+      }
+    } catch (error) {
+      console.error('Error saving score'); // Log error message in the console for debugging purposes
+      setError('Error saving score: ' + error.message); // Set the error state
     }
-    //logic to save new score
-    } 
-    catch (error) {
-      console.error('Error saving score');
-      setError('Error saving score' + error.message)
-    }
-  }*/
+  };
   
    // Function to start the quiz
   const handleQuizStart = useCallback(async (e) => {
