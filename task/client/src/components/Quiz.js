@@ -1,12 +1,12 @@
 // Import necessary modules and packages
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState} from 'react';
 // Bootstrap
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col'; 
 import Button from 'react-bootstrap/Button';
 
 //Quiz function component
-export default function Quiz(
+export default function Quiz(//Export default Quiz function component
   {// PROPS PASSED FROM PARENT COMPONENT
     selectedQuiz,
     quizIndex,
@@ -20,33 +20,27 @@ export default function Quiz(
   }) {
 
     //=============STATE VARIABLES=====================
-  // State to keep track of the time left for the countdown
-  const [timeLeft, setTimeLeft] = useState(timer);
-  const [startTime, setStartTime] = useState(null);
-  const [now, setNow] = useState(null)
-  const intervalRef=useRef(null);
-  // State to keep track of the selected option
-    const [selectedOption, setSelectedOption] = useState(null)
-    
-    const optionIds = ['A', 'B', 'C', 'D']
+
+  const [timeLeft, setTimeLeft] = useState(timer); // State to keep track of the time left for the countdown  
+    const [selectedOption, setSelectedOption] = useState(null)// State to keep track of the selected option
+    const optionIds = ['A', 'B', 'C', 'D']// Option identifiers (e.g., A, B, C, D)
 
     //========USE EFFECT HOOK==================
       // Effect hook to manage countdown timer
     useEffect(() => {
-    if (!quizTimer) return;
+    if (!quizTimer) return;// Exit if quiz timer is not enabled
 
-    setTimeLeft(timer);
+    setTimeLeft(timer);// Initialize timer
     const interval = setInterval(() => {
       setTimeLeft((prevTime) => {
         if (prevTime <= 1) {
-          clearInterval(interval);
-          handleNextQuestion();
-          return 0;
+          clearInterval(interval);// Clear the interval to stop the timer
+          handleNextQuestion();// Call the handleNextQuestion function to move to the next question
+          return 0;// Ensure time left is set to 0
         }
-        // /Decrement the timer
-        return prevTime - 1;
+        return prevTime - 1;// Decrease time left by 1 second
       });
-    }, 1000);
+    }, 1000);// 1000 milliseconds = 1 second
 
       /* Cleanup function to clear the interval when the 
       component unmounts or dependencies change*/
@@ -58,20 +52,6 @@ export default function Quiz(
     return <div>Loading...</div>
   }
 
-  // const startTimer = () => {
-  //   setStartTime(Date.now());
-  //   setNow(Date.now())
-
-  //   clearInterval()
-  //   intervalRef.current = setInterval(() => {
-  //     setNow(Date.now());
-  //   },10)
-  // }
-
-  // let secondsPassed = 0 
-  // if(startTime!= null && now != null){
-  //   secondsPassed = (now - startTime)/ 1000
-  // }
   // Function to format the timer into mm:ss format
   const formatTimer = (time) => {
     if (time === null) return '00:00'; // Return default if time is null
@@ -80,20 +60,39 @@ export default function Quiz(
     // Format timer
     return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   };
-  //============EVENT LISTENERS=================
+  
+    //============EVENT LISTENERS=================
   // Function to handle answer selection and update the score if correct
-  const handleAnswerClick = (isCorrect) => {
-    if (isCorrect) {
-      setScore(score + 1);
-    }
-    handleNextQuestion();
-  };
+  // const handleAnswerClick = (isCorrect) => {
+  //   if (isCorrect) {
+  //     setScore(score + 1);
+  //   }
+  //   handleNextQuestion();// Move to the next question
+  // };
 
-  // Function to handle option click and update the selected option
+  // // Function to handle option click and update the selected option
+  // const handleOptionClick = (option) => {
+  //   setSelectedOption(option);// Update the selected option
+  //   handleAnswerClick(option === questions[quizIndex].correctAnswer);
+  // };
+
+  //Function to handle user input when answering questions
   const handleOptionClick = (option) => {
-    setSelectedOption(option);
-    handleAnswerClick(option === questions[quizIndex].correctAnswer);
-  };
+    setSelectedOption(option)  // Update the selected option in state to reflect user selection
+    //Conditional rendering to check if the option is correct
+    if (option === questions[quizIndex].correctAnswer) {
+      setScore(score + 1);  // Increment the score if the selected option is correct
+    }
+    else if(quizIndex === 5){
+      addScore();//Call the addScore function if the question is the last question
+    }
+    else{
+      /* Call the handleNextQuestion() function if the 
+      question is not the last question*/ 
+      handleNextQuestion();
+    }
+  }
+
 
   //================JSX RENDERING======================
 
@@ -136,7 +135,6 @@ export default function Quiz(
           </Row>
           {/* Map through and randomize options */}
           <Row>
-
           <Col>
           {questions[quizIndex].options.map((option, index)=> (
             <div key={index}>
@@ -182,6 +180,5 @@ export default function Quiz(
         </Row>
       </div>
     </div>
-
   );
 }
