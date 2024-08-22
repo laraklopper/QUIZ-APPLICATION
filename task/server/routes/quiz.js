@@ -42,10 +42,15 @@ const checkJwtToken = (req, res, next) => {
 router.get('/findQuiz/:id', checkJwtToken, async (req, res) => {
     // console.log('Finding Quiz');
     try {
+        const {id} = req.params;
+        
         const quiz = await Quiz.findById(req.params.id).populate('user')//('username');
-        // if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-        //     return res.status(400).json({ success: false, message: 'Invalid quiz ID' });
-        // }
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ success: false, message: 'Invalid quiz ID' });
+        }
+
+        const quiz = await Quiz.findById(id).populate('userId', 'username');
+        
         if (!quiz) {
             return res.status(404).json({ message: 'Quiz not found' });
         }
@@ -58,13 +63,11 @@ router.get('/findQuiz/:id', checkJwtToken, async (req, res) => {
     }
 });
 
+// Route to fetch all the quizzes from the database
 router.get('/findQuizzes', checkJwtToken, async (req, res) => {
     // console.log('Finding Quizzes');
     try {
-          if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-            return res.status(400).json({ success: false, message: 'Invalid quiz ID' });
-        }
-        const quizzes = await Quiz.find({}).populate('username');
+        const quizzes = await Quiz.find({}).populate('userId','username');
         res.json({ quizList: quizzes });
         console.log(quizzes);
     } catch (error) {
@@ -73,49 +76,34 @@ router.get('/findQuizzes', checkJwtToken, async (req, res) => {
     }
 });
 
-// Route to fetch all the quizzes from the database
-router.get('/findQuizzes', checkJwtToken,  async (req, res) => {
-    // console.log('Finding Quizzes')
-    try {   
-        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-            return res.status(400).json({ success: false, message: 'Invalid quiz ID' });
-        }
-        const quizzes = await Quiz.find({}).populate('user')//populate('username');
-        res.json({quizList: quizzes})  
-        console.log(quizzes);
-    } 
-    catch (error) 
-    {
-        console.error('Error finding quizzes:', error.message);
-        res.status(500).json(
-            { message: error.message });
-    }
-});
+
 
 
 //------------POST--------------
 //Route to add new quiz
 router.post('/addQuiz', async (req, res) => {
     console.log(req.body)
-     // const { name, questions, username } = req.body;
-  try {
-    // const token = req.headers.authorization.split(' ')[1];
-    // const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-    const { name, questions, username } = req.body;
+     const { name, questions} = req.body;
 
+    
     if (!name || !Array.isArray(questions) || questions.length !== 5) {
       return res.status(400).json({ success: false, message: 'Invalid quiz data' });
     }
-
-    // Conditional rendering to check if username exists
-    if (!mongoose.Types.ObjectId.isValid(username)) {
-      return res.status(400).json({ success: false, message: 'Invalid user ID' });
+        for (const question of questions) {   
+         // Conditional rendering to check that each question has exactly 3 options
+        if (question.options.length !== 3) {
+            return res.status(400).json({
+                message: 'Each question must have exactly 3 options',
+            });
+        }
     }
+  try {
 
-    const newQuiz = new Quiz({ name, questions, username });
+    const newQuiz = new Quiz({ name, questions, userId: req.user._id });
     await newQuiz.save();
     res.status(201).json(newQuiz);
-  } catch (error) {
+  } 
+  catch (error) {
     console.error('Error adding quiz:', error);
     res.status(500).json({ success: false, message: 'Server error' });
   }
@@ -151,10 +139,11 @@ router.post('/addQuiz', async (req, res) => {
 //     }
     
 // })
+
 router.post('/addQuiz', async (req, res) => {
     console.log(req.body);
     
-    const { name, questions, username } = req.body;   
+    const { name, questions} = req.body;   
    if(!name || !questions || questions.length !== 5) {
         return res.status(400).json({ message: 'Quiz name and exactly 5 questions are required' });
     }
@@ -176,12 +165,12 @@ router.post('/addQuiz', async (req, res) => {
         }        
         
         // Create a new quiz object
-        const newQuiz = new Quiz({ name, questions, username});
+        const newQuiz = new Quiz({ name, questions, userId: req.user._id });
+
         const savedQuiz = await newQuiz.save();
         res.status(201).json(savedQuiz);
 
         console.log(savedQuiz);
-
     } 
     catch (error) {
         console.error('Error occurred while adding new quiz:', error);
@@ -203,7 +192,6 @@ router.put('/editQuiz/:id', checkJwtToken,  async (req, res) => {
     }
 
     try {
-        //Validate that each question has exactly 3 options
         for(const question of questions){
             if (question.options.length !== 3) {
                 return res.status(400).json({
@@ -216,9 +204,7 @@ router.put('/editQuiz/:id', checkJwtToken,  async (req, res) => {
         const updatedQuiz = await Quiz.findByIdAndUpdate(
             id, 
             { name, questions },
-            { 
-                new: true, 
-            }
+            {new: true,}
         );
 
         if (!updatedQuiz) {            
@@ -240,6 +226,9 @@ router.delete('/deleteQuiz/:id', async (req, res) => {
     const { id } = req.params;
     
     try {
+          if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: 'Invalid quiz ID' });
+        }
         const deletedQuiz = await Quiz.findByIdAndDelete(id);
         
         if (!deletedQuiz) {
