@@ -1,6 +1,6 @@
 // Import necessary modules and packages
 import React, { useState } from 'react';
-import '../CSS/Page4.css'
+import '../CSS/Page4.css';
 //Bootstrap
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -11,17 +11,16 @@ import EditUser from '../components/EditUser';
 import Footer from '../components/Footer';
 import UserViewBtn from '../components/UserViewBtn';
 
-//Page 4 function component
-export default function Page4(
-  {//PROPS PASSED FROM PARENT COMPONENT
-    logout, 
-    currentUser, 
-    setUsers, 
-    setLoggedIn, 
-    setError, 
-    users
-   }
-  ) {
+// Page 4 function component
+export default function Page4({
+  // PROPS PASSED FROM PARENT COMPONENT
+  logout, 
+  currentUser, 
+  setUsers, 
+  setLoggedIn, 
+  setError, 
+  users
+}) {
   //===========STATE VARIABLES===============
   const [editUserData, setEditUserData] = useState({
     editUsername: '',
@@ -32,7 +31,7 @@ export default function Page4(
 
   //---------------------------------------
 
-  //Function to specify the date format
+  // Function to specify the date format
   const dateDisplay = (dateString) => {
     const options = {
       day: '2-digit',
@@ -41,9 +40,10 @@ export default function Page4(
     };
     return new Date(dateString).toLocaleDateString('en-GB', options);
   }
+
   //======REQUESTS===============
   //--------PUT---------------
-  //Function to edit a user 
+  // Function to edit a user 
   const editUser = async (userId) => {
     try {
       const token = localStorage.getItem('token');
@@ -83,10 +83,10 @@ export default function Page4(
   };
 
   //-----------DELETE----------------------
-  //Function to remove a user
+  // Function to remove a user
   const deleteUser = async (userId) => {
     try {
-      //Send delete request to server
+      // Send delete request to server
       const response = await fetch(`http://localhost:3001/users/deleteUser/${userId}`, {
         method: 'DELETE',
         mode: 'cors',
@@ -102,15 +102,14 @@ export default function Page4(
         prevUsers.filter((user) => user._id !== userId)
       );
       console.log('User Successfully removed');
-    }
-    catch (error) {
+    } catch (error) {
       setError('Error removing user', error);
       console.error('Error removing user:', error.message);
     }
   };
 
   //==========EVENT LISTENERS=============
-  //Function to handle input change in the update form
+  // Function to handle input change in the update form
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setEditUserData((prevData) => ({
@@ -119,27 +118,27 @@ export default function Page4(
     }));
   };
 
-  //Function to toggle the update form
+  // Function to toggle the update form
   const updateAccount = (userId) => {
     setUpdateUser(userId === updateUser ? null : userId);
   };
 
   /* Function to toggle the display of the users list if 
-  the current user is an admin user*/
+     the current user is an admin user */
   const toggleViewUsers = () => {
     if (currentUser.admin) {
       setViewUsers(!viewUsers);
-    }
-    else{
+    } else {
       console.log('Unauthorized');
-      alert('Unauthorized')
+      alert('Unauthorized');
     }
   };
+
   //=======JSX RENDERING==================
 
   return (
     <>
-    {/* Header */}
+      {/* Header */}
       <Header heading='USER ACCOUNT' />
       <section className="page4Section1">
         {/* Current User output */}
@@ -147,30 +146,38 @@ export default function Page4(
           <div id='currentUserOutput'>
             <Row className='userOutputRow'>
               <Col xs={6} md={4} className='userOutputCol'>
-              {/* Current user username */}
+                {/* Current user username */}
+                <div className='userOutput'>
                 <label>USERNAME:</label>
-                <p className='outputText'>{currentUser.username}</p>
+                <p className='outputText'>{currentUser.username}</p></div>
               </Col>
               <Col xs={6} md={4} className='userOutputCol'>
-              {/* Current user email */}
+                {/* Current user email */}
+                <div className='userData'>
                 <label>EMAIL:</label>
                 <p className='outputText'>{currentUser.email}</p>
+                </div>
               </Col>
               <Col xs={6} md={4} className='userOutputCol'>
-              {/* current user Date of Birth */}
-                <label>DATE OF BIRTH:</label>
+                {/* Current user Date of Birth */}
+                <div className='userData'>
+                  <label>DATE OF BIRTH:</label>
                 <p className='outputText'>{dateDisplay(currentUser.dateOfBirth)}</p>
+                </div>
+                
               </Col>
             </Row>
             <Row className='userOutputRow'>
               <Col xs={6} md={4} className='userOutputCol'>
-              {/* Output to state if the current user is an admin user */}
+                {/* Output to state if the current user is an admin user */}
+                <div className='userData'>
                 <label>ADMIN:</label>
                 <p className='outputText'>{currentUser.admin ? 'Yes' : 'No'}</p>
+                </div>
               </Col>
               <Col xs={6} md={4}></Col>
               <Col xs={6} md={4} className='userOutputCol'>
-              {/* Button to toggle the update User details  */}
+                {/* Button to toggle the update User details */}
                 <Button
                   variant="primary"
                   type='button'
@@ -195,43 +202,43 @@ export default function Page4(
       </section>
       <section className='section2'>
         <div>
-          {/* Display all USERS  */}
-          {!viewUsers ? (
-
-            <Row>
-              {/* Button to display all users */}
-              <UserViewBtn toggleViewUsers={toggleViewUsers}/>
-            </Row>
-          ):(
-          <div id='usersList'>
-            <Row>
-              <Col>
-              <h2 className='h2'>USERS</h2>
-              </Col>
-            </Row>
-            {/* User Output */}
+          {/* Display all USERS */}
+          <Row>
+            <UserViewBtn 
+              toggleViewUsers={toggleViewUsers}
+              viewingUsers={viewUsers}
+            />
+          </Row>
+          {viewUsers && (
+            <div id='usersList'>
+              <Row>
+                <Col>
+                  <h2 className='h2'>USERS</h2>
+                </Col>
+              </Row>
+              {/* User Output */}
               {users.map((user) => (
                 <div key={user._id} className='user'>
                   <Row>
-                    <Col xs={6}>
-                    {/* Username output */}
-                      <label>USERNAME:</label>
+                    <Col xs={6} className='userDataCol'>
+                      {/* Username output */}
+                      <label className='userDataLabel'>USERNAME:</label>
                       <p className='outputText'>{user.username}</p>
                     </Col>
-                    <Col xs={6}>
-                    {/* Email output */}
+                    <Col xs={6} className='userDataCol'>
+                      {/* Email output */}
                       <label>EMAIL:</label>
                       <p className='outputText'>{user.email}</p>
                     </Col>
                   </Row>
                   <Row>
-                    <Col xs={6}>
-                    {/* Date of Birth output */}
+                    <Col xs={6} className='userDataCol'>
+                      {/* Date of Birth output */}
                       <label>DATE OF BIRTH:</label>
                       <p className='outputText'>{dateDisplay(user.dateOfBirth)}</p>
                     </Col>
-                    <Col xs={6}>
-                    {/* Button to delete user */}
+                    <Col xs={6} className='userDataCol'>
+                      {/* Button to delete user */}
                       <Button
                         variant='danger'
                         type='button'
@@ -242,22 +249,12 @@ export default function Page4(
                   </Row>
                 </div>
               ))}
-              <Row>
-                <Col>
-                {/* Toggle Button to hide user list */}
-                <Button variant='secondary'
-                onClick={toggleViewUsers}
-                >
-                  HIDE USERS
-                </Button>
-                </Col>
-              </Row>
             </div>
           )}
         </div>
       </section>
       {/* Page Footer */}
-     <Footer logout={logout}/>
+      <Footer logout={logout}/>
     </>
   );
 }
