@@ -1,5 +1,5 @@
 // Import necessary modules and packages
-import React, { useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState} from 'react';
 import '../CSS/Page3.css';
 // Bootstrap
 import Button from 'react-bootstrap/Button'; 
@@ -19,33 +19,31 @@ export default function Page3(
   setError, 
   fetchQuizzes, 
   logout, 
-  userData,
-  setUserData,
   quizName,
   setQuizName,
   currentQuestion,
   setCurrentQuestion,
   questions,
-  currentUser,
+  // currentUser,
   setQuestions  
 }
 ) {
   
   // ========STATE VARIABLES===============
-  //Edit Quiz variables
   const [newQuizName, setNewQuizName] = useState('');
-  const [update, setUpdate] = useState(false);
-  const [newQuestions, setNewQuestions] = useState([])
-  const [quizToUpdate, setQuizToUpdate] = useState(null);
-  const [editQuizIndex, setEditQuizIndex] = useState(
-    { questionText: '', correctAnswer: '', options: ['', '', ''] });
-    //Form error message variables
-  const [formError, setFormError] = useState(null);
+  const [update, setUpdate] = useState(false);  
+  const [newQuestions, setNewQuestions] = useState([]) 
+  const [quizToUpdate, setQuizToUpdate] = useState(null);  
+  const [editQuizIndex, setEditQuizIndex] = useState(  
+    { editQuestionText: '', editCorrectAnswer: '', editOptions: ['', '', ''] });
+  const [formError, setFormError] = useState(null); 
+  
   
   //====================USE EFFECT HOOK===================
   /* useEffect to fetch quizzes when the component mounts
  or when fetchQuizzes function changes*/
   useEffect(() => {
+    // Call the fetchQuizzes function to retrieve quizzes from the server
       fetchQuizzes()
   }, [fetchQuizzes])
 
@@ -56,13 +54,13 @@ export default function Page3(
     
     if (questions.length !== 5) {
       alert('You must add exactly 5 questions.');
-      return;
+      return;// Exit the function to prevent further execution
     }
     // Create a quiz object to send to the server
     const quiz = {
-      name: quizName, 
-      questions, 
-      username: currentUser
+      name: quizName, // The name of the quiz
+      questions,  // The array of questions
+      // username: currentUser
     }
     try {
       const token = localStorage.getItem('token');
@@ -93,6 +91,7 @@ export default function Page3(
     catch (error) {
       console.error('There was an error creating the quiz:', error);
       setError('There was an error creating the quiz');
+      alert('There was an error creating the quiz')
     }
   };
 
@@ -115,7 +114,7 @@ export default function Page3(
         },
         body: JSON.stringify({
             name: newQuizName, 
-            questions: newQuestions         
+            questions: newQuestions,                    
             })
       });
       //Response handling
@@ -124,7 +123,7 @@ export default function Page3(
         setQuizList(quizList.map(q => 
           (q._id === updatedQuiz._id ? updatedQuiz : q)));
         setEditQuizIndex([
-          { editQuestionText: '', editCorrectAnswer: '', options: ['', '', ''] }
+          { editQuestionText: '', editCorrectAnswer: '', editOptions: ['', '', ''] }
         ]);
         setQuizToUpdate(null);
         setNewQuizName('');
@@ -140,6 +139,7 @@ export default function Page3(
       setError(`Error editing the quiz: ${error}`);
     }
   }
+
 
 //------------DELETE------------------------
 //Function to delete a quiz
@@ -164,17 +164,17 @@ export default function Page3(
       }
     } 
     catch (error) {
-      setError('Error deleting quiz:', error);
-      console.error('Error deleting quiz:', error);
+      setError(`Error deleting quiz: ${error}`);
+      console.error(`Error deleting quiz: ${error}`);
     }
   }
  
   // ===========EVENT LISTENERS==============  
     //Function to toggle editForm
-  const toggleQuizUpdate = (quizId) => {
-    setUpdate(!update)
+  const toggleQuizUpdate = useCallback((quizId) => {
+    setUpdate( !update)
     setQuizToUpdate(quizId);
-  };
+  },[update]);
 
 
   //==============JSX RENDERING=================
@@ -182,7 +182,7 @@ export default function Page3(
     <>
       {/* Header */}
       <Header heading='ADD QUIZ' />
-      {/* Section1 */}
+      {/* Section1: List of quizzes */}
       <section className='page3Section1'>
         <Row className='quizRow'>
           <Col id='outputHeading'>
@@ -247,7 +247,7 @@ export default function Page3(
           ))}
         </div>
       </section> 
-      {/* Section 2 */}
+      {/* Section 2: Form to Add Quiz  */}
       <section id='page3Section2'>
         {/* Form to Add Quiz */}
         <AddQuiz
@@ -260,8 +260,7 @@ export default function Page3(
           setQuizName={setQuizName}
           currentQuestion={currentQuestion}
           setCurrentQuestion={setCurrentQuestion}
-          userData={userData}
-          setUserData={setUserData}
+         
         />
       </section>
       {/* Footer Component */}
