@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');// Import JSON Web Token for authentication
 const mongoose = require('mongoose'); // Import Mongoose for MongoDB interaction
 //Schemas
 const Quiz = require('../models/quizModel');
+// const Score = require('../models/scoreSchema')
 
 //=======SETUP MIDDLEWARE===========
 router.use(cors());
@@ -57,14 +58,28 @@ router.get('/findQuiz/:id', checkJwtToken, async (req, res) => {
     }
 });
 
+router.get('/findQuizzes', checkJwtToken, async (req, res) => {
+    // console.log('Finding Quizzes');
+    try {
+          if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ success: false, message: 'Invalid quiz ID' });
+        }
+        const quizzes = await Quiz.find({}).populate('username');
+        res.json({ quizList: quizzes });
+        console.log(quizzes);
+    } catch (error) {
+        console.error('Error finding quizzes:', error.message);
+        res.status(500).json({ message: error.message });
+    }
+});
 
 // Route to fetch all the quizzes from the database
 router.get('/findQuizzes', checkJwtToken,  async (req, res) => {
     // console.log('Finding Quizzes')
     try {   
-        // if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-        //     return res.status(400).json({ success: false, message: 'Invalid quiz ID' });
-        // }
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ success: false, message: 'Invalid quiz ID' });
+        }
         const quizzes = await Quiz.find({}).populate('user')//populate('username');
         res.json({quizList: quizzes})  
         console.log(quizzes);
@@ -106,6 +121,36 @@ router.post('/addQuiz', async (req, res) => {
   }
 });
 
+//Route to add new score
+// router.post('/addScore', async (req, res) => {
+//     console.log(req.body);
+//     try {
+//         const {username, name, score} = req.body;
+//         const result = new Score({username, name, score})
+
+//         const existingScore = await Score.findOne({username, name})
+
+//         //Conditional rendering to check if the user has previously attempted the quiz
+//         if (existingScore) {
+//             existingScore.score = score
+//             const savedScore = await existingScore.save()
+//             return res.status(201).json(savedScore)
+//         } else {
+//             const savedScore = await result.save()
+//             return res.status(201).json(savedScore)
+//         }
+//         //increase the number of attempts by 1 (attempts + 1) 
+//         /*
+//         if(addScore){
+//             attempts + 1
+//         }
+//         */
+//     } catch (error) {
+//         console.error('Error saving score:', error);
+//         return res.status(500).json({ error: error.message });
+//     }
+    
+// })
 router.post('/addQuiz', async (req, res) => {
     console.log(req.body);
     
