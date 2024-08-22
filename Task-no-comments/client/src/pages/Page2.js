@@ -52,11 +52,11 @@ export default function Page2(
   const shuffleArray = (array) => {
     let shuffledArray = array.slice(); 
     for (let i = shuffledArray.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));   
+      const j = Math.floor(Math.random() * (i + 1));     
 
       [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
     }
-    return shuffledArray; 
+    return shuffledArray;  // Return the shuffled array
   };
 
 
@@ -98,31 +98,33 @@ export default function Page2(
   const fetchQuiz = useCallback(async (quizId) => {
     try {
      
-      if (!quizId) return;
+      if (!quizId) return;// If no quiz ID is selected, exit the function
       const token = localStorage.getItem('token');
       if(!token) return
       // Send a GET request to fetch quiz data from the server
       const response = await fetch(`http://localhost:3001/quiz/findQuiz/${quizId}`, {
-        method: 'GET',
-        mode: 'cors',
+        method: 'GET',//HTTP request method
+        mode: 'cors',//Enable Cross-Origin resourcing
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',//Specify the Content-Type as JSON
+          'Authorization': `Bearer ${token}`,//Attatch the JWT token to the Authorization Header
         }
       })
 
       //Response handling
       if (!response.ok) {
-        throw new Error('Failed to fetch quiz');
+        throw new Error('Failed to fetch quiz');//Throw an error message if the GET request is unsuccessful
       }
 
-      const fetchedQuiz = await response.json();
-
+      
+      const fetchedQuiz = await response.json();// Parse the JSON response to get the quiz data
+      // Shuffle the questions to randomize their order
       const shuffledQuestions = fetchedQuiz.questions.map(question => {
+        // Combine options and correct answer
         const optionsWithCorrectAnswer = [...question.options, question.correctAnswer];
        
-        const shuffledOptions = shuffleArray(optionsWithCorrectAnswer);
-        return { ...question, options: shuffledOptions }; 
+        const shuffledOptions = shuffleArray(optionsWithCorrectAnswer); // Shuffle the options
+        return { ...question, options: shuffledOptions }; // Return the question with shuffled options
       });
 
 
@@ -139,7 +141,7 @@ export default function Page2(
     }
   }, [setQuizList, setError, setQuestions, setQuizName, setQuiz])
 
-  const addScore = async () => {
+ /* const addScore = async () => {
     // alert('Quiz Completed' + score )
     // console.log('quiz Completed' + score);
     try {
@@ -170,7 +172,7 @@ export default function Page2(
       console.error('Error saving score');
       setError('Error saving score' + error.message)
     }
-  }
+  }*/
   
   // Function to start the quiz
   const handleQuizStart = useCallback(async(e) => {
@@ -285,7 +287,8 @@ export default function Page2(
               setScore={setScore}
               addScore={addScore}
             />
-          )}         
+          )}
+         
         </div>
       </section>
       {/* Footer */}
