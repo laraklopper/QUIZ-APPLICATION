@@ -23,7 +23,9 @@ export default function Page2(
     setQuiz,  
     setQuizName,
     setQuestions,
-    questions
+    questions,
+    quizName,
+    currentUser
     }
 ) {
   // =========STATE VARIABLES====================
@@ -36,7 +38,6 @@ export default function Page2(
   //Timer variables
   const [timer, setTimer] = useState(null);
   const [quizTimer, setQuizTimer] = useState(false);
-
   
   
   //============USE EFFECT HOOK==================
@@ -51,19 +52,19 @@ export default function Page2(
   const shuffleArray = (array) => {
     let shuffledArray = array.slice(); 
     for (let i = shuffledArray.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1)); 
+      const j = Math.floor(Math.random() * (i + 1));   
+
       [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
     }
-    return shuffledArray;  // Return the shuffled array
+    return shuffledArray; 
   };
 
 
   //=======EVENT LISTENERS============
   // Function to handle quiz selection
   const handleSelectQuiz = (event) => {
-    setSelectedQuizId(event.target.value);
+    setSelectedQuizId(event.target.value); // Update the selected quiz ID
   };
-
 
   // Function to move to the next question
   const handleNextQuestion = useCallback(() => {
@@ -116,11 +117,12 @@ export default function Page2(
       }
 
       const fetchedQuiz = await response.json();
-      // Shuffle the questions to randomize their order
+
       const shuffledQuestions = fetchedQuiz.questions.map(question => {
         const optionsWithCorrectAnswer = [...question.options, question.correctAnswer];
+       
         const shuffledOptions = shuffleArray(optionsWithCorrectAnswer);
-        return { ...question, options: shuffledOptions };
+        return { ...question, options: shuffledOptions }; 
       });
 
 
@@ -137,13 +139,45 @@ export default function Page2(
     }
   }, [setQuizList, setError, setQuestions, setQuizName, setQuiz])
 
-  //=======Event Listeners==============
+  const addScore = async () => {
+    // alert('Quiz Completed' + score )
+    // console.log('quiz Completed' + score);
+    try {
+      //Send a POST request to the server 
+      const response = await fetch('http://localhost:3001/quiz/addScore', {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: currentUser,
+          quizName: quizName,
+          score,
+        })
+      }
+      )
+
+      if (response.ok) {
+        const userScore = await response.json();
+
+      }
+      else {
+        throw new Error('Error saving user score');
+      }
+
+    } catch (error) {
+      console.error('Error saving score');
+      setError('Error saving score' + error.message)
+    }
+  }
+  
   // Function to start the quiz
   const handleQuizStart = useCallback(async(e) => {
     e.preventDefault()
     if (!selectedQuizId) return;
     await fetchQuiz(selectedQuizId)
-    setQuizStarted(true)
+    setQuizStarted(true);
 
     setQuizIndex(0);
     setScore(0);
@@ -235,7 +269,7 @@ export default function Page2(
             </div>
           )}
           {/* QUIZ */}
-          {quiz && startQuiz && (
+          {quiz && startQuiz &&  (
             // Quiz component
             <Quiz
               selectedQuiz={quiz} 
@@ -249,8 +283,9 @@ export default function Page2(
               timer={timer} 
               questions={questions}
               setScore={setScore}
+              addScore={addScore}
             />
-          )}
+          )}         
         </div>
       </section>
       {/* Footer */}
