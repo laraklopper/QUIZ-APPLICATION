@@ -14,10 +14,8 @@ export default function Login(
         setError,
         setLoggedIn
     }) {
-
-      
       //=========STATE VARIABLES===============
-      const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
       //=============REQUESTS==================
       //-------------POST------------------------------
@@ -45,6 +43,7 @@ export default function Login(
         localStorage.setItem('token', data.token);
         setLoggedIn(true);
         setError(null);
+        // Clear user data from state
         setUserData({
           username: '',
           password: '',
@@ -56,7 +55,7 @@ export default function Login(
       setError(`Login Failed: ${error.message}`);
       console.log(`Login Failed: ${error.message}`);
       setLoggedIn(false);
-      alert('LOGIN FAILED');
+      alert('LOGIN FAILED');// Notify user of failure
     }
   };
  
