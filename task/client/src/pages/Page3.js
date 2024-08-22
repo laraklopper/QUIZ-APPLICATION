@@ -24,7 +24,7 @@ export default function Page3(
   currentQuestion,
   setCurrentQuestion,
   questions,
-  currentUser,
+  // currentUser,
   setQuestions  
 }
 ) {
@@ -50,7 +50,7 @@ export default function Page3(
   // ==============REQUESTS=======================
   // ----------POST-------------------
   //Function to add a new quiz
-  const addNewQuiz = async () => {
+  const addNewQuiz = async () => {//Define an async function to add a new Quiz
       // Conditional rendering to check if the number of questions is exactly 5
     if (questions.length !== 5) {
       // If not, alert the user and exit the function
@@ -62,7 +62,7 @@ export default function Page3(
     const quiz = {
       name: quizName, // The name of the quiz
       questions,     // The array of questions
-      username: currentUser // The username of the current user
+      // username: currentUser // The username of the current user
     };
 
     try {
@@ -81,10 +81,10 @@ export default function Page3(
       //Response handling
       if (response.ok) {
         alert('New Quiz successfully added')//Display a success message if the quiz is successfy
-        const newQuiz = await response.json(); 
-        setQuizList((prevQuizList) => [...prevQuizList, newQuiz]);
-        setQuizName('');     
-        setQuestions([]);
+        const newQuiz = await response.json(); //Parse the response as JSON
+        setQuizList((prevQuizList) => [...prevQuizList, newQuiz]);// Update quiz list with the new quiz
+        setQuizName('');     // Clear the quiz name
+        setQuestions([]);// Clear the questions array
       } 
       else {
         throw new Error('There was an error creating the quiz');//Throw an error message if the POST request is unsuccessful
