@@ -75,17 +75,10 @@ export default function EditQuiz(
           <label className='editQuizLabel'>
             <p className='labelText'>QUESTION:</p>
             <input
-                type='text' //Specify input type
+                type='text' 
                 name='questionText'
                 value={editQuizIndex.questionText}
-                onChange={(e) =>
-                  setEditQuizIndex({
-                    // Preserve other properties
-                    ...editQuizIndex, 
-                    // Update questionText with the new value
-                    questionText: e.target.value 
-                  })
-                }
+                onChange={(e) =>setEditQuizIndex({ ...editQuizIndex, questionText: e.target.value })}
                 autoComplete='off'
                 placeholder={quiz.questions[currentQuestionIndex]?.questionText || ''}
                 className='editQuizInput' 
@@ -101,13 +94,7 @@ export default function EditQuiz(
                 type='text'
                 name='correctAnswer'
                 value={setEditQuizIndex.correctAnswer} 
-                onChange={(e) => 
-                  setEditQuizIndex({ 
-                    // Spread the current state to retain other properties
-                    ...editQuizIndex, 
-                    // Update correctAnswer with the new value
-                    correctAnswer: e.target.value
-                 })}
+                onChange={(e) => setEditQuizIndex({...editQuizIndex, correctAnswer: e.target.value})}
                 autoComplete='off' 
                 placeholder={quiz.questions[currentQuestionIndex]?.correctAnswer || ''}
                 className='editQuizInput' 
@@ -125,11 +112,7 @@ export default function EditQuiz(
                type='text'
                 name='options[0]'
                 value={editQuizIndex.options[0] || ''}
-                onChange={(e) => 
-                  setEditQuizIndex({ 
-                    ...editQuizIndex, 
-                    options: [e.target.value, editQuizIndex.options[1], editQuizIndex.options[2]] 
-                })}
+                onChange={(e) => setEditQuizIndex({...editQuizIndex, options: [e.target.value, editQuizIndex.options[1], editQuizIndex.options[2]]})}
                 autoComplete='off'
                 placeholder={quiz.questions[currentQuestionIndex]?.options[0] || ''}
                 className='editQuizInput'
@@ -144,10 +127,7 @@ export default function EditQuiz(
                 type='text'
                 name='options[1]'
                 value={editQuizIndex.options[1] || ''} 
-                onChange={(e) => 
-                  setEditQuizIndex({ 
-                    ...editQuizIndex, 
-                    options: [editQuizIndex.options[0],e.target.value, editQuizIndex.options[2]]})}
+                onChange={(e) => setEditQuizIndex({...editQuizIndex, options: [editQuizIndex.options[0],e.target.value, editQuizIndex.options[2]]})}
                 autoComplete='off'
                 placeholder={quiz.questions[currentQuestionIndex]?.options[1] || ''}
                 className='editQuizInput'
@@ -166,11 +146,7 @@ export default function EditQuiz(
               type='text'
                 name='options[2]'
                 value={editQuizIndex.options[2] || ''} 
-                onChange={(e) => 
-                  setEditQuizIndex({ 
-                    ...editQuizIndex, 
-                    options: [editQuizIndex.options[0], editQuizIndex.options[1], e.target.value]                           
-                })}
+                onChange={(e) => setEditQuizIndex({ ...editQuizIndex, options: [editQuizIndex.options[0], editQuizIndex.options[1], e.target.value]})}
                 autoComplete='off'
                 placeholder={quiz.questions[currentQuestionIndex]?.options[2] || ''} 
                 className='editQuizInput'
@@ -193,10 +169,11 @@ export default function EditQuiz(
           <Col xs={6} md={4} className='editQuizCol'>
           {/* Button to move to previous question */}
           <Button 
-          variant='secondary' //Bootstrap variant
+          variant='secondary' 
           onClick={() => {
-            if (currentQuestionIndex > 0) {setCurrentQuestionIndex(currentQuestionIndex - 1)}
-          }}
+            if (currentQuestionIndex > 0) {
+              setCurrentQuestionIndex(currentQuestionIndex - 1)
+            }}}
               className='previousQuestionBtn'
           >
             PREVIOUS QUESTION
