@@ -96,8 +96,7 @@ export default function EditQuiz(
                 onChange={(e) => setEditQuizIndex({...editQuizIndex, questionText: e.target.value,})
                 }
                 autoComplete='off'
-                placeholder={quiz.questions[currentQuestionIndex]
-                  ?.newQuestionText || ''}
+                placeholder={quiz.questions[currentQuestionIndex]?.questionText || ''}
                 className='editQuizInput'
               />
             </label>
@@ -118,7 +117,7 @@ export default function EditQuiz(
                 }
                 autoComplete='off'
                 placeholder={quiz.questions[currentQuestionIndex]
-                  ?.editCorrectAnswer || ''}
+                  ?.correctAnswer || ''}
                 className='editQuizInput'
               />
             </label>
@@ -138,14 +137,14 @@ export default function EditQuiz(
                     ...editQuizIndex,
                     options: [
                       e.target.value,
-                      editQuizIndex.editOptions[1],
-                      editQuizIndex.editOptions[2],
+                      editQuizIndex.options[1],
+                      editQuizIndex.options[2],
                     ],
                   })
                 }
                 autoComplete='off'
                 placeholder={quiz.questions[currentQuestionIndex]
-                  ?.editOptions || ''}
+                  ?.options[0] || ''}
                 className='editQuizInput'
               />
             </label>
