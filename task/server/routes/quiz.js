@@ -62,7 +62,7 @@ router.get('/findQuiz/:id', checkJwtToken, async (req, res) => {
             );
         }
         
-       const quiz = await Quiz.findById(id).populate('username', 'username');
+       const quiz = await Quiz.findById({}).populate('user')//('username', 'username');
 
         if (!quiz) {
             return res.status(404).json({ message: 'Quiz not found' });
@@ -82,7 +82,7 @@ router.get('/findQuizzes', checkJwtToken,  async (req, res) => {
     console.log('Finding Quizzes')
     try {
        
-        const quizzes = await Quiz.find({}).populate('userId', 'username');
+        const quizzes = await Quiz.find({}).populate('user')//('userId', 'username');
         res.json({quizList: quizzes})  
         console.log(quizzes);
     } 
@@ -105,13 +105,20 @@ router.post('/addQuiz',/*checkJwtToken,*/ async (req, res) => {
         return res.status(400).json(
             { message: 'Quiz name and exactly 5 questions are required' });
     }
-
+/*
     for (const question of questions) {   
          // Conditional rendering to check that each question has exactly 3 options
         if (question.options.length !== 3) {
             return res.status(400).json({
                 message: 'Each question must have exactly 3 options',
             });
+        }
+    }*/
+      for (const questions of questions) {
+        if (!question.questionText || !questions.correctAnswer || !questions.options.length !== 3) {
+            return res.status(400).json(
+                { message: 'Each question must have a question , correct answer and 3 options' }
+            )
         }
     }
     try {               
@@ -177,7 +184,13 @@ router.put('/editQuiz/:id', checkJwtToken,  async (req, res) => {
             { message: 'Quiz name, and  questions are required' }
         );
     }
-
+            //Validate that each question has exactly 3 options
+    /*for (const questions of questions){
+        if (!question.questionText || ! questions.correctAnswer || !questions.options.length !== 3) {
+        return res.status(400).json(
+            {message : 'Each question must have a question , correct answer and 3 options'}
+        )
+    }}*/
     try {
         //Validate that each question has exactly 3 options
         for(const question of questions){
@@ -216,9 +229,9 @@ router.delete('/deleteQuiz/:id', /*checkJwtToken,*/ async (req, res) => {
     const { id } = req.params;
     
     try {
-        // if (!mongoose.Types.ObjectId.isValid(id)) {
-        //     return res.status(400).json({ message: 'Invalid quiz ID' });
-        // }
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: 'Invalid quiz ID' });
+        }
 
         const deletedQuiz = await Quiz.findByIdAndDelete(id);
         
