@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 //Schemas
 const Quiz = require('../models/quizModel');
+const User = require('../models/userSchema');
 
 //=======SETUP MIDDLEWARE===========
 router.use(cors());
@@ -36,17 +37,32 @@ const checkJwtToken = (req, res, next) => {
 }
 
 //=============ROUTES====================
+/*
+|================================================|
+| CRUD OPERATION | HTTP VERB | EXPRESS METHOD    |
+|================|===========|===================|
+|CREATE          | POST      |  router.post()    |
+|----------------|-----------|-------------------|
+|READ            | GET       |  router.get()     |  
+|----------------|-----------|-------------------|     
+|UPDATE          | PUT       |  router.put()     |
+|----------------|-----------|-------------------|
+|DELETE          | DELETE    |  router.delete()  |
+|================|===========|===================|
+*/
 //------------------GET---------------
 //Route to GET a specific quiz using the quiz Id
 router.get('/findQuiz/:id', checkJwtToken, async (req, res) => {
-    console.log('Finding Quiz');
+
     try {
        const {id} = req.params;
         if (!mongoose.Types.ObjectId.isValid(id)) {
-            return res.status(400).json({ success: false, message: 'Invalid quiz ID' });
+            return res.status(400).json(
+                { success: false, message: 'Invalid quiz ID' }
+            );
         }
-
-                const quiz = await Quiz.findById(id).populate('userId', 'username');
+        
+       const quiz = await Quiz.findById(id).populate('username', 'username');
 
         if (!quiz) {
             return res.status(404).json({ message: 'Quiz not found' });
@@ -81,7 +97,7 @@ router.get('/findQuizzes', checkJwtToken,  async (req, res) => {
 
 //------------POST--------------
 //Route to add new quiz
-router.post('/addQuiz', async (req, res) => {
+router.post('/addQuiz',/*checkJwtToken,*/ async (req, res) => {
     console.log(req.body);
     const { name, questions,} = req.body;
 
@@ -98,10 +114,7 @@ router.post('/addQuiz', async (req, res) => {
             });
         }
     }
-    try {       
-
-    
-        
+    try {               
         const existingQuiz = await Quiz.findOne({name});
         if (existingQuiz) {
             return res.status(400).json(
@@ -112,8 +125,8 @@ router.post('/addQuiz', async (req, res) => {
         const newQuiz = new Quiz({ 
             name, 
             questions, 
-            // username
-            // userId: req.user._id 
+            // username,
+            //username: req.user._id 
         });
 
         const savedQuiz = await newQuiz.save();
@@ -129,7 +142,29 @@ router.post('/addQuiz', async (req, res) => {
 })
 
 
+/*
+// Route to add new score
+router.post('/addScore', async (req, res) => {
+    console.log(req.body);
+    try {
+        const { username, name, score } = req.body;
+        const result = new Score({ username, name, score });
 
+        const existingScore = await Score.findOne({ username, name });
+
+        if (existingScore) {
+            existingScore.score = score; 
+            const savedScore = await existingScore.save();
+            return res.status(201).json(savedScore);
+        } else {
+            const savedScore = await result.save();
+            return res.status(201).json(savedScore);
+        }
+    } catch (error) {
+        console.error('Error saving score:', error);
+        return res.status(500).json({ error: error.message });
+});
+*/
 //-------------------PUT--------------------------
 // Route to edit a quiz
 router.put('/editQuiz/:id', checkJwtToken,  async (req, res) => {
@@ -164,7 +199,9 @@ router.put('/editQuiz/:id', checkJwtToken,  async (req, res) => {
             return res.status(404).json({ message: 'Quiz not found' });
         }
 
-        res.json({updatedQuiz})
+        res.json({ success: true, quiz: updatedQuiz });
+        // res.json({updatedQuiz})
+        // console.log(updatedQuiz);
     } 
     catch (error) {
         console.error('Error editing quiz:', error);
@@ -175,13 +212,13 @@ router.put('/editQuiz/:id', checkJwtToken,  async (req, res) => {
 
 //--------DELETE---------------
 // Route to delete a quiz
-router.delete('/deleteQuiz/:id', async (req, res) => {
+router.delete('/deleteQuiz/:id', /*checkJwtToken,*/ async (req, res) => {
     const { id } = req.params;
     
     try {
-        if (!mongoose.Types.ObjectId.isValid(id)) {
-            return res.status(400).json({ message: 'Invalid quiz ID' });
-        }
+        // if (!mongoose.Types.ObjectId.isValid(id)) {
+        //     return res.status(400).json({ message: 'Invalid quiz ID' });
+        // }
 
         const deletedQuiz = await Quiz.findByIdAndDelete(id);
         
