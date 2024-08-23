@@ -9,6 +9,12 @@ const quizSchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
+     // Username of the person who created the quiz
+    // username: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'User', 
+    //     required: true,
+    // },
     // Username of the person who created the quiz
     // username: {
     //     type: String, 
