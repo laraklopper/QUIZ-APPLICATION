@@ -21,28 +21,16 @@ export default function EditQuiz(
   }
 ) {
   //=============STATE VARIABLES======================
-  // State to track the index of the current question being edited
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
   //============EVENT LISTENERS=================
 
   // Function to edit a question
   const handleEditQuestion = () => {
-    // Create a copy of the current list of questions (`newQuestions`)
     const updatedQuestions = [...newQuestions];
-    /*Update the question at the current index (`currentQuestionIndex`) 
-    with the data in `editQuizIndex`*/
     updatedQuestions[currentQuestionIndex] = { ...editQuizIndex };
-   
-    setNewQuestions(updatedQuestions); // Update the state with the new list of questions
-    
-    setQuizList(//Update the quiz list (`quizList`) by mapping over it
-      quizList.map(q =>// Iterate over each quiz in the quizList array
-        /* If the current quiz matches the quiz being edited 
-        (`quiz._id`), return an updated version:*/
-        q._id === quiz._id // Check if the current quiz ID matches the ID of the quiz being edited
-          ? { ...q, questions: updatedQuestions, name: newQuizName }// If it matches, return a new object with updated questions and name
-          : q // If it doesn't match, return the quiz as is
+    setNewQuestions(updatedQuestions);     
+    setQuizList(quizList.map(q => q._id === quiz._id ? { ...q, questions: updatedQuestions, name: newQuizName }: 
       )
     );
   };
@@ -235,11 +223,8 @@ export default function EditQuiz(
             {/* Button to move to next question */}
             <Button
               variant='secondary'
-              onClick={() => {
-                /*Conditional rendering to check if the current question
-                index is less than the last question index*/
+              onClick={() => {              
                 if (currentQuestionIndex < quiz.questions.length - 1) {
-                  // Increase the index to move to the next question
                   setCurrentQuestionIndex(currentQuestionIndex + 1);
                 }
               }}
