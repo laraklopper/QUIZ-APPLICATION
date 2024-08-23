@@ -50,12 +50,9 @@ export default function Page2(
 //==========================================
   // Fisher-Yates shuffle algorithm to randomize array elements
   const shuffleArray = (array) => {
-    let shuffledArray = array.slice(); // Create a copy of the array to avoid mutating the original array
-    //  create a shallow copy of the original array so that the shuffle doesn't alter the original array
-    for (let i = shuffledArray.length - 1; i > 0; i--) {// Loop from the end of the array to the beginning
-      const j = Math.floor(Math.random() * (i + 1));     // Generate a random index from 0 to i
-
-      // Swap the element at index i with the element at the random index j
+    let shuffledArray = array.slice(); 
+    for (let i = shuffledArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));     
       [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
     }
     return shuffledArray;  // Return the shuffled array
@@ -65,7 +62,7 @@ export default function Page2(
   //=======EVENT LISTENERS============
   // Function to handle quiz selection
   const handleSelectQuiz = (event) => {
-    setSelectedQuizId(event.target.value); // Update the selected quiz ID
+    setSelectedQuizId(event.target.value); 
   };
 
   // Function to move to the next question
