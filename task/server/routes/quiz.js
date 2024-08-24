@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 //Schemas
 const Quiz = require('../models/quizModel');
-const User = require('../models/userSchema');
+// const User = require('../models/userSchema');
 
 //=======SETUP MIDDLEWARE===========
 router.use(cors());
@@ -62,8 +62,8 @@ router.get('/findQuiz/:id', checkJwtToken, async (req, res) => {
             );
         }
         
-       const quiz = await Quiz.findById({}).populate('user')//('username', 'username');
-
+ const quiz = await Quiz.findById(id).populate('userId', 'username');
+        // const quiz = await Quiz.findById(id).populate('user');
         if (!quiz) {
             return res.status(404).json({ message: 'Quiz not found' });
         }        
@@ -81,7 +81,9 @@ router.get('/findQuiz/:id', checkJwtToken, async (req, res) => {
 router.get('/findQuizzes', checkJwtToken,  async (req, res) => {
     // console.log('Finding Quizzes')
     try {
-        const quizzes = await Quiz.find({}).populate('user');
+        const quizzes = await Quiz.find({}).populate('userId', 'username'); 
+        // const quizzes = await Quiz.find({}).populate('user');
+        
         res.json({quizList: quizzes})  
         console.log(quizzes);
     } 
@@ -99,7 +101,7 @@ router.get('/findQuizzes', checkJwtToken,  async (req, res) => {
 router.post('/addQuiz',/*checkJwtToken,*/ async (req, res) => {
     console.log(req.body);
     const { name, questions,} = req.body;
-
+// const { name, questions/*, username*/} = req.body;
     if (!name || !questions || questions.length !== 5) {
         return res.status(400).json(
             { message: 'Quiz name and exactly 5 questions are required' });
@@ -132,7 +134,7 @@ router.post('/addQuiz',/*checkJwtToken,*/ async (req, res) => {
             name, 
             questions, 
             // username,
-            username: req.user._id 
+            // username: req.user._id 
         });
 
         const savedQuiz = await newQuiz.save();
@@ -183,13 +185,7 @@ router.put('/editQuiz/:id', checkJwtToken,  async (req, res) => {
             { message: 'Quiz name, and  questions are required' }
         );
     }
-            //Validate that each question has exactly 3 options
-    /*for (const questions of questions){
-        if (!question.questionText || ! questions.correctAnswer || !questions.options.length !== 3) {
-        return res.status(400).json(
-            {message : 'Each question must have a question , correct answer and 3 options'}
-        )
-    }}*/
+   
     try {
         //Validate that each question has exactly 3 options
         for(const question of questions){
@@ -211,9 +207,9 @@ router.put('/editQuiz/:id', checkJwtToken,  async (req, res) => {
             return res.status(404).json({ message: 'Quiz not found' });
         }
 
-        res.json({ success: true, quiz: updatedQuiz });
-        // res.json({updatedQuiz})
-        // console.log(updatedQuiz);
+        // res.json({ success: true, quiz: updatedQuiz });
+        res.json({updatedQuiz})
+        console.log(updatedQuiz);
     } 
     catch (error) {
         console.error('Error editing quiz:', error);
