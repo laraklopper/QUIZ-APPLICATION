@@ -24,7 +24,7 @@ export default function Page3(
   currentQuestion,
   setCurrentQuestion,
   questions,
-  currentUser,
+  // currentUser,
   setQuestions  
 }
 ) {
@@ -61,7 +61,7 @@ export default function Page3(
     const quiz = {
       name: quizName, 
       questions,  
-      username: currentUser
+      // username: currentUser
     }
     try {
       // Retrieve the JWT token from localStorage
@@ -117,9 +117,9 @@ export default function Page3(
         body: JSON.stringify({
             name: newQuizName, 
             questions: newQuestions,
-                     
             })
       });
+      
       //Response handling
       if (response.ok) {
         const updatedQuiz = await response.json();
@@ -174,10 +174,16 @@ export default function Page3(
  
   // ===========EVENT LISTENERS==============  
     //Function to toggle editForm
-  const toggleQuizUpdate = useCallback((quizId) => {
-    setUpdate( !update)
+  // const toggleQuizUpdate = useCallback((quizId) => {
+  //   setUpdate( !update)
+  //   setQuizToUpdate(quizId);
+  // },[update]);
+
+      //Function to toggle editForm
+    const toggleQuizUpdate = useCallback((quizId) => {
+    setUpdate((prevUpdate) => !prevUpdate);
     setQuizToUpdate(quizId);
-  },[update]);
+  }, []);
 
 
   //==============JSX RENDERING=================
