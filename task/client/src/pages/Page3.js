@@ -24,7 +24,7 @@ export default function Page3(
   currentQuestion,
   setCurrentQuestion,
   questions,
-  // currentUser,
+  currentUser,
   setQuestions  
 }
 ) {
@@ -43,7 +43,8 @@ export default function Page3(
   /* useEffect to fetch quizzes when the component mounts
  or when fetchQuizzes function changes*/
   useEffect(() => {
-    // Call the fetchQuizzes function to retrieve quizzes from the server
+    /* Call the fetchQuizzes function to 
+    retrieve quizzes from the server*/
       fetchQuizzes()
   }, [fetchQuizzes])
 
@@ -53,26 +54,27 @@ export default function Page3(
   const addNewQuiz = async () => {
     
     if (questions.length !== 5) {
-      alert('You must add exactly 5 questions.');// Alert if the number of questions is incorrect
+      alert('You must add exactly 5 questions.');
       return;// Exit the function to prevent further execution
     }
     // Create a quiz object to send to the server
     const quiz = {
-      name: quizName, // The name of the quiz
-      questions,  // The array of questions
-      // username: currentUser
+      name: quizName, 
+      questions,  
+      username: currentUser
     }
     try {
-      const token = localStorage.getItem('token');// Retrieve the JWT token from localStorage
+      // Retrieve the JWT token from localStorage
+      const token = localStorage.getItem('token');
       //Send a POST request to the server to add a new quiz
       const response = await fetch('http://localhost:3001/quiz/addQuiz', {
-        method: 'POST',//HTTP request method
-        mode: 'cors',//
+        method: 'POST',
+        mode: 'cors',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify(quiz)// Convert quiz object to JSON
+        body: JSON.stringify(quiz)
       });
   
       //Response handling
