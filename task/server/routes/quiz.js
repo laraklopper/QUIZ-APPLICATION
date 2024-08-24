@@ -79,10 +79,9 @@ router.get('/findQuiz/:id', checkJwtToken, async (req, res) => {
 
 // Route to fetch all the quizzes from the database
 router.get('/findQuizzes', checkJwtToken,  async (req, res) => {
-    console.log('Finding Quizzes')
+    // console.log('Finding Quizzes')
     try {
-       
-        const quizzes = await Quiz.find({}).populate('user')//('userId', 'username');
+        const quizzes = await Quiz.find({}).populate('user');
         res.json({quizList: quizzes})  
         console.log(quizzes);
     } 
@@ -105,7 +104,7 @@ router.post('/addQuiz',/*checkJwtToken,*/ async (req, res) => {
         return res.status(400).json(
             { message: 'Quiz name and exactly 5 questions are required' });
     }
-/*
+
     for (const question of questions) {   
          // Conditional rendering to check that each question has exactly 3 options
         if (question.options.length !== 3) {
@@ -113,14 +112,14 @@ router.post('/addQuiz',/*checkJwtToken,*/ async (req, res) => {
                 message: 'Each question must have exactly 3 options',
             });
         }
-    }*/
-      for (const questions of questions) {
+    }
+      /*for (const questions of questions) {
         if (!question.questionText || !questions.correctAnswer || !questions.options.length !== 3) {
             return res.status(400).json(
                 { message: 'Each question must have a question , correct answer and 3 options' }
             )
         }
-    }
+    }*/
     try {               
         const existingQuiz = await Quiz.findOne({name});
         if (existingQuiz) {
@@ -133,7 +132,7 @@ router.post('/addQuiz',/*checkJwtToken,*/ async (req, res) => {
             name, 
             questions, 
             // username,
-            //username: req.user._id 
+            username: req.user._id 
         });
 
         const savedQuiz = await newQuiz.save();
