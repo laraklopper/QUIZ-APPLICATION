@@ -40,6 +40,24 @@ const checkJwtToken = (req, res, next) => {
         console.error('No token attatched to the request');
         res.status(400).json({ message: 'Invalid token.' });
     }
+     /*  const token = req.headers.authorization
+
+    if (!token) {
+        return res.status(401).json(
+        {message: 'Unauthorized: token missing'})
+    }
+
+    try {
+        const decoded = jwt.verify(token, 'secretKey');
+        req.user = decoded;
+
+        console.log();
+        next();
+    } catch (error) {
+        //Error handling
+        console.error('No token attatched to the request');
+        res.status(400).json({ message: 'Invalid token.' });
+    }*/
 }
 
 
