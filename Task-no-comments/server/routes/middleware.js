@@ -1,3 +1,4 @@
+// Import necessary modules and packages
 const jwt = require('jsonwebtoken');
 
 // Middleware to verify JWT and extract user info
@@ -18,6 +19,7 @@ const authenticateToken = (req, res, next) => {
 
 //Middleware to verify the JWT token
 const checkJwtToken = (req, res, next) => {
+    
     const authHeader = req.headers.authorization
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
         return res.status(401).json(
