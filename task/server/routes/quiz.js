@@ -178,16 +178,21 @@ router.post('/addScore', async (req, res) => {
     console.log(req.body);
     try {
         const { username, name, score } = req.body;
-        const result = new Score({ username, name, score });
+         if (!username || !quizName || typeof score !== 'number') {
+            return res.status(400).json({ error: 'Invalid input data' });
+        }
 
+        const newScore =({ username, name, score });    
         const existingScore = await Score.findOne({ username, name });
+
 
         if (existingScore) {
             existingScore.score = score; 
             const savedScore = await existingScore.save();
             return res.status(201).json(savedScore);
         } else {
-            const savedScore = await result.save();
+           const createdScore = new Score(newScore);
+            const savedScore = await createdScore.save();
             return res.status(201).json(savedScore);
         }
     } catch (error) {
