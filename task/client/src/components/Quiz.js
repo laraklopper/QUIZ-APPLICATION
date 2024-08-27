@@ -61,32 +61,18 @@ export default function Quiz(
   };
   //============EVENT LISTENERS=================
   // Function to handle answer selection and update the score if correct
-  // const handleAnswerClick = (isCorrect) => {
-  //   if (isCorrect) {
-  //     setScore(score + 1);
-  //   }
-  //   handleNextQuestion();// Move to the next question
-  // };
+  const handleAnswerClick = (isCorrect) => {
+    if (isCorrect) {
+      setScore(score + 1);// Update the score if the answer is correct
+    }
+    handleNextQuestion();// Move to the next question
+  };
 
-  // // Function to handle option click and update the selected option
-  // const handleOptionClick = (option) => {
-  //   setSelectedOption(option);// Update the selected option
-  //   handleAnswerClick(option === questions[quizIndex].correctAnswer);
-  // };
-
+  // Function to handle option click and update the selected option
   const handleOptionClick = (option) => {
-    setSelectedOption(option)  // Update the selected option in state to reflect user selection
-    //Conditional rendering to check if the option is correct
-    if (option === questions[quizIndex].correctAnswer) {
-      setScore(score + 1);
-    }
-    else if(quizIndex === 5){
-      addScore()
-    }
-    else{
-      handleNextQuestion()
-    }
-  }
+    setSelectedOption(option);// Update the selected option
+    handleAnswerClick(option === questions[quizIndex].correctAnswer);
+  };
 
   //================JSX RENDERING======================
 
