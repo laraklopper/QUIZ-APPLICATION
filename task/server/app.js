@@ -5,7 +5,7 @@ const cors = require('cors');
 //Import routes
 const userRouter = require('./routes/users');
 const quizRouter = require('./routes/quiz');
-
+const scoreRouter = require('./routes/scores');
 // Load environment variables from a .env file
 require('dotenv').config()
 
@@ -66,7 +66,7 @@ app.use(express.json());
 //============ROUTES================
 app.use('/users', userRouter )
 app.use('/quiz', quizRouter )
-
+app.use('/scores', scoreRouter);
 //=================START THE SERVER=======================
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
