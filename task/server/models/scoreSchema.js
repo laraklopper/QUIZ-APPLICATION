@@ -5,13 +5,16 @@ const mongoose = require('mongoose');// Import the Mongoose library
 const scoreSchema = mongoose.Schema({
     // Field for username of the user who took the quiz
     username: {
-        type: String,
-        required: true
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: 'users',
+        required: true,
     },
     // Field for the name of the quiz taken
     quizName: {
-        type: String,
+        type: mongoose.SchemaType.ObjectId,
         required: true,
+        ref: 'quiz',
+        set: (v) => v.toUpperCase(),
     },
     //Field for the score/result
     score: {
@@ -25,7 +28,6 @@ const scoreSchema = mongoose.Schema({
         default: 0,
         required: true,
     }, 
-
 }, {timestamp: true})
 
 // Export the score model based on the scoreSchema
