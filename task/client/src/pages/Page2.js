@@ -24,8 +24,8 @@ export default function Page2(
     setQuizName,
     setQuestions,
     questions,
-    quizName,
-    currentUser
+    // quizName,
+    // currentUser
     }
 ) {
   // =========STATE VARIABLES====================
@@ -38,6 +38,7 @@ export default function Page2(
   //Timer variables
   const [timer, setTimer] = useState(null);
   const [quizTimer, setQuizTimer] = useState(false);
+    const [quizCompleted, setQuizCompleted] = useState(false)
   
   
   //============USE EFFECT HOOK==================
@@ -50,12 +51,10 @@ export default function Page2(
 //==========================================
   // Fisher-Yates shuffle algorithm to randomize array elements
   const shuffleArray = (array) => {
-    let shuffledArray = array.slice(); // Create a copy of the array to avoid mutating the original array
-    //  create a shallow copy of the original array so that the shuffle doesn't alter the original array
-    for (let i = shuffledArray.length - 1; i > 0; i--) {// Loop from the end of the array to the beginning
-      const j = Math.floor(Math.random() * (i + 1));     // Generate a random index from 0 to i
+    let shuffledArray = array.slice(); 
+    for (let i = shuffledArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));     
 
-      // Swap the element at index i with the element at the random index j
       [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
     }
     return shuffledArray;  // Return the shuffled array
@@ -65,7 +64,7 @@ export default function Page2(
   //=======EVENT LISTENERS============
   // Function to handle quiz selection
   const handleSelectQuiz = (event) => {
-    setSelectedQuizId(event.target.value); // Update the selected quiz ID
+    setSelectedQuizId(event.target.value);
   };
 
   // Function to move to the next question
@@ -80,6 +79,7 @@ export default function Page2(
       setSelectedQuizId('')
       setTimer(null); 
       setQuestionIndex(null)
+      setQuizCompleted(true)
     }
   },[ quiz, quizTimer, setQuiz, quizIndex]);
 
@@ -108,14 +108,14 @@ export default function Page2(
         method: 'GET',//HTTP request method
         mode: 'cors',//Enable Cross-Origin resourcing
         headers: {
-          'Content-Type': 'application/json',//Specify the Content-Type as JSON
-          'Authorization': `Bearer ${token}`,//Attatch the JWT token to the Authorization Header
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         }
       })
 
       //Response handling
       if (!response.ok) {
-        throw new Error('Failed to fetch quiz');//Throw an error message if the GET request is unsuccessful
+        throw new Error('Failed to fetch quiz');
       }
 
       
