@@ -70,42 +70,42 @@ export default function EditQuiz(
           </label>
             {/* Edit quizName input field */}
             <input
-              type='text'
-              name='newQuizName'
-              value={newQuizName}
-              onChange={(e) => setNewQuizName(e.target.value)}
-              autoComplete='off'
-              placeholder={quiz.name}
-              id='newQuizName'
-              className='editQuizInput'
+              type='text'//Specify input type
+              name='newQuizName'// Name attribute for the input
+              value={newQuizName}// The current value of the quiz name
+              onChange={(e) => setNewQuizName(e.target.value)}// Update state on change
+              autoComplete='off'// Disable browser autocomplete
+              placeholder={quiz.name}// Placeholder showing the current quiz name
+              id='newQuizName'// ID for the input field
+              className='editQuizInput'// CSS class for styling
             />          
         </div>
         </Col>
         <Col xs={12} md={8} className='editQuizCol'></Col>
       </Row>
-      {/* New question input */}
+            {/* Section for editing the questions */}
       <div className='editQuestions'>
         <Row>
           <Col className='editQuestionHead'>
             <h3 className='h3'>EDIT QUESTIONS</h3>
           </Col>
         </Row>
+          {/* Row for editing the question text */}
         <Row className='editQuizRow'>
           <Col xs={6} className='editQuizCol'>
           <div className='editField'>
+          {/* Label for the question input field */}
             <label className='editQuizLabel' htmlFor='editQuestion'>
-              {/* EDITED QUIZ QUESTION */}
               <p className='labelText'>QUESTION:</p>
             </label>
               <input
                 type='text'//Specify the input type
                 name='editQuestionText'// The name attribute used to identify the input
-                value={editQuizIndex.editQuestionText}
+                value={editQuizIndex.editQuestionText}// The current value of the question text
                 onChange={(e) => 
                   setEditQuizIndex({
                     ...editQuizIndex, // Preserve the existing state
-                    editQuestionText: // Update the `editQuestionText` with the new input value
-                    e.target.value,
+                    editQuestionText: e.target.value, // Update the question text
                   })}
                 autoComplete='off'//Disable the brower autocomplete field
                 placeholder={quiz.questions[currentQuestionIndex]?.questionText || ''}
@@ -117,78 +117,85 @@ export default function EditQuiz(
           <Col xs={6} className='editQuizCol' htmlFor='editAnswer'>
             {/* Edited correct answer */}
             <div className='editField'>
+                  {/* Label for the correct answer input field */}
               <label className='editQuizLabel'>
               <p className='labelText'>CORRECT ANSWER:</p>
+                </label>
+                  {/* Input field to edit the correct answer */}
               <input
-                type='text'
-                name='editCorrectAnswer'
-                value={editQuizIndex.editCorrectAnswer}
-                onChange={(e) => setEditQuizIndex({
-                  ...editQuizIndex, 
-                  editCorrectAnswer: e.target.value,
-                })}
-                autoComplete='off'
-                placeholder={quiz.questions[currentQuestionIndex]
-                  ?.correctAnswer || ''}
-                  id='editAnswer'
-                className='editQuizInput'
+                type='text'//Specify input type as text
+                name='editCorrectAnswer'// Name attribute for the input
+                value={editQuizIndex.editCorrectAnswer}// The current value of the correct answer
+                 onChange={(e) => setEditQuizIndex({
+                    ...editQuizIndex, // Preserve the existing state
+                    editCorrectAnswer: e.target.value, // Update the correct answer
+                  })}
+                   autoComplete='off' // Disable browser autocomplete
+                  placeholder={quiz.questions[currentQuestionIndex]?.correctAnswer || ''} // Placeholder showing the current correct answer
+                  id='editAnswer' // ID for the input field
+                  className='editQuizInput' // CSS class for styling
               />
-            </label>
+            
             </div>           
           </Col>
         </Row>
+        {/* Rows for editing the alternative answers */}
         <Row className='editQuizRow'>
           <Col xs={6} className='editQuizCol'>
           <div className='editField'>
             {/* Edited alternative answer 1 */}
+          {/* Label for the first alternative answer */}
               <label className='editQuizLabel' htmlFor='optionOne'>
                 <p className='labelText'>1. ALTERNATIVE ANSWER:</p>
               </label>
+          {/* Input field to edit the first alternative answer */}
               <input
-                type='text'
-                name='editOptions[0]'
-                value={editQuizIndex.editOptions[0] || ''}
+                type='text'//Specify the input type
+                name='editOptions[0]'// Name attribute for the input
+                value={editQuizIndex.editOptions[0] || ''}// The current value of the first alternative answer
                 onChange={(e) =>
                   setEditQuizIndex({
-                    ...editQuizIndex,
+                    ...editQuizIndex, // Preserve the existing state
                     editOptions: [
-                      e.target.value,// Update the first option
-                      editQuizIndex.editOptions[1] || '',// Preserve the second option
-                      editQuizIndex.editOptions[2] || '', // Preserve the third option
+                      e.target.value, // Update the first alternative answer
+                      editQuizIndex.editOptions[1] || '', // Preserve the second alternative answer
+                      editQuizIndex.editOptions[2] || '', // Preserve the third alternative answer
                     ],
                   })
                 }
-                autoComplete='off'
-                placeholder={quiz.questions[currentQuestionIndex]?.options[0] || ''}
-                id='optionOne'
-                className='editQuizInput'
+                 autoComplete='off' // Disable browser autocomplete
+                // Placeholder showing the current first alternative answer
+                placeholder={quiz.questions[currentQuestionIndex]?.options[0] || ''} 
+                id='optionOne' // ID for the input field
+                className='editQuizInput' // CSS class for styling
               />
           </div>       
           </Col>
           <Col xs={6} className='editQuizCol'>
           <div className='editField'>
-              {/* Edited alternative answer 2*/}
+            {/* Label for the second alternative answer */}
               <label className='editQuizLabel'>
                 <p className='labelText'>2. ALTERNATIVE ANSWER:</p>
               </label>
+                  {/* Input field to edit the second alternative answer */}
               <input
-                type='text'
-                name='editOptions[1]'
-                value={editQuizIndex.editOptions[1] || ''}
-                onChange={(e) =>
+                type='text'//Specify the input type
+                name='editOptions[1]'// Name attribute for the input
+                value={editQuizIndex.editOptions[1] || ''} // The current value of the second alternative answer
+                  onChange={(e) =>
                   setEditQuizIndex({
-                    ...editQuizIndex,
+                    ...editQuizIndex, // Preserve the existing state
                     editOptions: [
-                      editQuizIndex.editOptions[0] || '', // Preserve the first option
-                      e.target.value, // Update the second option
-                      editQuizIndex.editOptions[2] || '', // Preserve the third option
+                      editQuizIndex.editOptions[0] || '', // Preserve the first alternative answer
+                      e.target.value, // Update the second alternative answer
+                      editQuizIndex.editOptions[2] || '', // Preserve the third alternative answer
                     ],
                   })
                 }
-                autoComplete='off'
-                placeholder={quiz.questions[currentQuestionIndex]?.options[1] || ''}
-                id='optionTwo'
-                className='editQuizInput'
+                autoComplete='off' // Disable browser autocomplete
+                placeholder={quiz.questions[currentQuestionIndex]?.options[1] || ''} // Placeholder showing the current second alternative answer
+                id='optionTwo' // ID for the input field
+                className='editQuizInput' // CSS class for styling
               />
           </div>           
           </Col>
@@ -196,17 +203,18 @@ export default function EditQuiz(
         <Row className='editQuizRow'>
           <Col xs={6} className='editQuizCol'>
           <div className='editField'>
-              {/* Edited alternative answer 3 */}
+              {/* Label for the third alternative answer */}
              <label className='editQuizLabel' htmlFor='optionThree'>
               <p className='labelText'>3. ALTERNATIVE ANSWER:</p>
               </label>
+                  {/* Input field to edit the third alternative answer */}
               <input
-                type='text'
-                name='editOptions[2]'
-                value={editQuizIndex.editOptions[2]}
+                type='text'//Specify the input type
+                name='editOptions[2]'// Name attribute for the input
+                value={editQuizIndex.editOptions[2]}// Value of the third alternative answer
                 onChange={(e) =>
                   setEditQuizIndex({
-                    ...editQuizIndex,
+                    ...editQuizIndex,// Preserve the existing state
                     editOptions: [
                       editQuizIndex.editOptions[0] || '', // Preserve the first option
                       editQuizIndex.editOptions[1] || '', // Preserve the second option
@@ -214,29 +222,29 @@ export default function EditQuiz(
                     ],
                   })
                 }
-                autoComplete='off'
-                placeholder={quiz.questions[currentQuestionIndex]
-                  ?.options[2] || ''}
-                  id='optionThree'
-                className='editQuizInput'
+                autoComplete='off' // Disable browser autocomplete
+                placeholder={quiz.questions[currentQuestionIndex]?.options[2] || ''} // Placeholder showing current value or empty
+                id='optionThree' // ID for the input field
+                className='editQuizInput' // CSS class for styling
               />           
           </div>                       
           </Col>
         </Row>
         <Row className='editQuizRow'>
           {/* BUTTONS */}
+          {/* Buttons for editing the quiz and navigating between questions */}
           <Col xs={6} md={4} className='editQuizCol'>
             {/* Button to edit question */}
             <Button
               variant='primary'
-              onClick={handleEditQuestion}
+              onClick={handleEditQuestion}// Calls the function to handle editing the question
               className='editQuestionBtn'
             >
               EDIT QUESTION
             </Button>
           </Col>
           <Col xs={6} md={4} className='editQuizCol'>
-            {/* Button to move to previous question */}
+                {/* Button to navigate to the previous question */}
             <Button
               variant='secondary'
               onClick={() => {
@@ -253,7 +261,7 @@ export default function EditQuiz(
             </Button>
           </Col>
           <Col xs={6} md={4} className='editQuizCol'>
-            {/* Button to move to next question */}
+            {/* Button to navigate to the next question */}
             <Button
               variant='secondary'
               onClick={() => {
@@ -272,7 +280,7 @@ export default function EditQuiz(
         </Row>
         <Row className='editQuizRow'>
           <Col xs={12} className='editQuizCol'>
-            {/* Button to edit quiz */}
+                {/* Button to save changes and edit the quiz */}
             <Button
               variant='primary'
               // Call the editQuiz function with the quiz ID on click
