@@ -17,6 +17,7 @@ export default function Quiz(
     questions,
     quizTimer,
     timer,
+    quizCompleted
   }
 ) {
     //=============STATE VARIABLES=====================
@@ -24,8 +25,24 @@ export default function Quiz(
     const [selectedOption, setSelectedOption] = useState(null);  
 
     //========USE EFFECT HOOK==================
+  useEffect(() => {
+    if (quizTimer && timeLeft > 0) {
+      const id = setInterval(() => {
+        setTimeLeft((prevTime) => {
+          if (prevTime <= 1) {
+            clearInterval(id);
+            handleNextQuestion();
+            return 0;
+          }
+          return prevTime - 1;
+        });
+      }, 1000);
+      setIntervalId(id);
+      return () => clearInterval(id); // Cleanup on unmount
+    }
+  }, [quizTimer, timeLeft, handleNextQuestion]);
       // Effect hook to manage countdown timer  
-    useEffect(() => {
+   /* useEffect(() => {
       if (!quizTimer) return;
 
       setTimeLeft(timer);
@@ -40,23 +57,32 @@ export default function Quiz(
       });
     }, 1000);
 
-      /* Cleanup function to clear the interval when the 
-      component unmounts or dependencies change*/
     return () => clearInterval(interval);
-  }, [quizTimer, timer, handleNextQuestion]);
+  }, [quizTimer, timer, handleNextQuestion]);*/
   // Display loading text if quiz or questions are not available
 
   if (!selectedQuiz || !questions || questions.length === 0) {
     return <div>Loading...</div>
   }
 
+ /*
   // Function to format the timer into mm:ss format
   const formatTimer = (time) => {
-    if (time === null) return '00:00';
-    const minutes = Math.floor(time / 60);
-    const seconds = time % 60; 
+    if (time === null) return '00:00'; // Default value if time is null
+    const minutes = Math.floor(time / 60); // Calculate minutes
+    const seconds = time % 60; // Calculate seconds 
+    // Format time
     return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   };
+  */
+
+  // Function to format the timer into mm:ss format
+  const formatTimer = (seconds) => {
+    const minutes = Math.floor(seconds/ 60)
+    const secs = seconds % 60;
+    return `${minutes}: ${secs < 10 ? '0' : ' '}${secs}`
+  }
+
   //============EVENT LISTENERS=================
   // Function to handle answer selection and update the score if correct
   const handleAnswerClick = (isCorrect) => {
@@ -66,13 +92,25 @@ export default function Quiz(
     handleNextQuestion();// Move to the next question
   };
 
-  // Function to handle option click and update the selected option
+// Function to handle option click and update the selected option
   const handleOptionClick = (option) => {
+    // if (selectedOption) return; // Prevent re-selection
     setSelectedOption(option);// Update the selected option
+    // Check if the selected option is correct
     handleAnswerClick(option === questions[quizIndex].correctAnswer);
   };
 
- 
+    /*
+    //Function to display score when the quiz is completed
+ const showScore() => {
+   if(quizCompleted){
+   setShowScore(!true)
+   //show score and hide quiz output 
+   //save score when exit button is clicked/activated
+   }}
+   //=> add to startQuiz logic (useState to display score) 
+   //and exit if the quiz is complete
+ */
 
   //================JSX RENDERING======================
 
@@ -116,25 +154,18 @@ export default function Quiz(
             <Col xs={6} md={4} className='optionCol'>     
           {/* Map through and randomize options */}
           {questions[quizIndex].options.map((option, index)=> (
-            <div key={index} className='questions'>
-              {/* Render  buttons for each option */}
-              <div className='options'>     
-                <div className='option'> 
                   <Button
+                    key={index}
                     variant={selectedOption === option ? 'success' : 'secondary'}
                     className='answerOption'
                     onClick={() => handleOptionClick(option)}
+                     disabled={selectedOption}
                   >
-                    <p>{option}</p>  
-                    </Button>     
-                </div> 
-                </div>
-                
-            </div> 
+                    <p className='buttonText'>{option}</p>  
+                    </Button>         
           ))}
             </Col> 
             <Col xs={6} md={4} className='optionsCol'></Col>
-
           </Row>
         </div>
         <Row>
@@ -150,9 +181,12 @@ export default function Quiz(
           <Button 
           variant='primary' 
           type='button' 
-          onClick={handleNextQuestion}>
+          onClick={handleNextQuestion}
+            disabled={quizCompleted} // Disable button if the quiz is completed
+            >
             NEXT QUESTION
             </Button>
+ 
           {/* Button to restart quiz */}
           <Button 
           variant='primary' 
@@ -163,6 +197,8 @@ export default function Quiz(
             RESTART
             </Button>
           </Col>
+              {/*display score if quiz is completed*/}
+             {/*button to exit and save score to database*/}
         </Row>
       </div>
     </div>
