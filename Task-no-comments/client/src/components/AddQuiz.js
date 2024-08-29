@@ -18,7 +18,6 @@ export default function AddQuiz(
   setCurrentQuestion,
 }) {
   //===========STATE VARIABLES====================
-  // State to manage the error message displayed to the user
   const [errorMessage, setErrorMessage] = useState('');
 
   //============EVENT LISTENERS=========================
