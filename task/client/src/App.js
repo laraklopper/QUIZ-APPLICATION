@@ -17,21 +17,21 @@ import Page4 from './pages/Page4';
 export default function App() {
   //=======STATE VARIABLES===============
   //User variables
-  const [users, setUsers] = useState([]);
-  const [currentUser, setCurrentUser] = useState(null);
-  const [userData, setUserData] = useState({
-    username: '',
-    email: '',
-    dateOfBirth: '',
-    admin: '',
-    password: '',
+  const [users, setUsers] = useState([]);//State to store the list of users
+  const [currentUser, setCurrentUser] = useState(null);//State to store the user currently loggedIn
+  const [userData, setUserData] = useState({//State to store userData for login
+    username: '',        // Username entered in the login form
+    email: '',           // Email entered in the login form
+    dateOfBirth: '',     // Date of birth entered in the login form
+    admin: '',           // Admin status, if applicable
+    password: '',        // Password entered in the login form
   });
-  const [newUserData, setNewUserData] = useState({
-    newUsername: '',
-    newEmail: '',
-    newDateOfBirth: '',
-    newAdmin: false,
-    newPassword: '',
+  const [newUserData, setNewUserData] = useState({// State to manage the registration form data
+    newUsername: '',     // Username entered in the registration form
+    newEmail: '',        // Email entered in the registration form
+    newDateOfBirth: '',  // Date of birth entered in the registration form
+    newAdmin: false,     // Admin status (false by default)
+    newPassword: '',     // Password entered in the registration form
   });
   //Quiz variables
   const [quizList, setQuizList] = useState([]);
@@ -55,7 +55,7 @@ export default function App() {
     //Function to fetch users
     const fetchUsers = async () => {
       try {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('token');// Retrieve JWT token from localStorage for authentication
         if (!token || !loggedIn) return;// If no token is found, exit the function
 
       // Send a GET request to the server to fetch users
@@ -139,12 +139,18 @@ export default function App() {
         throw new Error('Failed to fetch quizzes');
       }
       const quizData = await response.json();//Parse the response data
-
-      if (quizData && quizData.quizList) {
-        // Update the quizList state with the fetched quizzes
-        setQuizList(quizData.quizList); 
-        // console.log(quizData);
+      
+      if (quizData && Array.isArray(quizData.quizList)) {
+        setQuizList(quizData.quizList)
+      } else {
+        throw new Error('Invalid quiz data')
       }
+      // if (quizData && quizData.quizList) {
+      //   // Update the quizList state with the fetched quizzes
+      //   setQuizList(quizData.quizList); 
+      //   // console.log(quizData);
+      // }
+  
     } 
     catch (error) {
       console.error('Error fetching quizzes:', error);
@@ -156,7 +162,7 @@ export default function App() {
     
 //===========EVENT LISTENERS============================
   // Function to handle user logout
-  const logout = () => {
+  const logout = useCallback(() => {
     localStorage.removeItem('token');
     localStorage.removeItem('username');
     localStorage.removeItem('loggedIn');
@@ -164,7 +170,7 @@ export default function App() {
     setError('');
     setUserData({ username: '', password: '' });
     navigate('/');
-  };
+  ),[navigate]};
 
   //===========JSX RENDERING=============================
 
