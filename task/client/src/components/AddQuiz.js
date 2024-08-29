@@ -1,9 +1,9 @@
 // Import necessary modules and packages
-import React, { useState } from 'react';
-//Bootstrap
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Button from 'react-bootstrap/Button';
+import React, { useState } from 'react'; // React and useState hook for managing component state
+// Import Bootstrap components
+import Row from 'react-bootstrap/Row'; // Row component for creating horizontal groups of columns
+import Col from 'react-bootstrap/Col'; // Col component for creating columns within a Row
+import Button from 'react-bootstrap/Button'; // Import Bootstrap button component
 
 
 //Add quiz function component
@@ -29,12 +29,13 @@ export default function AddQuiz(
       console.log('You must add up to 5 questions.');
       return;
     }
+    //Conditional rendering to check that all fields are filled in
     if (!currentQuestion.questionText || !currentQuestion.correctAnswer || currentQuestion.options.some(opt => !opt)) {
-      setErrorMessage('Please fill in all fields before adding a question.');
-      return;
+      setErrorMessage('Please fill in all fields before adding a question.');// Set error message if fields are missing
+      return; // Exit the function if any fields are empty
     }
-    setQuestions([...questions, currentQuestion]);
-    setCurrentQuestion(  
+    setQuestions([...questions, currentQuestion]);// Add the current question to the questions array
+    setCurrentQuestion(// Reset current question fields
       { 
         questionText: '', 
         correctAnswer: '', 
@@ -43,19 +44,22 @@ export default function AddQuiz(
     );
   };
 
-  // Function to delete a question
-  const deleteNewQuestion =(index) => {
-    const newQuestions = questions.filter((_, i) => i !== index); 
-    setQuestions(newQuestions)
+// Function to delete a question from the quiz
+  const deleteNewQuestion = (index) => {
+    // Filter out the question at the specified index
+    const newQuestions = questions.filter((_, i) => i !== index);
+    setQuestions(newQuestions); // Update the questions array with the filtered list
   }
 
-  // Function to handle form submission
+
+   // Function to handle form submission for adding a new quiz
   const handleAddNewQuiz = () => {
+    // Conditional rendering to check th quiz name and questions are provided
     if (!quizName || questions.length === 0) {
-      setErrorMessage('Please enter a quiz name and add at least one question.');
-      return;
+      setErrorMessage('Please enter a quiz name and add at least one question.'); // Set error message if validation fails
+      return; // Exit the function if validation fails
     }
-    // Call the addNewQuiz function passed as a prop
+    // Call the function to add the new quiz
     addNewQuiz();
   };
 
@@ -64,15 +68,17 @@ export default function AddQuiz(
     <div>
       <Row>
         <Col>
+    {/* Heading for the Add Quiz form */}
         <h2 className='h2'>ADD QUIZ</h2>
         </Col>
       </Row>
-      {/*  */}
+      {/* New Quiz form */}
       <div id='newQuizForm'>
         <Row>
           <Col xs={6} md={4}>
           {/* QuizForm Input */}
           <div className='addQuizField'>
+        {/* Label for the quiz name input */}
               <label className='addQuizLabel' htmlFor='addQuizName'>
                 <p className='labelText'>QUIZ NAME:</p> 
               </label>
@@ -80,16 +86,12 @@ export default function AddQuiz(
                   type='text'
                   name='quizName'
                   value={quizName}
-                  onChange={(e) =>
-                    /* Event handler for the onChange event, 
-                    triggered when the input value changes*/
-                    setQuizName(e.target.value)
-                  }
-                  autoComplete='off'
-                  placeholder='QUIZ NAME'
-                  required
-                  className='addQuizInput'
-                  id='addQuizName'
+                  onChange={(e) => setQuizName(e.target.value)} // Updates the quizName state when input value changes
+                  autoComplete='off' // Disable browser autocomplete
+                  placeholder='QUIZ NAME'// Placeholder text displayed in the input field
+                  required // Ensure the user cannot submit the form without entering a value in this field.
+                  className='addQuizInput'// CSS class for styling the input field
+                  id='addQuizName'// Unique ID for the input field
                 />             
           </div>
           </Col>
