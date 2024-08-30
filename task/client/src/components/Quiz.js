@@ -21,35 +21,22 @@ export default function Quiz(
   }
 ) {
     //=============STATE VARIABLES=====================
-    const [timeLeft, setTimeLeft] = useState(timer); 
-    const [selectedOption, setSelectedOption] = useState(null);  
+    const [timeLeft, setTimeLeft] = useState(timer); // State used to store the time left on the timer
+    const [selectedOption, setSelectedOption] = useState(null);  //State used to store the selected option
 
     //========USE EFFECT HOOK==================
+        // Effect hook to manage countdown timer  
   useEffect(() => {
-    if (quizTimer && timeLeft > 0) {
-      const id = setInterval(() => {
-        setTimeLeft((prevTime) => {
-          if (prevTime <= 1) {
-            clearInterval(id);
-            handleNextQuestion();
-            return 0;
-          }
-          return prevTime - 1;
-        });
-      }, 1000);
-      setIntervalId(id);
-      return () => clearInterval(id); // Cleanup on unmount
-    }
-  }, [quizTimer, timeLeft, handleNextQuestion]);
-      // Effect hook to manage countdown timer  
-   /* useEffect(() => {
-      if (!quizTimer) return;
+    // Check if the timer is enabled and time is remaining
+    if (!quizTimer || timeLeft <= 0) return;
 
-      setTimeLeft(timer);
-    const interval = setInterval(() => {
+    // Set up an interval to count down the timer every second
+    const id = setInterval(() => {
       setTimeLeft((prevTime) => {
+        /* If time is about to run out, clear the
+        interval and move to the next question*/
         if (prevTime <= 1) {
-          clearInterval(interval);
+          clearInterval(id);
           handleNextQuestion();
           return 0;
         }
@@ -57,12 +44,15 @@ export default function Quiz(
       });
     }, 1000);
 
-    return () => clearInterval(interval);
-  }, [quizTimer, timer, handleNextQuestion]);*/
-  // Display loading text if quiz or questions are not available
-
-  if (!selectedQuiz || !questions || questions.length === 0) {
-    return <div>Loading...</div>
+    return () => clearInterval(id);// Cleanup the interval on component unmount
+  }, [quizTimer, timeLeft, handleNextQuestion]);
+  
+ 
+// Function to format the timer into mm:ss format
+  const formatTimer = (seconds) => {
+    const minutes = Math.floor(seconds/ 60)
+    const secs = seconds % 60;
+    return `${minutes}: ${secs < 10 ? '0' : ' '}${secs}`
   }
 
  /*
@@ -76,16 +66,10 @@ export default function Quiz(
   };
   */
 
-  // Function to format the timer into mm:ss format
-  const formatTimer = (seconds) => {
-    const minutes = Math.floor(seconds/ 60)
-    const secs = seconds % 60;
-    return `${minutes}: ${secs < 10 ? '0' : ' '}${secs}`
-  }
-
   //============EVENT LISTENERS=================
   // Function to handle answer selection and update the score if correct
   const handleAnswerClick = (isCorrect) => {
+    //Conditional rendering to check if the answer is correct
     if (isCorrect) {
       setScore(score + 1);// Update the score if the answer is correct
     }
@@ -94,23 +78,17 @@ export default function Quiz(
 
 // Function to handle option click and update the selected option
   const handleOptionClick = (option) => {
-    // if (selectedOption) return; // Prevent re-selection
+    if (selectedOption) return; // Prevent re-selection
     setSelectedOption(option);// Update the selected option
-    // Check if the selected option is correct
+    // Conditional rendering to check if the selected option is correct
     handleAnswerClick(option === questions[quizIndex].correctAnswer);
   };
 
-    /*
-    //Function to display score when the quiz is completed
- const showScore() => {
-   if(quizCompleted){
-   setShowScore(!true)
-   //show score and hide quiz output 
-   //save score when exit button is clicked/activated
-   }}
-   //=> add to startQuiz logic (useState to display score) 
-   //and exit if the quiz is complete
- */
+  //=================================================
+   // Display loading text if quiz or questions are not available
+  if (!selectedQuiz || !questions || questions.length === 0) {
+    return <div>Loading...</div>
+  }
 
   //================JSX RENDERING======================
 
@@ -159,7 +137,8 @@ export default function Quiz(
                     variant={selectedOption === option ? 'success' : 'secondary'}
                     className='answerOption'
                     onClick={() => handleOptionClick(option)}
-                     disabled={selectedOption}
+                    disabled={!!selectedOption} // Disable re-selection
+                    aria-label={`Option ${index + 1}`}
                   >
                     <p className='buttonText'>{option}</p>  
                     </Button>         
