@@ -1,5 +1,5 @@
 // Import necessary modules and packages
-import React from 'react';
+import React, { /*useEffect,*/useState } from 'react';
 import '../CSS/Page1.css'
 //Bootstrap
 import Row from 'react-bootstrap/Row';
@@ -9,19 +9,53 @@ import Button from 'react-bootstrap/Button';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
-//Page1 function component
 export default function Page1(
   { //PROPS PASSED FROM PARENT COMPONENT 
-    logout,// Function to handle user logout
-    error, // Error state
-     currentUser//Current user state
+    logout,
+    error, 
+    setError,
+    currentUser
     }
   ) {
+  //=======STATE VARIABLES==============
+ const [scores, setScores] =useState([]);// State to hold scores
+
+  //=====================================
+/*
+    // Fetch scores on component mount
+  useEffect(() => {
+    fetchScores();
+  }, []);
+*/
  
 //=============REQUESTS===================
 //---------------GET---------------------
 //Function to display the Scores list from the database
+//Function to display the Scores list from the database
+const fetchScores = async () => {
+  try {
+    const token =localStorage.getItem('token')
+    const response = await fetch (`http://localhost:3001/findScores`, {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      }
+    })
 
+    if (!response.ok) {
+      throw new Error('Unable to fetch user scores')
+    }
+
+    const quizScores = await response.json(); // Await response.json() to get data
+    setScores(quizScores); // Update state with fetched scores
+    
+  } catch (error) {
+    console.error('Error fetching userScores', error.message);
+    setError('Error fetching userScores', error.message)    
+  }
+} 
 //========JSX RENDERING================
 
   return (
@@ -66,24 +100,19 @@ export default function Page1(
     </section>
     {/* Section2 - Displays a users past scores*/}
     <section className='section2'>
-      <Row>
+         <Row>
         {/* Past Scores */}
         <Col>
         <h2 className='h2'>PAST SCORES</h2>
         </Col>
       </Row>
         <Row>
-          <Col xs={6} md={4}>
-          {/* Button to view past scores */}
-            <Button 
-              variant="primary" 
-              type='button' 
-              id='pastScoresBtn'>
-                VIEW PAST SCORES
-              </Button>
+          <Col xs={6} md={4}></Col>
+          <Col xs={6} md={4} className='scoreDisplayCol'>
+          {/* PastScores component */}
+            <PastScores fetchScores={fetchScores} scores={scores}/>
           </Col>
-          <Col xs={12} md={8}>
-          </Col>
+          <Col xs={6} md={4}></Col>
         </Row>
     </section>
     {/* Footer */}
