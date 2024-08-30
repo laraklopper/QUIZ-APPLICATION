@@ -8,6 +8,7 @@ import Button from 'react-bootstrap/Button';
 //Components
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import PastScores from '../components/PastScores';
 
 export default function Page1(
   { //PROPS PASSED FROM PARENT COMPONENT 
@@ -30,7 +31,6 @@ export default function Page1(
  
 //=============REQUESTS===================
 //---------------GET---------------------
-//Function to display the Scores list from the database
 //Function to display the Scores list from the database
 const fetchScores = async () => {
   try {
