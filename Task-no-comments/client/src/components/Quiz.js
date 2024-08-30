@@ -23,8 +23,6 @@ export default function Quiz(
     //=============STATE VARIABLES=====================
     const [timeLeft, setTimeLeft] = useState(timer); 
     const [selectedOption, setSelectedOption] = useState(null);  
-    // Option identifiers (e.g., A, B, C, D)
-    const optionIds = ['A', 'B', 'C', 'D'];
 
     //========USE EFFECT HOOK==================
       // Effect hook to manage countdown timer  
@@ -53,41 +51,35 @@ export default function Quiz(
   }
 
   // Function to format the timer into mm:ss format
-  const formatTimer = (time) => {
-    if (time === null) return '00:00';
-    const minutes = Math.floor(time / 60);
-    const seconds = time % 60; 
-    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-  };
-  //============EVENT LISTENERS=================
-  // Function to handle answer selection and update the score if correct
-  // const handleAnswerClick = (isCorrect) => {
-  //   if (isCorrect) {
-  //     setScore(score + 1);
-  //   }
-  //   handleNextQuestion();// Move to the next question
+  // const formatTimer = (time) => {
+  //   if (time === null) return '00:00';
+  //   const minutes = Math.floor(time / 60);
+  //   const seconds = time % 60; 
+  //   return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   // };
 
-  // // Function to handle option click and update the selected option
-  // const handleOptionClick = (option) => {
-  //   setSelectedOption(option);// Update the selected option
-  //   handleAnswerClick(option === questions[quizIndex].correctAnswer);
-  // };
-
-  const handleOptionClick = (option) => {
-    setSelectedOption(option)  // Update the selected option in state to reflect user selection
-    //Conditional rendering to check if the option is correct
-    if (option === questions[quizIndex].correctAnswer) {
-      setScore(score + 1);
-    }
-    else if(quizIndex === 5){
-      addScore()
-    }
-    else{
-      handleNextQuestion()
-    }
+    // Function to format the timer into mm:ss format
+  const formatTimer = (seconds) => {
+    const minutes = Math.floor(seconds/ 60)
+    const secs = seconds % 60;
+    return `${minutes}: ${secs < 10 ? '0' : ' '}${secs}`
   }
 
+
+  //============EVENT LISTENERS=================
+  // Function to handle answer selection and update the score if correct
+  const handleAnswerClick = (isCorrect) => {
+    if (isCorrect) {
+      setScore(score + 1);
+    }
+    handleNextQuestion();// Move to the next question
+  };
+
+  // Function to handle option click and update the selected option
+  const handleOptionClick = (option) => {
+    setSelectedOption(option);// Update the selected option
+    handleAnswerClick(option === questions[quizIndex].correctAnswer);
+  };
   //================JSX RENDERING======================
 
   return (
@@ -127,29 +119,28 @@ export default function Quiz(
           </Row>
           {/* Map through and randomize options */}
           {questions[quizIndex].options.map((option, index)=> (
-            <div key={index}>
+           
               <Row> 
                 <Col xs={6} md={4}></Col>
           <Col md={4} className='optionCol'>
               {/* Render radio buttons for each option */}
-              <div className='options'>             
-              <input 
-              type='radio'
-              name='answer'
-              value={option}
-                checked={selectedOption === option} 
-                onChange={() => handleOptionClick(option)} 
-                className='answerOption'
-                />
-              {/* Display option label with identifier*/}
-              <p>{optionIds[index]} {option}</p>  
-              </div>
+              <div className='options'> 
+                <Button
+                    key={index}
+                    variant={selectedOption === option ? 'success' : 'secondary'}
+                    className='answerOption'
+                    onClick={() => handleOptionClick(option)}
+                    disabled={!!selectedOption} 
+                    aria-label={`Option ${index + 1}`}
+                    value={option}
+                  >
+                    {option}
+                    </Button>   
                 </Col>
                 <Col xs={6} md={4}></Col>
                 </Row>
-            </div> 
           ))}
-        </div>
+       
         <Row>
           <Col xs={6} md={4}>
           <div>
@@ -164,7 +155,9 @@ export default function Quiz(
           <Button 
           variant='primary' 
           type='button' 
-          onClick={handleNextQuestion}>
+          onClick={handleNextQuestion}
+            // disabled={!selectedOption || quizCompleted}
+            >
             NEXT QUESTION
             </Button>
           {/* Button to restart quiz */}
