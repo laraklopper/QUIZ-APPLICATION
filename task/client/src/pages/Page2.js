@@ -24,22 +24,24 @@ export default function Page2(
     setQuizName,
     setQuestions,
     questions,
-    // quizName,
-    // currentUser
+    quizName,
+    currentUser
     }
 ) {
   // =========STATE VARIABLES====================
-  const [selectedQuizId, setSelectedQuizId] = useState('');
-  const [quizIndex, setQuizIndex] = useState(0);
-  const [startQuiz, setQuizStarted] = useState(false)
-  const [questionIndex, setQuestionIndex] = useState(null)
+  //QuizVariables
+  const [selectedQuizId, setSelectedQuizId] = useState('');// Selected quiz ID
+  const [quizIndex, setQuizIndex] = useState(0);// Index of the current question in the quiz
+  const [startQuiz, setQuizStarted] = useState(false);// Flag to start quiz
+  const [quizCompleted, setQuizCompleted] = useState(false); // Flag to check if the quiz is completed  
+  const [questionIndex, setQuestionIndex] = useState(null); // State to store the index of the current question
   //Score variables
-  const [score, setScore] = useState(0);
+  const [score, setScore] = useState(0);// User's score
+  const [showScore, setShowScore] = useState(false); // Flag to show score
   //Timer variables
-  const [timer, setTimer] = useState(null);
-  const [quizTimer, setQuizTimer] = useState(false);
-    const [quizCompleted, setQuizCompleted] = useState(false)
-  
+  const [timer, setTimer] = useState(null); // Timer for the quiz
+  const [quizTimer, setQuizTimer] = useState(false); // Flag to enable or disable timer
+
   
   //============USE EFFECT HOOK==================
   /* useEffect to fetch quizzes when the component 
@@ -51,45 +53,44 @@ export default function Page2(
 //==========================================
   // Fisher-Yates shuffle algorithm to randomize array elements
   const shuffleArray = (array) => {
-    let shuffledArray = array.slice(); 
+    let shuffledArray = array.slice(); // Create a copy of the array
     for (let i = shuffledArray.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));     
-
-      [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+      const j = Math.floor(Math.random() * (i + 1)); // Generate a random index
+      [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]]; // Swap elements
     }
-    return shuffledArray;  // Return the shuffled array
+    return shuffledArray; // Return the shuffled array
   };
 
 
   //=======EVENT LISTENERS============
   // Function to handle quiz selection
   const handleSelectQuiz = (event) => {
-    setSelectedQuizId(event.target.value);
+    setSelectedQuizId(event.target.value); // Update selected quiz ID
   };
 
-  // Function to move to the next question
+    // Function to move to the next question or end the quiz
   const handleNextQuestion = useCallback(() => {
     if (quizIndex < quiz.questions.length - 1) {
-      setQuizIndex(quizIndex + 1); 
-      if (quizTimer) setTimer(30);
-    } 
-    else {
-      setQuizStarted(false)
-      setQuiz(null);   
-      setSelectedQuizId('')
-      setTimer(null); 
-      setQuestionIndex(null)
-      setQuizCompleted(true)
+      setQuizIndex(quizIndex + 1); // Move to the next question
+      if (quizTimer) setTimer(30); // Reset timer if enabled
+    } else {
+      setQuizStarted(false); // End quiz
+      setQuiz(null); // Clear quiz data
+      setSelectedQuizId(''); // Reset selected quiz ID
+      setTimer(null); // Clear timer
+      setQuizCompleted(true); // Mark quiz as completed
     }
-  },[ quiz, quizTimer, setQuiz, quizIndex]);
+  }, [quiz, quizTimer, /*setQuiz*/ quizIndex]);
+  
 
   // Function to restart the quiz
   const handleRestart = () => {
-    setQuizIndex(0); 
-    setScore(0); 
-    setTimer(null); 
+    setQuizIndex(0);  // Reset question index
+    setScore(0); // Reset score
+    setTimer(null); // Clear timer
+    setQuizCompleted(false); // Reset completion flag
     if (quizTimer) {
-      handleQuizStart(); 
+      handleQuizStart(); // Restart quiz if timer is enabled
     }
   };
 
@@ -143,12 +144,14 @@ export default function Page2(
     }
   }, [setQuizList, setError, setQuestions, setQuizName, setQuiz])
 
- /* const addScore = async () => {
+   //----------------POST-------------------------
+  // Function to save the user's score
+ const addScore = async () => {
     // alert('Quiz Completed' + score )
     // console.log('quiz Completed' + score);
     try {
       //Send a POST request to the server 
-      const response = await fetch('http://localhost:3001/quiz/addScore', {
+      const response = await fetch('http://localhost:3001/scores/addScore', {
         method: 'POST',
         mode: 'cors',
         headers: {
@@ -159,9 +162,11 @@ export default function Page2(
           quizName: quizName,
           score,
         })
-      }
-      )
+      })
 
+      if(!response.ok){
+        throw new Error()
+      }
       if (response.ok) {
         const userScore = await response.json();
 
@@ -287,10 +292,22 @@ export default function Page2(
               timer={timer} 
               questions={questions}
               setScore={setScore}
-              // addScore={addScore}
             />
           )}
-         
+           {quizCompleted && (
+            <div>
+              <Score score={score} quiz={quiz} addScore={addScore} />
+              <Button onClick={viewScore}>VIEW SCORE</Button>
+            </div>
+          )}
+          {quizCompleted && (
+            <>
+              <Button onClick={handleRestart}>RESTART QUIZ</Button>
+              <Button onClick={() => setQuizTimer(!quizTimer)}>
+                {quizTimer ? 'Disable Timer' : 'Enable Timer'}
+              </Button>
+            </>
+          )}
         </div>
       </section>
       {/* Footer */}
