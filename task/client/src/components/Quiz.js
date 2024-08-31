@@ -23,18 +23,37 @@ export default function Quiz(
     //=============STATE VARIABLES=====================
     const [timeLeft, setTimeLeft] = useState(timer); // State used to store the time left on the timer
     const [selectedOption, setSelectedOption] = useState(null);  //State used to store the selected option
-
+    const [feedback, setFeedback] = useState('')
+    const [questionIndex, setQuestionIndex] = useState(null)
     //========USE EFFECT HOOK==================
-        // Effect hook to manage countdown timer  
+
+  useEffect(()=> {
+      if (questions.length > 0) {
+        setQuestionIndex(0)
+      }
+    }, [questions])
+  
+  // Effect to manage the timer countdown
   useEffect(() => {
+    if (timer === 0) {
+      handleNextQuestion(); // Move to the next question when timer hits zero
+    } else if (timer !== null) {
+      const countdown = setInterval(() => {
+        setTimer((prevTimer) => prevTimer - 1); // Decrease timer every second
+      }, 1000);
+
+      // Cleanup function to clear the interval when component unmounts or timer changes
+      return () => clearInterval(countdown);
+    }
+  }, [timer, handleNextQuestion, setTimer]);
+  
+/*  useEffect(() => {
     // Check if the timer is enabled and time is remaining
     if (!quizTimer || timeLeft <= 0) return;
 
     // Set up an interval to count down the timer every second
     const id = setInterval(() => {
       setTimeLeft((prevTime) => {
-        /* If time is about to run out, clear the
-        interval and move to the next question*/
         if (prevTime <= 1) {
           clearInterval(id);
           handleNextQuestion();
@@ -46,7 +65,24 @@ export default function Quiz(
 
     return () => clearInterval(id);// Cleanup the interval on component unmount
   }, [quizTimer, timeLeft, handleNextQuestion]);
-  
+
+    // UseEffect to handle the quiz timer countdown
+  useEffect(() => {
+    if (!quizTimer || timeLeft <= 0) return;
+    if (quizTimer && timeLeft > 0) {
+      const id = setInterval(() => {
+        setTimeLeft((prevTime) => {
+          if (prevTime <= 1) {
+            clearInterval(id);
+            handleNextQuestion();
+            return 0;
+          }
+          return prevTime - 1;
+        });
+      }, 1000);
+      return () => clearInterval(id); // Cleanup on unmount
+    }
+  }, [quizTimer, timeLeft, handleNextQuestion]);*/
  
 // Function to format the timer into mm:ss format
   const formatTimer = (seconds) => {
