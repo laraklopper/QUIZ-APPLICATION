@@ -83,7 +83,14 @@ export default function Quiz(
       return () => clearInterval(id); // Cleanup on unmount
     }
   }, [quizTimer, timeLeft, handleNextQuestion]);*/
- 
+
+   //=================================================
+   // Display loading text if quiz or questions are not available
+  if (!selectedQuiz || !questions || questions.length === 0) {
+    return <div>Loading...</div>
+  }
+
+    //=======Utility function============
 // Function to format the timer into mm:ss format
   const formatTimer = (seconds) => {
     const minutes = Math.floor(seconds/ 60)
@@ -112,6 +119,18 @@ export default function Quiz(
     handleNextQuestion();// Move to the next question
   };
 
+    // const handleAnswerClick = (isCorrect) => {
+  //   if (isCorrect) {
+  //     setScore(score + 1)
+  //     setFeedback('Correct')
+  //   }
+  //   else{
+  //     setFeedback('Incorrect')// Set feedback message for an incorrect answer
+  //   }
+  //   handleNextQuestion();// Move to the next question
+  //   }
+  // }
+  
 // Function to handle option click and update the selected option
   const handleOptionClick = (option) => {
     if (selectedOption) return; // Prevent re-selection
@@ -120,11 +139,7 @@ export default function Quiz(
     handleAnswerClick(option === questions[quizIndex].correctAnswer);
   };
 
-  //=================================================
-   // Display loading text if quiz or questions are not available
-  if (!selectedQuiz || !questions || questions.length === 0) {
-    return <div>Loading...</div>
-  }
+ 
 
   //================JSX RENDERING======================
 
@@ -168,16 +183,20 @@ export default function Quiz(
             <Col xs={6} md={4} className='optionCol'>     
           {/* Map through and randomize options */}
           {questions[quizIndex].options.map((option, index)=> (
-                  <Button
-                    key={index}
+                <div key={index} className='questions'>
+               <Button
                     variant={selectedOption === option ? 'success' : 'secondary'}
                     className='answerOption'
-                    onClick={() => handleOptionClick(option)}
-                    disabled={!!selectedOption} // Disable re-selection
-                    aria-label={`Option ${index + 1}`}
+                    name='options'
+                    onClick={() => handleOptionClick()}
+                    // onClick={() => handleAnswerClick()}
+                    // disabled={!!selectedOption} 
+                    // aria-label={`Option ${index + 1}`}
+                    // value={option}
                   >
-                    <p className='buttonText'>{option}</p>  
-                    </Button>         
+                    {option}
+                    </Button> 
+            </div>
           ))}
             </Col> 
             <Col xs={6} md={4} className='optionsCol'></Col>
