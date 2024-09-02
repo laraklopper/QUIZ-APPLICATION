@@ -67,17 +67,20 @@ export default function Quiz(
 
 
   //============EVENT LISTENERS=================
-  // Function to handle answer selection and update the score if correct
+  /* Function to handle answer selection and 
+  update the score if correct*/
   const handleAnswerClick = (isCorrect) => {
     if (isCorrect) {
       setScore(score + 1);
     }
-    handleNextQuestion();// Move to the next question
+    // Move to the next question
+    handleNextQuestion();
   };
 
-  // Function to handle option click and update the selected option
+  /* Function to handle option click and 
+  update the selected option*/
   const handleOptionClick = (option) => {
-    setSelectedOption(option);// Update the selected option
+    setSelectedOption(option);
     handleAnswerClick(option === questions[quizIndex].correctAnswer);
   };
   //================JSX RENDERING======================
