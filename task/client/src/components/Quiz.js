@@ -21,69 +21,43 @@ export default function Quiz(
   }
 ) {
     //=============STATE VARIABLES=====================
-    const [timeLeft, setTimeLeft] = useState(timer); // State used to store the time left on the timer
-    const [selectedOption, setSelectedOption] = useState(null);  //State used to store the selected option
-    const [feedback, setFeedback] = useState('')
-    const [questionIndex, setQuestionIndex] = useState(null)
+    const [selectedOption, setSelectedOption] = useState(null); //State used to track the selected option
+  const [feedback, setFeedback] = useState('');// State used to store feedback message for correct/incorrect answers
+  const [timeLeft, setTimeLeft] = useState(10);// State used to track the remaining time for the timer
     //========USE EFFECT HOOK==================
-
-  useEffect(()=> {
+  /* Effect to reset the question index to the first 
+  question when the questions array changes*/
+    useEffect(()=> {
       if (questions.length > 0) {
-        setQuestionIndex(0)
+        setQuizIndex(0)// Reset the question index to 0 (the first question)
+        // setQuestionIndex(0); 
       }
-    }, [questions])
+    }, [questions, setQuizIndex])
   
-  // Effect to manage the timer countdown
+   // Effect to manage the timer countdown
   useEffect(() => {
-    if (timer === 0) {
-      handleNextQuestion(); // Move to the next question when timer hits zero
-    } else if (timer !== null) {
-      const countdown = setInterval(() => {
-        setTimer((prevTimer) => prevTimer - 1); // Decrease timer every second
-      }, 1000);
+    if (!quizTimer) return; //Exit early if the quizTimer is not enabled
 
-      // Cleanup function to clear the interval when component unmounts or timer changes
-      return () => clearInterval(countdown);
-    }
-  }, [timer, handleNextQuestion, setTimer]);
-  
-/*  useEffect(() => {
-    // Check if the timer is enabled and time is remaining
-    if (!quizTimer || timeLeft <= 0) return;
-
-    // Set up an interval to count down the timer every second
-    const id = setInterval(() => {
-      setTimeLeft((prevTime) => {
+    setTimeLeft(timer);// Set the initial time for the timer based on the value
+    // Set up an interval to decrease the timer every second
+    const interval =setInterval(() => {
+      setTimeLeft((prevTime) => {// Update the time left by decrementing it by 1 second
+        // If the time left is 1 second or less, handle the end of the countdown
         if (prevTime <= 1) {
-          clearInterval(id);
-          handleNextQuestion();
-          return 0;
-        }
-        return prevTime - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(id);// Cleanup the interval on component unmount
-  }, [quizTimer, timeLeft, handleNextQuestion]);
-
-    // UseEffect to handle the quiz timer countdown
-  useEffect(() => {
-    if (!quizTimer || timeLeft <= 0) return;
-    if (quizTimer && timeLeft > 0) {
-      const id = setInterval(() => {
-        setTimeLeft((prevTime) => {
-          if (prevTime <= 1) {
-            clearInterval(id);
-            handleNextQuestion();
-            return 0;
-          }
-          return prevTime - 1;
-        });
-      }, 1000);
-      return () => clearInterval(id); // Cleanup on unmount
-    }
-  }, [quizTimer, timeLeft, handleNextQuestion]);*/
-
+          clearInterval(interval)// Clear the interval to stop the countdown
+          handleNextQuestion() // Move to the next question as time has run out
+          return 0;// Set time left to 0 to indicate no time remains
+        }          
+        return prevTime - 1;// Otherwise, continue decreasing the time by 1 second
+      }, 1000);// Run the interval every 1000 milliseconds (1 second)
+    })
+       /* Cleanup function to clear the interval 
+      when component unmounts or timer changes*/
+      return ()=> clearInterval(interval)
+    
+  }, [timer, handleNextQuestion,  quizTimer]);
+  // Dependencies: re-run the effect if timer, handleNextQuestion, or quizTimer changes
+  
    //=================================================
    // Display loading text if quiz or questions are not available
   if (!selectedQuiz || !questions || questions.length === 0) {
@@ -110,26 +84,26 @@ export default function Quiz(
   */
 
   //============EVENT LISTENERS=================
-  // Function to handle answer selection and update the score if correct
+  /* Function to handle answer selection and 
+update the score if correct*/
   const handleAnswerClick = (isCorrect) => {
-    //Conditional rendering to check if the answer is correct
     if (isCorrect) {
-      setScore(score + 1);// Update the score if the answer is correct
+      setScore(score + 1);// If correct, increment the score
+      setFeedback('correct')// Provide feedback that the answer is correct
     }
-    handleNextQuestion();// Move to the next question
-  };
+    else{
+      setFeedback('incorrect')// If incorrect, provide feedback that the answer is wrong
+    }
+   
+    // Set a timeout to move to the next question after a short delay
+      // setTimeout(() => {
+    // Move to the next question
 
-    // const handleAnswerClick = (isCorrect) => {
-  //   if (isCorrect) {
-  //     setScore(score + 1)
-  //     setFeedback('Correct')
-  //   }
-  //   else{
-  //     setFeedback('Incorrect')// Set feedback message for an incorrect answer
-  //   }
-  //   handleNextQuestion();// Move to the next question
-  //   }
-  // }
+      //   handleNextQuestion();
+      // }, 500);     
+      // Move to the next question
+    handleNextQuestion();
+  };
   
 // Function to handle option click and update the selected option
   const handleOptionClick = (option) => {
@@ -189,7 +163,6 @@ export default function Quiz(
                     className='answerOption'
                     name='options'
                     onClick={() => handleOptionClick()}
-                    // onClick={() => handleAnswerClick()}
                     // disabled={!!selectedOption} 
                     // aria-label={`Option ${index + 1}`}
                     // value={option}
