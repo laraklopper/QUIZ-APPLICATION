@@ -1,4 +1,5 @@
 const mongoose = require('mongoose'); // Import the Mongoose library
+const autopopulate = require('mongoose-autopopulate');// Import the autopopulate plugin for Mongoose
 
 // Define the schema for quizzes
 const quizSchema = new mongoose.Schema({
@@ -8,13 +9,13 @@ const quizSchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
-    /*Username of the person who created the quiz
+    //Username of the person who created the quiz
     username: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User', 
         required: true,
     },
-    username: {
+   /* username: {
         type: String, 
         required: true, 
     },
