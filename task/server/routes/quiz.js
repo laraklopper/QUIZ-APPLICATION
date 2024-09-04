@@ -105,34 +105,7 @@ router.get('/findQuizzes', checkJwtToken,  async (req, res) => {
     }
 });
 
-//Route to fetch scores for a single user 
-router.get('/findScores/:username', async (req, res) => {
-    try {
-        const username = req.params.username
 
-        const result = await Score.find({ username })
-            .populate("name")
-            .sort({ createdAt: -1 });
-        res.json({ userScores: result })
-    } catch (error) {
-        console.error('Error finding user scores');
-        return res.status(500).json({ error: error.message });
-    }
-})
-
-//Route to GET all scores
-router.get('/allScores', async (req, res) => {
-    try {
-        const allScores = await Score.find()
-            .populate("name")
-            .sort({ createdAt: -1 });
-
-        res.json({ allScores });
-    } catch (error) {
-        console.error('Error fetching all scores:', error);
-        return res.status(500).json({ error: error.message });
-    }
-});
 //------------POST--------------
 //Route to add new quiz
 router.post('/addQuiz', async (req, res) => {
@@ -177,42 +150,6 @@ router.post('/addQuiz', async (req, res) => {
     }
 })
 
-// Route to add new score
-router.post('/addScore', async (req, res) => {
-    console.log(req.body);
-
-    try {
-        const { username, name, score } = req.body;
-
-        if (!username || !name || !score) {
-            return res.status(400).json(
-                { error: 'Username, name, and score are required.' });
-        }
-
-        const existingScore = await Score.findOne({ username, name });
-
-        if (existingScore) {
-            if (score > existingScore.score) {
-                existingScore.score = score
-                const updatedScore = await existingScore.save();
-                return res.status(200).json(updatedScore);
-            } else {
-                return res.status(200).json(existingScore);
-            }
-        }
-        else {
-            // Create new score if it does not exist
-            const newScore = new Score({ username, name, score });
-
-            const savedScore = await newScore.save();
-            return res.status(201).json(savedScore);
-        }
-    }
-    catch (error) {
-        console.error('Error saving score:', error);
-        return res.status(500).json({ error: error.message });
-    }
-})
 
 
 //-------------------PUT--------------------------
