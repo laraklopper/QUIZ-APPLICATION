@@ -50,55 +50,21 @@ export default function Page2(
     fetchQuizzes();
   }, [fetchQuizzes]);
 
-//==========================================
-//==========================================
+  //==========================================
   // Fisher-Yates shuffle algorithm to randomize array elements
-  // const shuffleArray = (array) => {
-  //   let shuffledArray = array.slice(); 
-  //   for (let i = shuffledArray.length - 1; i > 0; i--) {
-  //     const j = Math.floor(Math.random() * (i + 1));    
-  //     [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
-  //   }
-  //   return shuffledArray;  
-  // };
+ /* const shuffleArray = (array) => {
+    let shuffledArray = array.slice(); 
+    for (let i = shuffledArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));    
+      [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+    }
+    return shuffledArray;  
+  };*/
 
   //Function to randomise answers
   const shuffleArray = (array) => {
     return array.sort(() => Math.random() - 0.5);
   };
-
-  //=======EVENT LISTENERS============
-  // Function to handle quiz selection
-  const handleSelectQuiz = (event) => {
-    setSelectedQuizId(event.target.value); // Update selected quiz ID
-  };
-
-    // Function to move to the next question or end the quiz
-  const handleNextQuestion = useCallback(() => {
-    if (quizIndex < quiz.questions.length - 1) {
-      setQuizIndex(quizIndex + 1); // Move to the next question
-      if (quizTimer) setTimer(30); // Reset timer if enabled
-    } else {
-      setQuizStarted(false); // End quiz
-      setQuiz(null); // Clear quiz data
-      setSelectedQuizId(''); // Reset selected quiz ID
-      setTimer(null); // Clear timer
-      setQuizCompleted(true); // Mark quiz as completed
-    }
-  }, [quiz, quizTimer, /*setQuiz*/ quizIndex]);
-  
-
-  // Function to restart the quiz
-  const handleRestart = () => {
-    setQuizIndex(0);  // Reset question index
-    setScore(0); // Reset score
-    setTimer(null); // Clear timer
-    setQuizCompleted(false); // Reset completion flag
-    if (quizTimer) {
-      handleQuizStart(); // Restart quiz if timer is enabled
-    }
-  };
-
 
   //=========REQUEST================
   //-----------GET-----------------------
@@ -151,9 +117,13 @@ export default function Page2(
 
    //----------------POST-------------------------
   // Function to save the user's score
- const addScore = async () => {
-    // alert('Quiz Completed' + score )
-    // console.log('quiz Completed' + score);
+ const addScore = useCallback(async () => {
+      const token = localStorage.getItem('token');
+     if(!token){
+      alert('User authentication required')
+      return
+     } ;
+
     try {
       //Send a POST request to the server 
       const response = await fetch('http://localhost:3001/scores/addScore', {
@@ -169,23 +139,30 @@ export default function Page2(
         })
       })
 
-      if(!response.ok){
-        throw new Error()
-      }
-      if (response.ok) {
-        const userScore = await response.json();
+      if (!response.ok) {
+       throw new Error('Error saving user score');
+     }
+      
+     const result = await response.json();
 
-      }
-      else {
-        throw new Error('Error saving user score');
-      }
+     setUserScores(prevScores => [result, ...prevScores]);
+     console.log('Score saved successfully!');
 
     } catch (error) {
       console.error('Error saving score');
       setError('Error saving score' + error.message)
     }
-  }*/
+  },[currentUser, quizName, setError, score,setUserScores]);
   
+ 
+
+  //=======EVENT LISTENERS============
+  // Function to handle quiz selection
+  const handleSelectQuiz = (event) => {
+    // Update selected quiz ID
+    setSelectedQuizId(event.target.value); 
+  };
+
   // Function to start the quiz
   const handleQuizStart = useCallback(async(e) => {
     e.preventDefault()
@@ -196,10 +173,37 @@ export default function Page2(
     setQuizIndex(0);
     setScore(0);
     if (quizTimer) {
-      setTimer(30);
+      setTimer(10);
     }
   }, [selectedQuizId, quizTimer, fetchQuiz]);
 
+    // Function to move to the next question or end the quiz
+  const handleNextQuestion = useCallback(() => {
+    if (quizIndex < quiz.questions.length - 1) {
+      setQuizIndex(quizIndex + 1); // Move to the next question
+      if (quizTimer) setTimer(10); // Reset timer if enabled
+    } else {
+      //End Quiz
+      setQuizStarted(false); // End quiz
+      setQuiz(null); // Clear quiz data
+      setSelectedQuizId(''); // Reset selected quiz ID
+      setTimer(null); // Clear timer
+      setQuizCompleted(true); // Mark quiz as completed
+    }
+  }, [quiz, quizTimer, setQuiz, quizIndex]);
+  
+
+  // Function to restart the quiz
+  const handleRestart = () => {
+    setQuizIndex(0);  // Reset question index
+    setScore(0); // Reset score
+    setTimer(null); // Clear timer
+    setQuizCompleted(false); 
+    if (quizTimer) {
+      // Restart quiz if timer is enabled
+      handleQuizStart({preventDefault: () => {}}); 
+    }
+  };
 
 
   // ==========JSX RENDERING==========
