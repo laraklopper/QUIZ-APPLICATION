@@ -30,7 +30,6 @@ export default function Quiz(
     useEffect(()=> {
       if (questions.length > 0) {
         setQuizIndex(0)// Reset the question index to 0 (the first question)
-        // setQuestionIndex(0); 
       }
     }, [questions, setQuizIndex])
   
@@ -97,10 +96,9 @@ update the score if correct*/
    
     // Set a timeout to move to the next question after a short delay
       // setTimeout(() => {
-    // Move to the next question
-
-      //   handleNextQuestion();
-      // }, 500);     
+    //   setSelectedOption(null);  // Reset selected option
+      //   handleNextQuestion(); // Move to the next question
+      // }, 1000);     // 1 second delay to display feedback
       // Move to the next question
     handleNextQuestion();
   };
@@ -163,8 +161,6 @@ update the score if correct*/
                     className='answerOption'
                     name='options'
                     onClick={() => handleOptionClick()}
-                    // disabled={!!selectedOption} 
-                    // aria-label={`Option ${index + 1}`}
                     // value={option}
                   >
                     {option}
@@ -173,6 +169,12 @@ update the score if correct*/
           ))}
             </Col> 
             <Col xs={6} md={4} className='optionsCol'></Col>
+          </Row>
+              <Row className='feedbackRow'>
+            <Col md={12} className='feedbackMessage'>
+              {/* Display feedback message */}
+              {feedback && <p className='feedback'>{feedback}</p>}
+            </Col>
           </Row>
         </div>
         <Row>
