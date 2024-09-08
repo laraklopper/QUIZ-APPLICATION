@@ -1,5 +1,5 @@
 // Import necessary modules and packages
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';// Import the React module to use React functionalities
 import './App.css';//Import CSS stylesheet
 // React Router components
 import {  Route, Routes, useNavigate } from 'react-router-dom';
@@ -34,10 +34,10 @@ export default function App() {
     newPassword: '',     // Password entered in the registration form
   });
   //Quiz variables
-  const [quizList, setQuizList] = useState([]);
-  const [questions, setQuestions] = useState([]);
-  const [quiz, setQuiz] = useState(null);
-  const [quizName, setQuizName] = useState('');
+  const [quizList, setQuizList] = useState([]);//State to sto the list of all the quizzes
+  const [questions, setQuestions] = useState([]);//State to store the list of questions in the quiz
+  const [quiz, setQuiz] = useState(null);//State to store the currently selectedQuiz
+  const [quizName, setQuizName] = useState('');//State to store the QuizName
   const [currentQuestion, setCurrentQuestion] = useState({
     questionText: '',
     correctAnswer: '',
@@ -57,7 +57,7 @@ export default function App() {
   //Fetch users when the component mounts or when loggedIn changes
   useEffect(() => {
     //Function to fetch users
-    const fetchUsers = async () => {
+    const fetchUsers = async () => {//Define an async function fetch all users
       try {
         const token = localStorage.getItem('token');// Retrieve JWT token from localStorage for authentication
         if (!token || !loggedIn) return;// If no token is found, exit the function
@@ -90,38 +90,42 @@ export default function App() {
     //Function to fetch the current user details
     const fetchCurrentUser = async () => {
       try {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('token');// Retrieve JWT token from localStorage for authentication
         if (!token) return;// If no token is found, exit the function
         //Send a GET request to the server to fetch the current user id
         const response = await fetch('http://localhost:3001/users/userId', {
-          method: 'GET',
-          mode: 'cors',
+          method: 'GET',//HTTP request method
+          mode: 'cors',//Enable Cross-Origin resource sharing mode
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
+           'Content-Type': 'application/json',// Specify the content type of the request
+            'Authorization': `Bearer ${token}`,// Attach JWT token for authorization
           }
         });
 
-        //Response handling 
+         /* Conditional rendering to check if the response
+               is not successful (status code is not in the range 200-299)*/
         if (!response.ok) {
-          throw new Error('Failed to fetch current user');
+          throw new Error('Failed to fetch current user');//Throw an error message if the GET request is unsuccessful
         }
 
-        const fetchedCurrentUser = await response.json();
-        setCurrentUser(fetchedCurrentUser);
+         const fetchedCurrentUser = await response.json();    // Parse and set the current user's details
+        setCurrentUser(fetchedCurrentUser);// Update state with fetched user details
       }
       catch (error) {
-        console.error('Error fetching current user', error.message);
-        setError('Error fetching current user');
+        console.error('Error fetching current user', error.message);//Log an error message in the console for debugging purposes
+        setError('Error fetching current user');// Set the error state and an error messsage
       }
     };
-
+//Conditional rendering to check if the user is logged in
     if (loggedIn) {
-      fetchUsers();
-      fetchCurrentUser();
+      fetchUsers();// Call the FetchUsers function to fetch the list of users
+      fetchCurrentUser();//Call the FetchCurrentUser function to fetch the current user's details
     }
-  }, [loggedIn]);
-
+  }, [loggedIn,  navigate/*, fetchUsers, fetchCurrentUser*/);
+// Dependency array:
+  // - `loggedIn`: The effect will run whenever the `loggedIn` state changes.
+  // - `navigate`: The effect will also run if the `navigate` function changes (though it's usually stable).
+  // - Including `fetchUsers` and `fetchCurrentUser` ensures that the effect re-runs if these functions change.
   //==============REQUESTS========================
   //-----------GET-------------------------
 // Function to fetch quizzes
@@ -166,15 +170,20 @@ export default function App() {
     
 //===========EVENT LISTENERS============================
   // Function to handle user logout
-  const logout = useCallback(() => {
+  /* useCallback hook is to handle user logout, 
+  memoized to avoid unnecessary re-renders*/
+  const logout = useCallback (() => {
+    // Remove JWT token from localStorage to clear authentication
     localStorage.removeItem('token');
-    localStorage.removeItem('username');
-    localStorage.removeItem('loggedIn');
+    localStorage.removeItem('username');// Remove username from localStorage
+    localStorage.removeItem('loggedIn');  // Remove logged-in status from localStorage
+    // Update local state to reflect that the user is no longer logged in
     setLoggedIn(false);
-    setError('');
-    setUserData({ username: '', password: '' });
+    setError(''); // Clear any existing error messages
+    setUserData({ username: '', password: '' });//Reset the userData
+    //Use the navigate function to redirect the user to the home page after logging out
     navigate('/');
-  ),[navigate]};
+  }, [navigate]);
 
   //===========JSX RENDERING=============================
 
@@ -183,6 +192,7 @@ export default function App() {
       {/* App Container */}
         <Container>
           <Routes>
+    {/* Routes available if user is logged */}
             {loggedIn ? (
               <>
                 {/* Route for Page1: HOME */}
@@ -253,6 +263,7 @@ export default function App() {
               </>
             ) : (
               <>
+             {/* Routes available when the user is not logged in */}
                 {/* Route for Login */}
                 <Route exact path='/' element={
                   <Login
