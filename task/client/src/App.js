@@ -43,7 +43,11 @@ export default function App() {
     correctAnswer: '',
     options: ['', '', ''],
   });
-
+   const [userScores, setUserScores] = useState({// State to store the current user's quiz scores
+    result: '',
+    date: '',//date format
+    attemptNumber: ''//number format
+  });
   // Event and UI-related states
   const [error, setError] = useState(null); 
   const [loggedIn, setLoggedIn] = useState(false); 
