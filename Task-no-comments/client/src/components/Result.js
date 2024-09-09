@@ -14,7 +14,7 @@ export default function Result({
   totalQuestions,
   currentUser
 }) {
-  // State to control the visibility of the result display
+//=======STATE VARIABLES===============
   const [showScore, setShowScore] = useState(true);
 
   // Function to submit score
