@@ -28,8 +28,8 @@ export default function QuizDisplay(
   const [quizStarted, setQuizStarted] = useState(false); 
    // Boolean to track whether the quiz is completed
   const [quizCompleted, setQuizCompleted] = useState(false);
-  const [currentScore, setCurrentScore] = useState(0); // State to track the user's score
-
+  const [currentScore, setCurrentScore] = useState(0); 
+  const [attempts, setAttempts] = useState(1) 
     //=========REQUESTS============
     //--------POST------------
     // Function to add the user Score
@@ -53,11 +53,24 @@ export default function QuizDisplay(
         
         // Response handling where the response is unsuccessful
         if (existingScore) {
-          throw new Error('Error saving score')
+          const response = await fetch ('http://localhost:3001/scores/updateScore/:id', {
+            method: 'PUT',
+            mode: 'cors',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body:JSON.stringify({
+               _id: existingScore._id,
+              score: currentScore,
+              attempts: existingScore.attempts + 1
+            })
+          })
+          if(!response.ok){
+            throw new Error('Error saving score')
+          }
         }
-
+        
         const result = await response.json();
-       
         setUserScores (prevScores => [result, ...prevScores]);
       } catch (error) {
         console.error('Error saving score', error.message);
