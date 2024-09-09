@@ -49,6 +49,12 @@ const scoreSchema = new mongoose.Schema({
         // required: true,   //State that the number of attempts is required
         set: (v) => Math.floor(v), // Ensure attempts is an integer
     }, 
+       //Field for the date of the current attempt
+    date: {
+        type: Date,
+        default: Date.now,
+        required: true,
+    },
 }, {timestamps: true})
 // Automatically adds createdAt and updatedAt fields
 
