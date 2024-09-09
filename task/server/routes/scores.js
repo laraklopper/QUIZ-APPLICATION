@@ -29,9 +29,53 @@ mongoose.set('strictPopulate', false); // Disable strict population checks in Mo
 |DELETE          | DELETE    |  router.delete()  |
 |================|===========|===================|
 */
+//-------------GET-----------------
+// Route to fetch scores for a single user
+router.get('/findScores/:username', async (req, res) => {
+    try {
+        const { username } = req.params; // Extract username from route parameters
+
+        // Fetch the user document based on the username
+        const user = await User.findOne({ username }).exec();
+        //Conditional rendering to check if the user exists
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' }); // Send a 404(Not Found) response if the user does not exist
+        }
+        // Fetch the user score based on the user id
+        const result = await Score.find(// Find scores where userId matches the fetched user._id
+            { userId: (await User.findOne({ username }))._id })
+            .populate('quizId')// Populate quizId field with quiz details
+            .populate('userId')// Populate userId field with user details
+            .sort({ createdAt: -1 });// Sort the results by creation date in descending order
+
+        res.json({ userScores: result });        // Return the user scores in the response
+        // console.log(result);
+        
+    } catch (error) {
+        console.error('Error finding user scores:', error);//Log an error message in the console for debugging purposes
+        return res.status(500).json({ error: error.message });// Return a 500 (Internal Server Error) status response
+    }
+});
+
+// Route to fetch all scores
+router.get('/allScores', async (req, res) => {
+    try {
+        // Fetch all score documents from the database
+        const allScores = await Score.find()// Find all score entries
+            .populate('quizId')// Populate the quizId field with details from the Quiz collection
+            .populate('userId')// Populate the userId field with details from the User collection
+            .sort({ createdAt: -1 });// Sort the results by creation date in descending order
+        // Return the fetched scores in the response
+        res.json({ allScores });
+    } catch (error) {
+        console.error('Error fetching all scores:', error);//Log an error message in the console for debugging purposes
+        return res.status(500).json({ error: error.message });// Return a 500 (Internal Server Error) status response
+    }
+});
+
 //-----------POST----------------------
 //Route to add a new score
-router.post('/addScore', async (req, res) => {
+/*router.post('/addScore', async (req, res) => {
     console.log(req.body); // Log the request body for debugging purposes
 
     try {
@@ -96,51 +140,44 @@ router.post('/addScore', async (req, res) => {
         console.error('Error saving score:', error);//Log an error message in the console for debugging purposes
         return res.status(500).json({ error: error.message });// Return a 500 (Internal Server Error) status response
     }
+});*/
+router.post('/addScore', async (req, res) => {
+  try {
+    const { userId, quizId, score, attempts } = req.body;
+    const newScore = new Score({
+      userId,
+      quizId,
+      score,
+      attempts
+    });
+    const savedScore await newScore.save();
+    res.status(201).json({savedScore});
+      console.log(savedScore)
+  } catch (error) {
+    res.status(500).json({ message: 'Error adding score' });
+      console.error('Error saving score')
+  }
 });
 
-//-------------GET-----------------
-// Route to fetch scores for a single user
-router.get('/findScores/:username', async (req, res) => {
-    try {
-        const { username } = req.params; // Extract username from route parameters
-
-        // Fetch the user document based on the username
-        const user = await User.findOne({ username }).exec();
-        //Conditional rendering to check if the user exists
-        if (!user) {
-            return res.status(404).json({ error: 'User not found' }); // Send a 404(Not Found) response if the user does not exist
-        }
-        // Fetch the user score based on the user id
-        const result = await Score.find(// Find scores where userId matches the fetched user._id
-            { userId: (await User.findOne({ username }))._id })
-            .populate('quizId')// Populate quizId field with quiz details
-            .populate('userId')// Populate userId field with user details
-            .sort({ createdAt: -1 });// Sort the results by creation date in descending order
-
-        res.json({ userScores: result });        // Return the user scores in the response
-        // console.log(result);
-        
-    } catch (error) {
-        console.error('Error finding user scores:', error);//Log an error message in the console for debugging purposes
-        return res.status(500).json({ error: error.message });// Return a 500 (Internal Server Error) status response
+//-------------PUT-----------------------
+//Route to edit existing score
+router.put('/updateScore/:id', async(req, res) => {
+    try{
+        const {_id, score, attemps} = req.body;
+         const updatedScore = await Score.findByIdAndUpdate(
+      _id,
+      { score, attempts },
+      { new: true } // Return the updated document
+    );
+        if (updatedScore) {
+      res.json(updatedScore);
+    } else {
+      res.status(404).json({ message: 'Score not found' });
     }
-});
-
-// Route to fetch all scores
-router.get('/allScores', async (req, res) => {
-    try {
-        // Fetch all score documents from the database
-        const allScores = await Score.find()// Find all score entries
-            .populate('quizId')// Populate the quizId field with details from the Quiz collection
-            .populate('userId')// Populate the userId field with details from the User collection
-            .sort({ createdAt: -1 });// Sort the results by creation date in descending order
-        // Return the fetched scores in the response
-        res.json({ allScores });
-    } catch (error) {
-        console.error('Error fetching all scores:', error);//Log an error message in the console for debugging purposes
-        return res.status(500).json({ error: error.message });// Return a 500 (Internal Server Error) status response
+    }catch(error){
+        res.status(500).json({ message: 'Error updating score' });
+        console.error('Error updating score')
     }
-});
-
+})
 // Export the router to be used in other parts of the application
 module.exports = router;
