@@ -34,26 +34,25 @@ export default function QuizDisplay(
     //--------POST------------
     // Function to add the user Score
     const addScore = useCallback(async(e) => {
-      e.preventDefault()
       try {
       
         //Send a POST request to the server
-        const response = await fetch (`http://localhost:3001/scores/addScore`, {
+        const existingScoreResponse = await fetch (`http://localhost:3001/scores/findQuizScores`, {
           method: 'POST',
           mode:'cors',
           headers:{
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            username: currentUser.username,
-            name: quizName,
-            score: currentScore,
-            // attempts: currentAttempts
+            username: currentUser._id,
+            quizId: selectedQuizId
           })
         })
 
+        const existingScore = await existingScoreResponse.json();
+        
         // Response handling where the response is unsuccessful
-        if (!response.ok) {
+        if (existingScore) {
           throw new Error('Error saving score')
         }
 
