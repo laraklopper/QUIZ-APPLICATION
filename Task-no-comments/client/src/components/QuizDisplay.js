@@ -22,14 +22,10 @@ export default function QuizDisplay(
     setUserScores
   }) {
     //======STATE VARIABLES=========== 
-    // Current question index in the quiz
   const [quizIndex, setQuizIndex] = useState(0);
-  // Boolean to track whether the quiz has started
-  const [quizStarted, setQuizStarted] = useState(false); 
-   // Boolean to track whether the quiz is completed
+  const [quizStarted, setQuizStarted] = useState(false);   
   const [quizCompleted, setQuizCompleted] = useState(false);
-  const [currentScore, setCurrentScore] = useState(0); // State to track the user's score
-
+  const [currentScore, setCurrentScore] = useState(0);
     //=========REQUESTS============
     //--------POST------------
     // Function to add the user Score
@@ -69,12 +65,10 @@ export default function QuizDisplay(
   // Function to move to the next question
   const handleNextQuestion = useCallback(() => {
     if (quizIndex < quiz.questions.length - 1) {
-      // Increment the quiz index to move to the next question
       setQuizIndex(quizIndex + 1)
       if(quizTimer) setTimer(10)
 
     }else{
-      //End the Quiz
       setQuizStarted(false)
       setQuiz(null)
       setSelectedQuizId('')
@@ -103,7 +97,7 @@ export default function QuizDisplay(
     setQuizIndex(0)
     setCurrentScore(0) 
     if (quizTimer) {
-      setTimer(10)// Initialize timer if enabled
+      setTimer(10)
     }
     } catch (error) {
       setError('Error starting quiz: ', error.message);
@@ -114,12 +108,11 @@ export default function QuizDisplay(
   
     // Function to restart the quiz
     const handleRestart = useCallback(() => {
-      setQuizIndex(0)// Reset the quiz index
-      setCurrentScore(0);//Reset the quiz score
-      setTimer(null)// Clear the timer
+      setQuizIndex(0)
+      setCurrentScore(0);
+      setTimer(null);
       setQuizCompleted(false)
       if (quizTimer) {
-        // Restart the quiz if the timer is enabled
         handleQuizStart({preventDefault:() => {}})
       }
     },[quizTimer, handleQuizStart, setTimer])
