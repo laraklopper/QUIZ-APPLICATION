@@ -1,9 +1,9 @@
 // Import necessary modules and packages
-import React, {  useEffect, useState } from 'react';//Import React
+import React, {  useEffect, useState } from 'react';
 // Bootstrap
-import Row from 'react-bootstrap/Row';//Import Bootstrap Row 
-import Col from 'react-bootstrap/Col';//Import Col from Bootstrap
-import Button from 'react-bootstrap/Button';//Import Bootstrap Button Component
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
 
 // Quiz function component
 export default function Quiz({
@@ -20,9 +20,9 @@ export default function Quiz({
   setQuizIndex
 }) {
   // =============STATE VARIABLES=====================
-  const [selectedOption, setSelectedOption] = useState(null);// State to track the selected answer option 
-  const [feedback, setFeedback] = useState('');// Feedback message for correct/incorrect answers              
-  const [timeLeft, setTimeLeft] = useState(10);// Timer state for countdown
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [feedback, setFeedback] = useState('');         
+  const [timeLeft, setTimeLeft] = useState(10);
 
   // ========USE EFFECT HOOK==================
   /* Effect to reset the question index to the first 
