@@ -33,50 +33,114 @@ export default function QuizDisplay(
     //=========REQUESTS============
     //--------POST------------
     // Function to add the user Score
-    const addScore = useCallback(async(e) => {
-      try {
-      
-        //Send a POST request to the server
-        const existingScoreResponse = await fetch (`http://localhost:3001/scores/findQuizScores`, {
-          method: 'POST',
-          mode:'cors',
-          headers:{
+  /*// Function to add the user Score
+  const addScore = useCallback(async (e) => {
+    try {
+      // Fetch the existing score for the user and quiz
+      const existingScoreResponse = await fetch(`http://localhost:3001/scores/findQuizScores`, {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: currentUser._id,
+          quizId: selectedQuizId
+        })
+      });
+
+      const existingScore = await existingScoreResponse.json();
+
+      if (existingScore) {
+        // If score exists, update it
+        const response = await fetch(`http://localhost:3001/scores/updateScore/${existingScore._id}`, {
+          method: 'PUT',
+          mode: 'cors',
+          headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            username: currentUser._id,
-            quizId: selectedQuizId
+            score: currentScore,
+            attempts: existingScore.attempts + 1
           })
-        })
+        });
 
-        const existingScore = await existingScoreResponse.json();
-        
-        // Response handling where the response is unsuccessful
-        if (existingScore) {
-          const response = await fetch ('http://localhost:3001/scores/updateScore/:id', {
-            method: 'PUT',
-            mode: 'cors',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body:JSON.stringify({
-               _id: existingScore._id,
-              score: currentScore,
-              attempts: existingScore.attempts + 1
-            })
-          })
-          if(!response.ok){
-            throw new Error('Error saving score')
-          }
+        if (!response.ok) {
+          throw new Error('Error updating score');
         }
-        
+
         const result = await response.json();
-        setUserScores (prevScores => [result, ...prevScores]);
-      } catch (error) {
-        console.error('Error saving score', error.message);
-        setError('Error saving score', error.message)
+        setUserScores(prevScores => [result, ...prevScores]);
+      } else {
+        // If no existing score, create a new one
+        const response = await fetch('http://localhost:3001/scores/addScore', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userId: currentUser._id,
+            quizId: selectedQuizId,
+            score: currentScore,
+            attempts: 1
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error('Error saving new score');
+        }
+
+        const result = await response.json();
+        setUserScores(prevScores => [result, ...prevScores]);
       }
-    }, [currentUser, quizName, setError, setUserScores, currentScore])
+    } catch (error) {
+      console.error('Error saving score', error.message);
+      setError('Error saving score', error.message);
+    }
+   }, [currentUser, selectedQuizId, currentScore, setUserScores, setError]);*/
+
+  
+  // Function to add the user Score
+  const addScore = useCallback(async (e) => {
+    e.preventDefault()//Prevent default form submission
+    try {
+      // const token = localStorage.getItem('token');// Retrieve JWT token from local storage
+      // Conditional rendering if token is missing
+      // if (!token) {
+      //   alert('Authentication required'); // Alert if the user is not authenticated
+      //   console.log('Authentication required')//Log a message in the console for debugging purposes
+      //   return;//Exit the function if the token is missing
+      // }
+      //Send a POST request to the server
+      const response = await fetch(`http://localhost:3001/scores/addScore`, {
+        method: 'POST',//HTTP request method
+        mode: 'cors',//Set the mode to cors, allowing cross-origin request
+        headers: {
+          'Content-Type': 'application/json',// Specify the Content-Type being sent in the request payload
+          // 'Authentication': `Bearer ${token}`,//Add the Authorization header containing the JWT token
+        },
+        body: JSON.stringify({
+          username: currentUser.username, // Pass the username from the current user object
+          name: quizName,// The name of the quiz being taken
+          score: currentScore,// The user's score to be submitted
+          // attempts: currentAttempts
+        })
+      })
+
+      // Response handling where the response is unsuccessful
+      if (!response.ok) {
+        throw new Error('Error saving score')
+      }
+
+      const result = await response.json();//Parse the JSON response from the server
+      // Update the user scores state by adding the new score to the existing scores
+      setUserScores(prevScores => [result, ...prevScores]);
+    } catch (error) {
+      console.error('Error saving score', error.message);//Log an error message in the console for debugging purposes
+      setError('Error saving score', error.message)// Update error state to display an error message in the UI
+    }
+  }, [currentUser, quizName, setError, setUserScores, currentScore])
   //=======EVENT LISTENERS==========
   // Function to move to the next question
   const handleNextQuestion = useCallback(() => {
