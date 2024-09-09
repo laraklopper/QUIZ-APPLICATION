@@ -16,19 +16,6 @@ router.use(express.urlencoded({ extended: true })); // Parse URL-encoded data
 mongoose.set('strictPopulate', false); // Disable strict population checks in Mongoose
 
 //=============ROUTES=====================
-/*
-|================================================|
-| CRUD OPERATION | HTTP VERB | EXPRESS METHOD    |
-|================|===========|===================|
-|CREATE          | POST      |  router.post()    |
-|----------------|-----------|-------------------|
-|READ            | GET       |  router.get()     |  
-|----------------|-----------|-------------------|     
-|UPDATE          | PUT       |  router.put()     |
-|----------------|-----------|-------------------|
-|DELETE          | DELETE    |  router.delete()  |
-|================|===========|===================|
-*/
 //-------------GET-----------------
 // Route to fetch scores for a single user
 router.get('/findScores/:username', async (req, res) => {
