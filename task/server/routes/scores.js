@@ -60,6 +60,27 @@ router.get('/allScores', async (req, res) => {
     }
 });
 
+// Route to find a specific user's score for a quiz
+router.post('/findQuizScores', async (req, res) => {
+    try {
+        const { username, quizId } = req.body;
+
+        if (!username || !quizId) {
+            return res.status(400).json({ error: 'Username and quizId are required' });
+        }
+        
+        const user = await User.findOne({ username });
+        if (!user) return res.status(404).json({ error: 'User not found' });
+
+        const score = await Score.findOne({ userId: user._id, quizId });
+        if (!score) return res.status(404).json({ error: 'Score not found' });
+
+        res.json(score);
+    } catch (error) {
+        console.error('Error finding quiz score:', error);
+        return res.status(500).json({ error: error.message });
+    }
+});
 //-----------POST----------------------
 //Route to add a new score
 /*router.post('/addScore', async (req, res) => {
@@ -148,23 +169,25 @@ router.post('/addScore', async (req, res) => {
 
 //-------------PUT-----------------------
 //Route to edit existing score
-router.put('/updateScore/:id', async(req, res) => {
-    try{
-        const {_id, score, attemps} = req.body;
-         const updatedScore = await Score.findByIdAndUpdate(
-      _id,
-      { score, attempts },
-      { new: true } // Return the updated document
-    );
+router.put('/updateScore/:id', async (req, res) => {
+    try {
+        const { _id, score, attemps } = req.body;
+        const updatedScore = await Score.findByIdAndUpdate(
+            _id,
+            { score, attempts },
+            { new: true } // Return the updated document
+        );
         if (updatedScore) {
-      res.json(updatedScore);
-    } else {
-      res.status(404).json({ message: 'Score not found' });
-    }
-    }catch(error){
+            res.json(updatedScore);
+        } else {
+            res.status(404).json({ message: 'Score not found' });
+        }
+    } catch (error) {
         res.status(500).json({ message: 'Error updating score' });
         console.error('Error updating score')
     }
+})
+
 })
 // Export the router to be used in other parts of the application
 module.exports = router;
