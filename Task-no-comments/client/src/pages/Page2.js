@@ -1,14 +1,14 @@
 // Import necessary modules and packages
 import React, { useCallback, useEffect, useState} from 'react';
-import '../CSS/Page2.css'; // Import custom CSS file for styling Page2
+import '../CSS/Page2.css'; 
 // Bootstrap
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 // Components
-import Header from '../components/Header';//Import the Header function component
-import QuizDisplay from '../components/QuizDisplay';//Import the QuizDisplay function component
-import Footer from '../components/Footer';//Import the Footer function component
+import Header from '../components/Header';
+import QuizDisplay from '../components/QuizDisplay';
+import Footer from '../components/Footer';
 
 // Page 2 function component
 export default function Page2(
@@ -32,10 +32,9 @@ export default function Page2(
   // =========STATE VARIABLES====================
   //QuizVariables
   // Store the selected quiz ID
-  const [selectedQuizId, setSelectedQuizId] = useState(''); // Store the selected quiz ID
+  const [selectedQuizId, setSelectedQuizId] = useState(''); 
   //Timer variables
-  const [timer, setTimer] = useState(10);// Timer for the quiz
-  // Boolean to control the timer visibility
+  const [timer, setTimer] = useState(10);
   const [quizTimer, setQuizTimer] = useState(false);
 
 
@@ -63,23 +62,21 @@ export default function Page2(
     try {
      
       if (!quizId) return;// Exit early if no quiz is selected
-      const token = localStorage.getItem('token');//Retrieve authentication token from localStorage
+      const token = localStorage.getItem('token');
       if (!token) return;// Return if no token is found
 
       // Send a GET request to fetch quiz data from the server
       const response = await fetch(`http://localhost:3001/quiz/findQuiz/${quizId}`, {
         method: 'GET',//HTTP request method
-        mode: 'cors',//Enable Cors for cross-origin resourcing
-        headers: {//Setup request headers
-          'Content-Type': 'application/json',//Specify the content-type in the payload as JSON
-          'Authorization': `Bearer ${token}`,//Attatch the token 
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         }
       })
-
-      /* Conditional rendering to check if the response
-        is not successful (status code is not in the range 200-299)*/
+      //Response handling
       if (!response.ok) {
-        throw new Error('Failed to fetch quiz');//Throw an error message if the GET request is unsuccessful
+        throw new Error('Failed to fetch quiz');
       }
      
       const fetchedQuiz = await response.json(); // Parse the JSON response
@@ -91,24 +88,23 @@ export default function Page2(
 
       // Shuffle the questions to randomize their order
       const shuffledQuestions = fetchedQuiz.questions.map(question => {
-        const optionsWithCorrectAnswer = [...question.options, question.correctAnswer];// Combine options and correct answer
-        const shuffledOptions = shuffleArray(optionsWithCorrectAnswer);// Shuffle the options
-        return { ...question, options: shuffledOptions }; // Return the question with shuffled options
+        const optionsWithCorrectAnswer = [...question.options, question.correctAnswer];
+        const shuffledOptions = shuffleArray(optionsWithCorrectAnswer);
+        return { ...question, options: shuffledOptions }; 
       });
 
 
       // Update quiz list and set quiz details
       setQuizList(prevQuizList =>
-        // Update the quiz list
         prevQuizList.map((q) => (q._id === quizId ? fetchedQuiz : q))
       );
       setQuestions(shuffledQuestions);
-      setQuizName(fetchedQuiz.quizName);// Set the quiz name
-      setQuiz(fetchedQuiz);// Set the fetched quiz
+      setQuizName(fetchedQuiz.quizName);
+      setQuiz(fetchedQuiz);
     } 
     catch (error) {
-      setError(`Error fetching quiz: ${error.message}`);// Set the error state and an error messsage
-      console.error(`Error fetching quiz: ${error.message}`);//Log an error message in the console for debugging purposes
+      setError(`Error fetching quiz: ${error.message}`);
+      console.error(`Error fetching quiz: ${error.message}`);
     }
   }, [setQuizList, setError, setQuestions, setQuizName, setQuiz])
 
@@ -145,9 +141,8 @@ export default function Page2(
                 {/* Form to select a quiz */}               
               <Form.Select  
               id='quizSelect' 
-                // Set the selected value to the current quiz ID from the state
                 value={selectedQuizId} 
-              onChange={(e) => {handleSelectQuiz(e)}}//Handle Quiz selection
+              onChange={(e) => {handleSelectQuiz(e)}}
               >
                 {/* Default option prompting the user to select a quiz */}
                 <option value=''>Select a quiz</option>
