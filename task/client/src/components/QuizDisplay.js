@@ -22,14 +22,11 @@ export default function QuizDisplay(
     setUserScores
   }) {
     //======STATE VARIABLES=========== 
-    // Current question index in the quiz
-  const [quizIndex, setQuizIndex] = useState(0);
-  // Boolean to track whether the quiz has started
-  const [quizStarted, setQuizStarted] = useState(false); 
-   // Boolean to track whether the quiz is completed
-  const [quizCompleted, setQuizCompleted] = useState(false);
-  const [currentScore, setCurrentScore] = useState(0); 
-  const [attempts, setAttempts] = useState(1) 
+   const [quizIndex, setQuizIndex] = useState(0);// Current question index in the quiz
+  const [quizStarted, setQuizStarted] = useState(false);// Boolean to track whether the user has started the quiz
+  const [quizCompleted, setQuizCompleted] = useState(false);// Boolean to track whether the quiz is completed
+  const [currentScore, setCurrentScore] = useState(0); // State to store the user's score during the quiz
+  // const [attempts, setAttempts] = useState(1)// State to track how many times the user has attempted the quiz
     //=========REQUESTS============
     //--------POST------------
     // Function to add the user Score
@@ -144,18 +141,16 @@ export default function QuizDisplay(
   //=======EVENT LISTENERS==========
   // Function to move to the next question
   const handleNextQuestion = useCallback(() => {
-    if (quizIndex < quiz.questions.length - 1) {
+    if (/*quizIndex < quiz.questions.length - 1*/quiz && quiz.questions && quizIndex < quiz.questions.length - 1) {
       // Increment the quiz index to move to the next question
       setQuizIndex(quizIndex + 1)
-      if(quizTimer) setTimer(10)
-
+      if(quizTimer) setTimer(10)// Reset timer if quiz timer is enabled
     }else{
       //End the Quiz
       setQuizStarted(false)
-      setQuiz(null)
-      setSelectedQuizId('')
-      setQuizCompleted(true)
-      addScore()
+      setQuiz(null) // Clear current quiz data
+      setSelectedQuizId('')// Reset the selected quiz ID
+      setQuizCompleted(true)// Mark quiz as completed
     }
   },[ quiz, 
     quizIndex,
@@ -164,7 +159,6 @@ export default function QuizDisplay(
     setQuizStarted,
     setQuiz, 
     setSelectedQuizId,
-    addScore,  
     setTimer,
     setQuizCompleted
      ])
@@ -174,18 +168,17 @@ export default function QuizDisplay(
     e.preventDefault();
     if (!selectedQuizId) return;
     try {
-      await fetchQuiz(selectedQuizId)
-    setQuizStarted(true)
-    setQuizIndex(0)
-    setCurrentScore(0) 
+      await fetchQuiz(selectedQuizId)// Fetch the quiz by its ID
+      setQuizStarted(true)// Set quiz as started
+       setQuizIndex(0)// Reset question index
+       setCurrentScore(0) // Reset score to 0
     if (quizTimer) {
       setTimer(10)// Initialize timer if enabled
     }
     } catch (error) {
-      setError('Error starting quiz: ', error.message);
-    }
-    
-   
+      setError('Error starting quiz: ', error.message);// Handle errors during quiz start
+      console.log('Error starting quiz')//Log an error message in the console for debugging purposes
+    }   
   },[selectedQuizId, quizTimer, fetchQuiz, setTimer, setQuizIndex , setError])
   
     // Function to restart the quiz
@@ -193,10 +186,13 @@ export default function QuizDisplay(
       setQuizIndex(0)// Reset the quiz index
       setCurrentScore(0);//Reset the quiz score
       setTimer(null)// Clear the timer
-      setQuizCompleted(false)
+      setQuizCompleted(false)// Mark quiz as not completed
       if (quizTimer) {
         // Restart the quiz if the timer is enabled
         handleQuizStart({preventDefault:() => {}})
+      }
+      else{
+        setTimer(null)
       }
     },[quizTimer, handleQuizStart, setTimer])
 
@@ -205,6 +201,7 @@ export default function QuizDisplay(
 
   return (
     <div id='quizDisplay'>    
+          {/* Show the quiz start form if a quiz is selected but not started */}
       {selectedQuizId && (
         <div id='quizDisplayForm'>
          {/* Form to start quiz */}
