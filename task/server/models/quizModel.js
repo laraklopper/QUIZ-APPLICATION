@@ -1,6 +1,6 @@
 // Import the Mongoose library
-const mongoose = require('mongoose'); 
-const autopopulate = require('mongoose-autopopulate');
+const mongoose = require('mongoose'); // Import the Mongoose library
+const autopopulate = require('mongoose-autopopulate');// Import the autopopulate plugin for Mongoose
 
 // Define the schema for quizzes
 const quizSchema = new mongoose.Schema({
@@ -51,16 +51,19 @@ const quizSchema = new mongoose.Schema({
 /* Custom validation function to ensure each 
 question has exactly 3 options*/
 function arrayLimit(val) {
-    return val.length === 3;
+    return val.length === 3;// Validation passes if the array length is 3
 }
 
 /* Custom validation function to ensure 
 each quiz has exactly 5 questions*/
 function arrayLimit5(val) {
-    return val.length === 5;
+    return val.length === 5;// Validation passes if the array length is 5
 }
 
+/* Create an index for userId to improve query 
+performance when filtering quizzes by user*/
 quizSchema.index({userId: 1})
+
 // Apply the autopopulate plugin to the schema
 quizSchema.plugin(autopopulate);
 
