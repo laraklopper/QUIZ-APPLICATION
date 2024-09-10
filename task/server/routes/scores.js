@@ -16,6 +16,19 @@ router.use(express.urlencoded({ extended: true })); // Parse URL-encoded data
 mongoose.set('strictPopulate', false); // Disable strict population checks in Mongoose
 
 //=============ROUTES=====================
+/*
+|================================================|
+| CRUD OPERATION | HTTP VERB | EXPRESS METHOD    |
+|================|===========|===================|
+|CREATE          | POST      |  router.post()    |
+|----------------|-----------|-------------------|
+|READ            | GET       |  router.get()     |  
+|----------------|-----------|-------------------|     
+|UPDATE          | PUT       |  router.put()     |
+|----------------|-----------|-------------------|
+|DELETE          | DELETE    |  router.delete()  |
+|================|===========|===================|
+*/
 //-------------GET-----------------
 // Route to fetch scores for a single user
 router.get('/findScores/:username', async (req, res) => {
@@ -61,7 +74,7 @@ router.get('/allScores', async (req, res) => {
 });
 
 // Route to find a specific user's score for a quiz
-router.post('/findQuizScores', async (req, res) => {
+/*router.post('/findQuizScores', async (req, res) => {
     try {
         const { username, quizId } = req.body;
 
@@ -80,10 +93,10 @@ router.post('/findQuizScores', async (req, res) => {
         console.error('Error finding quiz score:', error);
         return res.status(500).json({ error: error.message });
     }
-});
+});*/
 //-----------POST----------------------
 //Route to add a new score
-/*router.post('/addScore', async (req, res) => {
+router.post('/addScore', async (req, res) => {
     console.log(req.body); // Log the request body for debugging purposes
 
     try {
@@ -148,8 +161,8 @@ router.post('/findQuizScores', async (req, res) => {
         console.error('Error saving score:', error);//Log an error message in the console for debugging purposes
         return res.status(500).json({ error: error.message });// Return a 500 (Internal Server Error) status response
     }
-});*/
-router.post('/addScore', async (req, res) => {
+});
+/*router.post('/addScore', async (req, res) => {
   try {
     const { userId, quizId, score, attempts } = req.body;
     const newScore = new Score({
@@ -165,11 +178,11 @@ router.post('/addScore', async (req, res) => {
     res.status(500).json({ message: 'Error adding score' });
       console.error('Error saving score')
   }
-});
+});*/
 
 //-------------PUT-----------------------
 //Route to edit existing score
-router.put('/updateScore/:id', async (req, res) => {
+/*router.put('/updateScore/:id', async (req, res) => {
     try {
         const { _id, score, attemps } = req.body;
         const updatedScore = await Score.findByIdAndUpdate(
@@ -188,6 +201,6 @@ router.put('/updateScore/:id', async (req, res) => {
     }
 })
 
-})
+})*/
 // Export the router to be used in other parts of the application
 module.exports = router;
