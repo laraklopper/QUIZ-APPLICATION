@@ -19,6 +19,15 @@ const quizSchema = new mongoose.Schema({
         ref: 'User',  // Reference the User collection
         autopopulate: true,// Automatically populate the quiz field
     },
+    /*
+    //Username of the person who created the quiz
+    username:{
+        type: String,
+        //Indicate that the username is required and 
+        //add a custom error message
+        requiered: [true, username is required], 
+    },
+    */
     //Field for questions containing an array of objects
     questions: {
         type: [
