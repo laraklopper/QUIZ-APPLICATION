@@ -24,25 +24,36 @@ export default function EditQuiz(
   // State to track the index of the current question being edited
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
-  //============EVENT LISTENERS=================
+  //===============USE EFFECT HOOK======================
+    // Initialize editQuizIndex with current question data
+  useEffect(() => {
+    if (quiz) {
+      setEditQuizIndex({
+        editQuestionText: quiz.questions[currentQuestionIndex]?.questionText || '',
+        editCorrectAnswer: quiz.questions[currentQuestionIndex]?.correctAnswer || '',
+        editOptions: quiz.questions[currentQuestionIndex]?.options || ['','','']
+      })
+    }
+  }, [quiz, currentQuestionIndex, setEditQuizIndex])
+
+//============EVENT LISTENERS=================
 
   // Function to edit a question
   const handleEditQuestion = () => {
+    if (newQuestions.length === 0) {
+      alert('No questions to update');
+      return;
+    }
     const updatedQuestions = [...newQuestions];
-    
     updatedQuestions[currentQuestionIndex] = { ...editQuizIndex };
    
     setNewQuestions(updatedQuestions); // Update the state with the new list of questions
     
     setQuizList(//Update the quiz list (`quizList`) by mapping over it
-      quizList.map(q =>// Iterate over each quiz in the quizList array
-        /* If the current quiz matches the quiz being edited 
-        (`quiz._id`), return an updated version:*/
-        q._id === quiz._id // Check if the current quiz ID matches the ID of the quiz being edited
-          ? { ...q, questions: updatedQuestions, name: newQuizName }// If it matches, return a new object with updated questions and name
-          : q // If it doesn't match, return the quiz as is
-      )
-    );
+      quizList.map(q =>
+        q._id === quiz._id 
+          ? { ...q, questions: updatedQuestions, name: newQuizName } : q 
+      ));
   };
 
  
@@ -136,10 +147,12 @@ export default function EditQuiz(
               </div>          
              </Col>
           </Row>
-          {/* Input for each option */}
+            {/* Input for each option */}
           {[0, 1, 2].map((optionIndex) => (
             <Row className='editQuizRow' key={optionIndex}>
-              <Col xs={6} md={4} className='editQuizCol'>
+              <Col xs={6}  className='editQuizCol'>
+              <div className='editField'>             
+              <label><p className='labelText'>ALTERNATIVE ANSWER:</p></label>
                 <input
                   type='text'
                   name={`editOption${optionIndex + 1}`}
@@ -152,8 +165,10 @@ export default function EditQuiz(
                   placeholder={quiz.questions[currentQuestionIndex]?.options[optionIndex] || ''}
                   id={`editOption${optionIndex + 1}`}
                   className='editQuizInput'
-                />  
-              </Col>
+                  
+                />
+                </div>  
+              </Col>          
             </Row>
           ))}
           {/* <Row className='editQuizRow'>
