@@ -6,7 +6,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
 //RegistrationForm function component
-export default function RegistrationForm(
+export default function RegistrationForm(//Export default RegistrationForm function component
     {//PROPS PASSED FROM PARENT COMPONENT
     newUserData, 
     addUser,
@@ -33,7 +33,7 @@ export default function RegistrationForm(
 //=========JSX RENDERING===========
 
   return (
-    // Registration form
+   // Registration form
     <form id='registrationForm' onSubmit={handleRegistration}>
           <Row className='regisRow'>
               <Col xs={6} md={4} className='regisCol'>
