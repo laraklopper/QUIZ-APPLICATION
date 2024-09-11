@@ -4,7 +4,8 @@ import StartQuizForm from '../components/StartQuizForm'
 import Quiz from './Quiz'
 import Result from './Result';
 
-export default function QuizDisplay(
+//QuizDisplay Function component
+export default function QuizDisplay(//Export default quizDisplay component
   {// PROPS PASSED FROM PARENT COMPONENT
     selectedQuizId, 
     quiz, 
@@ -26,54 +27,62 @@ export default function QuizDisplay(
   const [quizStarted, setQuizStarted] = useState(false);   
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [currentScore, setCurrentScore] = useState(0);
+  // const [attempts, setAttempts] = useState(1)
     //=========REQUESTS============
     //--------POST------------
     // Function to add the user Score
-    const addScore = useCallback(async(e) => {
-      e.preventDefault()
-      try {
-      
-        //Send a POST request to the server
-        const response = await fetch (`http://localhost:3001/scores/addScore`, {
-          method: 'POST',
-          mode:'cors',
-          headers:{
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            username: currentUser.username,
-            name: quizName,
-            score: currentScore,
-            // attempts: currentAttempts
-          })
-        })
-
-        // Response handling where the response is unsuccessful
-        if (!response.ok) {
-          throw new Error('Error saving score')
-        }
-
-        const result = await response.json();
-       
-        setUserScores (prevScores => [result, ...prevScores]);
-      } catch (error) {
-        console.error('Error saving score', error.message);
-        setError('Error saving score', error.message)
+// Function to add the user Score
+  const addScore = useCallback(async (e) => {//Define an async function to add a users Score
+    e.preventDefault()
+    try {
+      const token = localStorage.getItem('token');
+     
+      if (!token) {
+        alert('Authentication required'); // Alert if the user is not authenticated
+        console.log('Authentication required')
+        return;//Exit the function if the token is missing
       }
-    }, [currentUser, quizName, setError, setUserScores, currentScore])
+      //Send a POST request to the server
+      const response = await fetch(`http://localhost:3001/scores/addScore`, {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',// Specify the Content-Type 
+          'Authentication': `Bearer ${token}`,//Add the Authorization header 
+        },
+        body: JSON.stringify({
+          username: currentUser.username,
+          name: quizName,
+          score: currentScore,
+          // attempts: currentAttempts
+        })
+      })
+
+      // Response handling where the response is unsuccessful
+      if (!response.ok) {
+        throw new Error('Error saving score')
+      }
+
+      const result = await response.json();
+      // Update the user scores state 
+      setUserScores(prevScores => [result, ...prevScores]);
+    } catch (error) {
+      console.error('Error saving score', error.message);
+      setError('Error saving score', error.message);
+    }
+  }, [currentUser, quizName, setError, setUserScores, currentScore])
   //=======EVENT LISTENERS==========
   // Function to move to the next question
   const handleNextQuestion = useCallback(() => {
-    if (quizIndex < quiz.questions.length - 1) {
+    if (quiz && quiz.questions && quizIndex < quiz.questions.length - 1) {
+      // Increment the quiz index to move to the next question
       setQuizIndex(quizIndex + 1)
-      if(quizTimer) setTimer(10)
-
+      if (quizTimer) setTimer(10)// Reset timer if quiz timer is enabled
     }else{
-      setQuizStarted(false)
-      setQuiz(null)
-      setSelectedQuizId('')
-      setQuizCompleted(true)
-      addScore()
+       setQuizStarted(false)
+      setQuiz(null) // Clear current quiz data
+      setSelectedQuizId('')// Reset the selected quiz ID
+      setQuizCompleted(true)// Mark quiz as completed
     }
   },[ quiz, 
     quizIndex,
@@ -82,7 +91,6 @@ export default function QuizDisplay(
     setQuizStarted,
     setQuiz, 
     setSelectedQuizId,
-    addScore,  
     setTimer,
     setQuizCompleted
      ])
@@ -90,33 +98,35 @@ export default function QuizDisplay(
   //Function to start the quiz
   const handleQuizStart = useCallback(async(e) => {
     e.preventDefault();
-    if (!selectedQuizId) return;
+    if (!selectedQuizId) return;// If no quiz is selected, return early
     try {
       await fetchQuiz(selectedQuizId)
-    setQuizStarted(true)
-    setQuizIndex(0)
-    setCurrentScore(0) 
+      setQuizStarted(true)
+      setQuizIndex(0)
+      setCurrentScore(0) 
     if (quizTimer) {
-      setTimer(10)
+      setTimer(10)// Initialize timer if enabled
     }
     } catch (error) {
       setError('Error starting quiz: ', error.message);
+      console.error('Error starting quiz')
     }
-    
-   
   },[selectedQuizId, quizTimer, fetchQuiz, setTimer, setQuizIndex , setError])
   
     // Function to restart the quiz
     const handleRestart = useCallback(() => {
       setQuizIndex(0)
       setCurrentScore(0);
-      setTimer(null);
+      setQuizStarted(true)
       setQuizCompleted(false)
       if (quizTimer) {
+        setTimer(10)// Clear the timer
+        // Restart the quiz if the timer is enabled
         handleQuizStart({preventDefault:() => {}})
+      }else{
+        setTimer(null)
       }
     },[quizTimer, handleQuizStart, setTimer])
-
     
   //======JSX RENDERING============
 
