@@ -1,10 +1,11 @@
 import React from 'react'
+//Bootstrap
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 
 //StartQuizForm function component
-export default function StartQuizForm(
+export default function StartQuizForm(//Export default StartQuizForm function component
     {//PROPS PASSED FROM PARENT COMPONENT
         quiz,
         quizTimer,
@@ -12,7 +13,7 @@ export default function StartQuizForm(
         handleQuizStart
     }) {
 
-    //=======JSX RENDERING=============
+  //=======JSX RENDERING=============
   return (
     // Form to start quiz
       <form
