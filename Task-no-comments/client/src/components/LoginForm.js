@@ -15,12 +15,10 @@ export default function LoginForm(
     submitLogin
   }
 ) {
-
   //============EVENT LISTENER===============
   // Event listener for handling user login data changes
   const handleUserLogin = (event) => {
     const { name, value } = event.target;
-    // Update userData state with new values
     setUserData((prevState) => (
       { ...prevState, [name]: value }
     ));
@@ -33,7 +31,7 @@ export default function LoginForm(
         submitLogin();
     }
 
-  //============JSX RENDERING================
+ //============JSX RENDERING================
 
   return (
     // Form for user login
