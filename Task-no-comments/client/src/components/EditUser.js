@@ -24,7 +24,7 @@ export default function EditUser(
   
     //===================JSX RENDERING===============
     
-  return (
+ return (
         <div>
           <Row>
             <Col><h3 className='h3'>EDIT ACCOUNT</h3></Col>
