@@ -18,20 +18,19 @@ export default function AddQuiz(
   setCurrentQuestion,
 }) {
   //===========STATE VARIABLES====================
-  // State to manage the error message displayed to the user
   const [errorMessage, setErrorMessage] = useState('');
 
   //============EVENT LISTENERS=========================
   //Function to add a new question
-  const handleAddQuestion = () => {
+   const handleAddQuestion = () => {
     if (questions.length >= 5) {
       alert('You must add up to 5 questions.'); 
       console.log('You must add up to 5 questions.');
-      return;
+      return;// Exit the function to prevent adding more questions
     }
     if (!currentQuestion.questionText  || !currentQuestion.correctAnswer  || currentQuestion.options.some(opt => !opt)) {
       setErrorMessage('Please fill in all fields before adding a question.');
-      return;
+      return;// Exit the function to prevent adding incomplete questions
     }
     setQuestions([...questions, currentQuestion]);
     setCurrentQuestion(  
@@ -42,9 +41,9 @@ export default function AddQuiz(
       }
     );
   };
-
+  
   // Function to delete a question
-  const deleteNewQuestion =(index) => {
+const deleteNewQuestion =(index) => {
     const newQuestions = questions.filter((_, i) => i !== index); 
     setQuestions(newQuestions)
   }
@@ -55,12 +54,12 @@ export default function AddQuiz(
       setErrorMessage('Please enter a quiz name and add at least one question.');
       return;
     }
-    // Call the addNewQuiz function passed as a prop
-    addNewQuiz();
+    addNewQuiz();// Call the addNewQuiz function
   };
 
   //============JSX RENDERING================
   return (
+ return (
     <div>
       <Row>
         <Col>
