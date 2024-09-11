@@ -11,7 +11,7 @@ import QuizDisplay from '../components/QuizDisplay';
 import Footer from '../components/Footer';
 
 // Page 2 function component
-export default function Page2(
+export default function Page2(//Export default page2 function component
   {// PROPS PASSED FROM PARENT COMPONENT
     quizList,
     setQuizList,
@@ -30,8 +30,7 @@ export default function Page2(
     }
 ) {
   // =========STATE VARIABLES====================
-  //QuizVariables
-  // Store the selected quiz ID
+ //QuizVariables
   const [selectedQuizId, setSelectedQuizId] = useState(''); 
   //Timer variables
   const [timer, setTimer] = useState(10);
@@ -49,16 +48,13 @@ export default function Page2(
 
   //Function to randomise answers
   const shuffleArray = (array) => {
-    // Use the JavaScript sort method to shuffle the array
-    // The comparison function returns a random value between -0.5 and 0.5
-    // This results in a random order for each array element
     return array.sort(() => Math.random() - 0.5);
   };
 
   //=========REQUEST================
   //-----------GET-----------------------
   // Function to fetch a single quiz
-  const fetchQuiz = useCallback(async (quizId) => {//Define async function to fetch a single Quiz
+    const fetchQuiz = useCallback(async (quizId) => {//Define async function to fetch a single Quiz
     try {
      
       if (!quizId) return;// Exit early if no quiz is selected
@@ -67,13 +63,14 @@ export default function Page2(
 
       // Send a GET request to fetch quiz data from the server
       const response = await fetch(`http://localhost:3001/quiz/findQuiz/${quizId}`, {
-        method: 'GET',//HTTP request method
+        method: 'GET',
         mode: 'cors',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',//Specify the Content-Type 
+          'Authorization': `Bearer ${token}`,//Attatch the token 
         }
       })
+
       //Response handling
       if (!response.ok) {
         throw new Error('Failed to fetch quiz');
@@ -81,9 +78,9 @@ export default function Page2(
      
       const fetchedQuiz = await response.json(); // Parse the JSON response
       
-      // Conditional rendering to check if fetchedQuiz is valid
+    
       if (!fetchedQuiz || !fetchedQuiz.questions) {
-        throw new Error('Invalid quiz data');// Throw error if the data type is invalid
+        throw new Error('Invalid quiz data');
       }
 
       // Shuffle the questions to randomize their order
@@ -96,11 +93,12 @@ export default function Page2(
 
       // Update quiz list and set quiz details
       setQuizList(prevQuizList =>
+        // Update the quiz list
         prevQuizList.map((q) => (q._id === quizId ? fetchedQuiz : q))
       );
       setQuestions(shuffledQuestions);
-      setQuizName(fetchedQuiz.quizName);
-      setQuiz(fetchedQuiz);
+      setQuizName(fetchedQuiz.quizName);// Set the quiz name
+      setQuiz(fetchedQuiz);// Set the fetched quiz
     } 
     catch (error) {
       setError(`Error fetching quiz: ${error.message}`);
@@ -119,7 +117,7 @@ export default function Page2(
 
 
   // ==========JSX RENDERING==========
-  return (
+ return (
     <>
     {/* Header component*/}
       <Header heading="GAME" />
@@ -141,8 +139,9 @@ export default function Page2(
                 {/* Form to select a quiz */}               
               <Form.Select  
               id='quizSelect' 
+                // Set the selected value to the current quiz ID from the state
                 value={selectedQuizId} 
-              onChange={(e) => {handleSelectQuiz(e)}}
+              onChange={(e) => {handleSelectQuiz(e)}}//Handle Quiz selection
               >
                 {/* Default option prompting the user to select a quiz */}
                 <option value=''>Select a quiz</option>
