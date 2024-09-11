@@ -6,7 +6,7 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 
 //EditQuiz function component
-export default function EditQuiz(
+export default function EditQuiz(//Export default editQuiz Function component
   {//PROPS PASSED FROM PARENT COMPONENT
     quiz, 
     setQuizList, 
@@ -18,33 +18,43 @@ export default function EditQuiz(
     newQuizName,
     newQuestions,
     setNewQuestions,
+
   }
 ) {
   //=============STATE VARIABLES======================
-  // State to track the index of the current question being edited
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
+  //=========USE EFFECT HOOK==================
+  /* Effect to initialize and update the editQuizIndex state when 
+  quiz or currentQuestionIndex changes*/
+  useEffect(() => {
+    if (quiz) {
+      // Update the editQuizIndex state with data from the current question
+      setEditQuizIndex({
+        editQuestionText: quiz.questions[currentQuestionIndex]?.questionText || '',
+        editCorrectAnswer: quiz.questions[currentQuestionIndex]?.correctAnswer || '',
+        editOptions: quiz.questions[currentQuestionIndex]?.options || ['', '', '']
+      })
+    }
+  }, [quiz, currentQuestionIndex, setEditQuizIndex])
   //============EVENT LISTENERS=================
 
   // Function to edit a question
-  const handleEditQuestion = () => {
-    const updatedQuestions = [...newQuestions];
-    
+const handleEditQuestion = () => {
+    if (newQuestions.length === 0) {
+      alert('No questions to update');
+      return;// Exit the function
+    }
+  const updatedQuestions = [...newQuestions];
     updatedQuestions[currentQuestionIndex] = { ...editQuizIndex };
-   
-    setNewQuestions(updatedQuestions); // Update the state with the new list of questions
-    
-    setQuizList(//Update the quiz list (`quizList`) by mapping over it
-      quizList.map(q =>// Iterate over each quiz in the quizList array
-        /* If the current quiz matches the quiz being edited 
-        (`quiz._id`), return an updated version:*/
-        q._id === quiz._id // Check if the current quiz ID matches the ID of the quiz being edited
-          ? { ...q, questions: updatedQuestions, name: newQuizName }// If it matches, return a new object with updated questions and name
-          : q // If it doesn't match, return the quiz as is
-      )
-    );
+    setNewQuestions(updatedQuestions);
+    setQuizList(
+      quizList.map(q =>
+        q._id === quiz._id 
+          ? { ...q, questions: updatedQuestions, name: newQuizName } 
+          : q  
+      ));
   };
-
  
 
   //==============JSX RENDERING====================
