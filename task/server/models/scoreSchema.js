@@ -1,8 +1,6 @@
 // Import necessary modules and packages
-// Import the Mongoose library
-const mongoose = require('mongoose');
-// Import the autopopulate plugin for Mongoose
-const autopopulate = require('mongoose-autopopulate');
+const mongoose = require('mongoose');// Import the Mongoose library
+const autopopulate = require('mongoose-autopopulate');// Import the autopopulate plugin for Mongoose
 
 //Define the score schema
 const scoreSchema = new mongoose.Schema({
@@ -19,6 +17,10 @@ const scoreSchema = new mongoose.Schema({
             message: 'Invalid user Id',//Custom error message if validation fails
         },
     },
+    /*username: {
+        type: String,
+        required: true,
+    },*/
     // Field for the name of the quiz taken
     quizId: {
         type: mongoose.Schema.Types.ObjectId,// Define the type as ObjectId
@@ -31,6 +33,12 @@ const scoreSchema = new mongoose.Schema({
             message: 'Invalid quiz Id',//Custom error message if validation fails
         },
     },
+    // Field for the name of the quiz taken
+    /*name: {
+        type: String,
+        required:[true, 'Quiz name is required'],   
+    }
+    */
     score: {
         type: Number,  // Define the type as Number
         default: 0,// Default score value
@@ -62,8 +70,8 @@ const scoreSchema = new mongoose.Schema({
 scoreSchema.plugin(autopopulate);
 
 // Create indexes on userId and quizId for faster lookups
-scoreSchema.index({ userId: 1 }); // Create an index on userId
-scoreSchema.index({ quizId: 1 }); // Create an index on quizId
+// scoreSchema.index({ userId: 1 }); // Create an index on userId
+// scoreSchema.index({ quizId: 1 }); // Create an index on quizId
 
 // Export the score model based on the scoreSchema
 module.exports = mongoose.model('Score', scoreSchema);
