@@ -1,7 +1,7 @@
 // Import required modules
-const express = require('express');// Import Express Web framework
-const mongoose = require('mongoose');//Import the Mongoose library
-const cors = require('cors');// Import CORS (Cross-Origin Resource Sharing) middleware
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
 //Import routes
 const userRouter = require('./routes/users');
 const quizRouter = require('./routes/quiz');
@@ -39,8 +39,8 @@ else if(!uri){
 
 mongoose.connect(uri, {
     dbName: database,  // Specify the database name
-    // useNewUrlParser: true,  // (Optional) Use the new URL parser (default in newer versions)
-    // useUnifiedTopology: true,  // (Optional) Use the new connection management engine
+    // useNewUrlParser: true,  
+    // useUnifiedTopology: true, 
 })
     .then(() => {
         console.log('Connected to MongoDB');
@@ -64,17 +64,16 @@ mongoose.connection.once('open', () => {
 });
 
 //===========SETUP MIDDLEWARE==================
-app.use(cors());  // Enable CORS for all routes, allowing cross-origin requests
-app.use(express.json());  // Enable parsing of JSON bodies in incoming requests
+app.use(cors());  
+app.use(express.json());  
 
 //============ROUTES================
-app.use('/users', userRouter);// user-related routes at the '/users' path
-app.use('/quiz', quizRouter);// quiz-related routes at the '/quiz' path
-app.use('/scores', scoreRouter);//score-related routes at the '/scores' path
+app.use('/users', userRouter);
+app.use('/quiz', quizRouter);
+app.use('/scores', scoreRouter);
 
 //=================START THE SERVER=======================
 // Start the server and listen on the specified port
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
-    // Log a message indicating the server is running
 } )
