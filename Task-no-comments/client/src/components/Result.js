@@ -5,25 +5,32 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 
 // Result function component
-export default function Result({
+export default function Result({//Export default Result function component
   // PROPS PASSED FROM PARENT COMPONENT
   currentScore,
   addScore,
   quizName,
-  selectedQuiz,
   totalQuestions,
-  currentUser
+  currentUser,
 }) {
 //=======STATE VARIABLES===============
   const [showScore, setShowScore] = useState(true);
 
+  //--------------EVENT LISTENERS---------------
+
   // Function to submit score
-  const handleSubmitScore = async (e) => {
-    e.preventDefault();
+ const handleSubmitScore = /*async*/ (e) => {
+    // e.preventDefault();
+    setSubmitted(true); 
+    setSubmissionError(null); // Clear previous errors
     try {
-      await addScore();  
+      /*await*/ addScore(); // Call the addScore function 
+      console.log('Score successfully submitted');
+      setSubmitted(false);
     } catch (error) {
+      setSubmissionError('Failed to save score');
       console.log('Failed to save score', error.message);
+      setSubmitted(false);
     }
   };
 
@@ -44,7 +51,7 @@ export default function Result({
 
   //=============JSX RENDERING=================
 
-  return (
+ return (
     showScore && (
       <div id='results'>
         <form onSubmit={handleSubmitScore}>
@@ -52,7 +59,7 @@ export default function Result({
             <Col xs={6} md={4}>
             {/* Display the quizName */}
               <input
-                value={selectedQuiz?.quizName || quizName || 'Unnamed Quiz'}
+                value={quizName || 'Unnamed Quiz'}
               readOnly
               type='text'
                 className='resultFormInput'
@@ -73,14 +80,12 @@ export default function Result({
               <input
                 id='resultOutput'
                 className='resultFormInput'
-                type='text'
+                type='text'//Input type
                 value={`RESULT: ${currentScore} OF ${totalQuestions}`}
                 readOnly
               />
             </Col>
-            <Col xs={6} md={4} className='resultsCol'>
-              
-             
+            <Col xs={6} md={4} className='resultsCol'>             
             </Col>
           </Row>
           <Row>
@@ -88,7 +93,7 @@ export default function Result({
             {/* Display the current date */}
              <input
                 type='text'
-                value={currentDate(new Date())}
+                value={currentDate()}
                 name='date'
                 readOnly
                 className='resultFormInput'
@@ -103,17 +108,20 @@ export default function Result({
               <Button
                 variant='primary'
                 type='submit'
+                disabled={submitted}
               >
-                SAVE SCORE
+                {submitted ? 'Submitting...' : 'SAVE SCORE'}              
               </Button>
             </Col>
             <Col xs={6} md={4}></Col>
           </Row>
         </form>
+          {/* Display error message if an error occurs when the score is submitted */}
+        {submissionError && <p>{submissionError}</p>}
         <Row>
           <Col xs={6} md={4}></Col>
           <Col xs={6} md={4}>
-            {/* Button to exit */}
+            {/* Button to exit when the quiz is complete or the user saved the score*/}
             <Button
               variant='warning'
               onClick={handleExit}
@@ -125,6 +133,7 @@ export default function Result({
           <Col xs={6} md={4}></Col>
         </Row>
       </div>
-    ))}
+    )
+    )}
   
 
