@@ -24,7 +24,7 @@ export default function Quiz({
   const [feedback, setFeedback] = useState('');         
   const [timeLeft, setTimeLeft] = useState(10);
 
-  // ========USE EFFECT HOOK==================
+   // ========USE EFFECT HOOK==================
   /* Effect to reset the question index to the first 
   question when the questions array changes */
   useEffect(() => {
@@ -81,7 +81,7 @@ export default function Quiz({
     } else {
       setFeedback('incorrect');
     }
-    handleNextQuestion();
+   setTimeout(() => setFeedback(''), 1000)
   };
 
   /* Function to handle option click and 
@@ -89,9 +89,10 @@ export default function Quiz({
   const handleOptionClick = (option) => {
     setSelectedOption(option);
     handleAnswerClick(option === questions[quizIndex].correctAnswer);
+    handleNextQuestion();
   };
 
-  // =================JSX RENDERING======================
+ // =================JSX RENDERING======================
   return (
     <div id='quizDisplay'>
       <Row>
