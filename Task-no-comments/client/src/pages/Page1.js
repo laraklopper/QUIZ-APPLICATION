@@ -12,7 +12,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 
 //Page1 function component
-export default function Page1(
+export default function Page1(//Export default Page1 function component
   { //PROPS PASSED FROM PARENT COMPONENT 
     logout,
     setError,
@@ -23,6 +23,7 @@ export default function Page1(
      setUserScores
     }
   ) {
+
 
 //=============REQUESTS===================
 //---------------GET---------------------
@@ -35,21 +36,20 @@ const fetchScores = useCallback(async () => {//Define an async function to fetch
       method: 'GET',
       mode: 'cors',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',// Specify the Content-Type 
+        'Authorization': `Bearer ${token}`,// Authorization header 
       }
     })
 
-   
+    //Response handling
     if (!response.ok) {
-      // Throw an error if GET request status is not OK(unsuccessful)
       throw new Error('Unable to fetch user scores');
     }
 
     const quizScores = await response.json(); 
 
     if (quizScores && Array.isArray(quizScores.userScores)) {
-      setUserScores(quizScores.userScores); 
+      setUserScores(quizScores.userScores); // Update state with fetched scores
     } 
     else {
       throw new Error('Invalid data type');
@@ -57,17 +57,18 @@ const fetchScores = useCallback(async () => {//Define an async function to fetch
     
   } catch (error) {
     console.error('Error fetching userScores', error.message);
-    setError(`Error fetching userScores: ${error.message}`);  
+    setError(`Error fetching userScores: ${error.message}`);
   }
 },[setUserScores, setError])
 
-  // Filter the results by the selected quiz name
+// Filter the results by the selected quiz name
   const quizResults = selectedQuiz
     ? userScores.filter(score => score.quizName === selectedQuiz) 
     : [];
 
+  // useEffect hook to fetch scores when the component mounts
     useEffect (() => {
-      fetchScores()
+      fetchScores()// Call the fetchScores function 
     },[fetchScores])
 //========JSX RENDERING================
 
@@ -154,6 +155,7 @@ const fetchScores = useCallback(async () => {//Define an async function to fetch
                       </div>
                     ))
                   ) : (
+                    // Message if no scores are available for a specific quiz
                     <p className="scoreError">No scores for this quiz</p>
                   )}
                 </div>
