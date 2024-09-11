@@ -7,7 +7,7 @@ import Col from 'react-bootstrap/Col';
 import { Link } from 'react-router-dom';
 
 //MainHeader function component
-export default function MainHeader(
+export default function MainHeader(//Export default MainHeader function component
     {//Props
         mainHeading
     } 
@@ -15,7 +15,7 @@ export default function MainHeader(
 
     //========JSX RENDERING==========
 
-  return (
+ return (
     // Header for the Login and Registration pages
       <header className='header'>
         {/* Heading Row */}
