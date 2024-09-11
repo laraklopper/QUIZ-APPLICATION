@@ -38,7 +38,7 @@ export default function QuizDisplay(//Export default quizDisplay component
       const token = localStorage.getItem('token');
      
       if (!token) {
-        alert('Authentication required'); // Alert if the user is not authenticated
+        alert('Authentication required');
         console.log('Authentication required')
         return;//Exit the function if the token is missing
       }
@@ -75,14 +75,13 @@ export default function QuizDisplay(//Export default quizDisplay component
   // Function to move to the next question
   const handleNextQuestion = useCallback(() => {
     if (quiz && quiz.questions && quizIndex < quiz.questions.length - 1) {
-      // Increment the quiz index to move to the next question
       setQuizIndex(quizIndex + 1)
       if (quizTimer) setTimer(10)// Reset timer if quiz timer is enabled
     }else{
        setQuizStarted(false)
-      setQuiz(null) // Clear current quiz data
-      setSelectedQuizId('')// Reset the selected quiz ID
-      setQuizCompleted(true)// Mark quiz as completed
+      setQuiz(null) 
+      setSelectedQuizId('')
+      setQuizCompleted(true)
     }
   },[ quiz, 
     quizIndex,
@@ -120,7 +119,7 @@ export default function QuizDisplay(//Export default quizDisplay component
       setQuizStarted(true)
       setQuizCompleted(false)
       if (quizTimer) {
-        setTimer(10)// Clear the timer
+        setTimer(10)
         // Restart the quiz if the timer is enabled
         handleQuizStart({preventDefault:() => {}})
       }else{
