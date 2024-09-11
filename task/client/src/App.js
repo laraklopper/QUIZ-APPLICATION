@@ -2,22 +2,22 @@
 import React, { useEffect, useState, useCallback } from 'react';// Import the React module to use React functionalities
 import './App.css';//Import CSS stylesheet
 // React Router components
-import {  Route, Routes, useNavigate } from 'react-router-dom';
+import {  Route, Routes, useNavigate } from 'react-router-dom';// Import the Container component from react-bootstrap
 //Bootstrap
 import Container from 'react-bootstrap/Container';
 //Pages
-import Login from './pages/Login';
-import Registration from './pages/Registration';
-import Page1 from './pages/Page1';
-import Page2 from './pages/Page2';
-import Page3 from './pages/Page3';
-import Page4 from './pages/Page4';
+import Login from './pages/Login';//Import Login function component 
+import Registration from './pages/Registration';//Import Registration component
+import Page1 from './pages/Page1';//Import Page1 function component(HOME)
+import Page2 from './pages/Page2';//Import Page2 function component(GAME)
+import Page3 from './pages/Page3';//Import Page3 function component(ADD QUESTIONS)
+import Page4 from './pages/Page4';//Import Page4 function component(USER ACCOUNT)
 
 //App function component
 export default function App() {
   //=======STATE VARIABLES===============
   //User variables
-  const [users, setUsers] = useState([]);//State to store the list of users
+  const [users, setUsers] = useState([]);//State used to store a list of all the users
   const [currentUser, setCurrentUser] = useState(null);//State to store the user currently loggedIn
   const [userData, setUserData] = useState({//State to store userData for login
     username: '',        // Username entered in the login form
@@ -26,33 +26,29 @@ export default function App() {
     admin: '',           // Admin status, if applicable
     password: '',        // Password entered in the login form
   });
-  const [newUserData, setNewUserData] = useState({// State to manage the registration form data
-    newUsername: '',     // Username entered in the registration form
-    newEmail: '',        // Email entered in the registration form
-    newDateOfBirth: '',  // Date of birth entered in the registration form
-    newAdmin: false,     // Admin status (false by default)
-    newPassword: '',     // Password entered in the registration form
-  });
   //Quiz variables
-  const [quizList, setQuizList] = useState([]);//State to sto the list of all the quizzes
-  const [questions, setQuestions] = useState([]);//State to store the list of questions in the quiz
-  const [quiz, setQuiz] = useState(null);//State to store the currently selectedQuiz
-  const [quizName, setQuizName] = useState('');//State to store the QuizName
-  const [currentQuestion, setCurrentQuestion] = useState({
+  const [quizList, setQuizList] = useState([]);//State to store the List of all quizzes
+  const [questions, setQuestions] = useState([]);//List of questions in the quit
+  const [quiz, setQuiz] = useState(null);//Currently selected quiz
+  const [quizName, setQuizName] = useState(''); // Name of the quiz
+  const [currentQuestion, setCurrentQuestion] = useState({// Current question being added
     questionText: '',
     correctAnswer: '',
     options: ['', '', ''],
   });
-   const [userScores, setUserScores] = useState({// State to store the current user's quiz scores
+  const [userScores, setUserScores] = useState({// State to store the current user's quiz scores
     result: '',
-    date: '',//date format
-    attemptNumber: ''//number format
+    date: '',
+    attemptNumber: ''
   });
+  // const [scores, setScores] =useState([]);// State to hold scores
   // Event and UI-related states
-  const [error, setError] = useState(null); 
-  const [loggedIn, setLoggedIn] = useState(false); 
-
+  const [error, setError] = useState(null); //Error message
+  const [loggedIn, setLoggedIn] = useState(false); //Boolean to track whether or not the user is currently logged in
+  const [selectedQuiz, setSelectedQuiz] = useState(null);// State to store the selected quiz
+  // Hook to navigate between different routes
   const navigate = useNavigate()
+  
   //============USE EFFECT HOOK TO FETCH USERS======================
   //Fetch users when the component mounts or when loggedIn changes
   useEffect(() => {
@@ -129,29 +125,32 @@ export default function App() {
   //==============REQUESTS========================
   //-----------GET-------------------------
 // Function to fetch quizzes
-  const fetchQuizzes = useCallback(async () => {
+  const fetchQuizzes = useCallback(async () => {//Define an async function to fetch quizzes 
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token');// Retrieve the JWT token from localStorage
       //Send a GET request to the server to find all quizzes
       const response = await fetch('http://localhost:3001/quiz/findQuizzes', {
-        method: 'GET',
-        mode: 'cors',
+        method: 'GET',//HTTP request method
+        mode: 'cors',// Enable Cross-Origin Resource Sharing
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+           'Content-Type': 'application/json',// Specify that the request and response are JSON
+          'Authorization': `Bearer ${token}`,// Attach JWT token for authorization
         }
       });
 
       //Response handling
+        /* Conditional rendering to check if the response
+        is not successful (status code is not in the range 200-299)*
       if (!response.ok) {
-        throw new Error('Failed to fetch quizzes');
+        throw new Error('Failed to fetch quizzes');//Throw an error message if the GET request is unsuccessful
       }
       const quizData = await response.json();//Parse the response data
-      
+
+      //Conditional rendering to ensure the data is an array
       if (quizData && Array.isArray(quizData.quizList)) {
-        setQuizList(quizData.quizList)
+        setQuizList(quizData.quizList)// Update the quizList state with the fetched quiz data
       } else {
-        throw new Error('Invalid quiz data')
+        throw new Error('Invalid quiz data')// Throw error if the data format is incorrect
       }
       // if (quizData && quizData.quizList) {
       //   // Update the quizList state with the fetched quizzes
@@ -161,8 +160,8 @@ export default function App() {
   
     } 
     catch (error) {
-      console.error('Error fetching quizzes:', error);
-      setError('Error fetching quizzes');
+      console.error('Error fetching quizzes:', error);//Log an error message in the console for debugging purposes
+      setError('Error fetching quizzes');// Set error state with error message
     }
   },[]);
   /* The useCallback hook ensures that the function is not 
@@ -201,6 +200,11 @@ export default function App() {
                     logout={logout} 
                     error={error} 
                     currentUser={currentUser} 
+                    setError={setError}
+                    userScores={userScores}
+                    setUserScores={setUserScores}
+                    selectedQuiz={selectedQuiz}
+                    setSelectedQuiz={setSelectedQuiz}
                   />
                 }
                 />
@@ -222,6 +226,7 @@ export default function App() {
                       questions={questions}
                       setQuestions={setQuestions}
                       currentUser={currentUser}
+                      setUserScores={setUserScores}
                     />
                   }
                 />
@@ -279,8 +284,6 @@ export default function App() {
                   path='/reg'
                   element={
                     <Registration
-                      newUserData={newUserData} 
-                      setNewUserData={setNewUserData} 
                       setError={setError} 
                     />
                   }
