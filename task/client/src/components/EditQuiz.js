@@ -25,19 +25,16 @@ export default function EditQuiz(
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
   //=========USE EFFECT HOOK==================
-  /* Effect to initialize and update the editQuizIndex state when 
+   /* Effect to initialize and update the editQuizIndex state when 
   quiz or currentQuestionIndex changes*/
   useEffect(() => {
     // Conditional rendering to check if the object is available
     if (quiz) {
       // Update the editQuizIndex state with data from the current question
       setEditQuizIndex({
-        // Get the text of the current question, defaulting to an empty string if not available
-        editQuestionText: quiz.questions[currentQuestionIndex]?.questionText || '',
-        // Get the correct answer for the current question, defaulting to an empty string if not available
-        editCorrectAnswer: quiz.questions[currentQuestionIndex]?.correctAnswer || '',
-        // Get the options for the current question, defaulting to an array of three empty strings if not available
-        editOptions: quiz.questions[currentQuestionIndex]?.options || ['','','']
+        editQuestionText: quiz.questions[currentQuestionIndex]?.questionText || '',// Set the question text or empty if undefined
+        editCorrectAnswer: quiz.questions[currentQuestionIndex]?.correctAnswer || '',// Set the correct answer or empty if undefined
+        editOptions: quiz.questions[currentQuestionIndex]?.options || ['', '', '']// Set options or default to 3 empty strings
       })
     }
   }, [quiz, currentQuestionIndex, setEditQuizIndex])
@@ -46,21 +43,28 @@ export default function EditQuiz(
 //============EVENT LISTENERS=================
 
   // Function to edit a question
-  const handleEditQuestion = () => {
-    //Conditional rendering 
+const handleEditQuestion = () => {
+  // Conditional rendering to check if there are any new questions to update
     if (newQuestions.length === 0) {
+      // If no questions are available, alert the user and stop the function execution
       alert('No questions to update');
-      return;//Exit early if an error occurs
+      return;// Exit the function
     }
-    const updatedQuestions = [...newQuestions];
+    // Copy the newQuestions array to avoid directly mutating the state
+  const updatedQuestions = [...newQuestions];
+  /* Update the specific question being edited by replacing its value 
+  with the current editQuizIndex state*/
     updatedQuestions[currentQuestionIndex] = { ...editQuizIndex };
-   
     setNewQuestions(updatedQuestions); // Update the state with the new list of questions
-    
-    setQuizList(//Update the quiz list (`quizList`) by mapping over it
+  // Update the quiz list with the modified quiz
+    setQuizList(
+      //Map over the existing quizzes
       quizList.map(q =>
+        // Check if the quiz's ID matches the ID of the quiz being edited
         q._id === quiz._id 
-          ? { ...q, questions: updatedQuestions, name: newQuizName } : q 
+          // Update the quiz's questions and name
+          ? { ...q, questions: updatedQuestions, name: newQuizName } 
+          : q  // If it doesn't match, return the quiz unchanged
       ));
   };
 
@@ -89,7 +93,7 @@ export default function EditQuiz(
             <input
               type='text'
               name='newQuizName'
-              value={newQuizName}
+              value={newQuizName}// The current value of the edited question
               onChange={(e) => setNewQuizName(e.target.value)}
               autoComplete='off'
               placeholder={quiz.name}
@@ -114,21 +118,20 @@ export default function EditQuiz(
                   <p className='labelText'>QUESTION:</p>
                 </label>
                 {/* New question input */}
-                <input
+               <input
                   type='text'
                   name='editQuestionText'
-                  value={editQuizIndex.editQuestionText}
+                  value={editQuizIndex.editQuestionText} // The current value of the edited question
                   onChange={(e) =>
                     setEditQuizIndex({
                       ...editQuizIndex,
-                      editQuestionText:
-                        e.target.value,
+                      editQuestionText: e.target.value, 
                     })}
                   autoComplete='off'
-                  placeholder={quiz.questions[currentQuestionIndex]?.questionText || ''}
+                  placeholder={quiz.questions[currentQuestionIndex]?.questionText || ''}// Placeholder shows current question text
                   id='editQuestion'
                   className='editQuizInput'
-                />        
+                />      
             </div>
             </Col>
             <Col xs={6} className='editQuiz'> 
@@ -139,14 +142,14 @@ export default function EditQuiz(
                 </label>
                 {/* New correct answer input */}
                 <input
-                  type='text'
-                  name='editCorrectAnswer'
-                  value={editQuizIndex.editCorrectAnswer}
+                  type='text'//Input type
+                  name='editCorrectAnswer'// Name of the input field
+                  value={editQuizIndex.editCorrectAnswer}// The value of the input is bound to the 'editCorrectAnswer' property in the editQuizIndex state
                   onChange={(e) => setEditQuizIndex({
-                    ...editQuizIndex,
-                    editCorrectAnswer: e.target.value,
+                    ...editQuizIndex,// Spread the current state to retain other properties
+                    editCorrectAnswer: e.target.value,// Update only the 'editCorrectAnswer' property with the new value from the input
                   })}
-                  autoComplete='off'
+                  autoComplete='off'//Disable the browser from autocompleting the previous answers
                   placeholder={quiz.questions[currentQuestionIndex]
                     ?.correctAnswer || ''}
                   id='editAnswer'
@@ -156,27 +159,30 @@ export default function EditQuiz(
              </Col>
           </Row>
             {/* Input for each option */}
-          {[0, 1, 2].map((optionIndex) => (
+         {[0, 1, 2].map((optionIndex) => (
             <Row className='editQuizRow' key={optionIndex}>
               <Col xs={6}  className='editQuizCol'>
               <div className='editField'>             
-              <label><p className='labelText'>ALTERNATIVE ANSWER:</p></label>
+              <label className='editQuizLabel'>
+                <p className='labelText'>ALTERNATIVE ANSWER:</p>
+              </label>
+              {/* Input for new option */}
                 <input
-                  type='text'
-                  name={`editOption${optionIndex + 1}`}
-                  value={editQuizIndex.editOptions[optionIndex]}
+                  type='text'//Input type
+                    name={`editOption${optionIndex + 1}`}// Set a unique name for each option input
+                    value={editQuizIndex.editOptions[optionIndex]}// The current value of the edited option
+                    //The value of the input is controlled by the 'editOptions' array in editQuizIndex state
                   onChange={(e) => {
-                    const updatedOptions = [...editQuizIndex.editOptions];
-                    updatedOptions[optionIndex] = e.target.value;
-                    setEditQuizIndex({ ...editQuizIndex, editOptions: updatedOptions });
+                    const updatedOptions = [...editQuizIndex.editOptions];// Clone the existing options array to maintain immutability
+                    updatedOptions[optionIndex] = e.target.value;  // Update the specific option in state
+                    setEditQuizIndex({ ...editQuizIndex, editOptions: updatedOptions });// Set the updated options array back to the state
                   }}
-                  placeholder={quiz.questions[currentQuestionIndex]?.options[optionIndex] || ''}
-                  id={`editOption${optionIndex + 1}`}
+                    placeholder={quiz.questions[currentQuestionIndex]?.options[optionIndex] || ''}// Placeholder shows current option value
+                    id={`editOption${optionIndex + 1}`}// Assign a unique ID for each option input field
                   className='editQuizInput'
-                  
                 />
                 </div>  
-              </Col>          
+              </Col>             
             </Row>
           ))}
           {/* <Row className='editQuizRow'>
