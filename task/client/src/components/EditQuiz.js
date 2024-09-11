@@ -1,9 +1,9 @@
 // Import necessary modules and packages
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';// Import the React module to use React functionalities
 //Bootstrap
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Button from 'react-bootstrap/Button';
+import Row from 'react-bootstrap/Row'; // Import the Row component from react-bootstrap
+import Col from 'react-bootstrap/Col'; // Import the Col component from react-bootstrap
+import Button from 'react-bootstrap/Button'; // Import the Button component from react-bootstrap
 
 //EditQuiz function component
 export default function EditQuiz(
@@ -24,25 +24,33 @@ export default function EditQuiz(
   // State to track the index of the current question being edited
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
-  //===============USE EFFECT HOOK======================
-    // Initialize editQuizIndex with current question data
+  //=========USE EFFECT HOOK==================
+  /* Effect to initialize and update the editQuizIndex state when 
+  quiz or currentQuestionIndex changes*/
   useEffect(() => {
+    // Conditional rendering to check if the object is available
     if (quiz) {
+      // Update the editQuizIndex state with data from the current question
       setEditQuizIndex({
+        // Get the text of the current question, defaulting to an empty string if not available
         editQuestionText: quiz.questions[currentQuestionIndex]?.questionText || '',
+        // Get the correct answer for the current question, defaulting to an empty string if not available
         editCorrectAnswer: quiz.questions[currentQuestionIndex]?.correctAnswer || '',
+        // Get the options for the current question, defaulting to an array of three empty strings if not available
         editOptions: quiz.questions[currentQuestionIndex]?.options || ['','','']
       })
     }
   }, [quiz, currentQuestionIndex, setEditQuizIndex])
+  // Dependencies array: the effect runs when quiz, currentQuestionIndex, or setEditQuizIndex changes
 
 //============EVENT LISTENERS=================
 
   // Function to edit a question
   const handleEditQuestion = () => {
+    //Conditional rendering 
     if (newQuestions.length === 0) {
       alert('No questions to update');
-      return;
+      return;//Exit early if an error occurs
     }
     const updatedQuestions = [...newQuestions];
     updatedQuestions[currentQuestionIndex] = { ...editQuizIndex };
