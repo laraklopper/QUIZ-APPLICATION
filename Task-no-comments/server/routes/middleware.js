@@ -4,11 +4,9 @@ const jwt = require('jsonwebtoken');
 
 // Middleware to verify JWT and extract user info
 const authenticateToken = (req, res, next) => {
-    // Extract the authorization header
     const authHeader = req.headers['authorization'];
-    // Extract the token from the header
+    
     const token = authHeader && authHeader.split(' ')[1];
-
     if (token == null) return res.sendStatus(401);
 
     // Verify the token using a secret key
@@ -21,14 +19,13 @@ const authenticateToken = (req, res, next) => {
 
 //Middleware to verify the JWT token
 const checkJwtToken = (req, res, next) => {
-    // Retrieve the authorization header from the request
     const authHeader = req.headers.authorization 
    
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
         return res.status(401).json(
-            { message: 'Access denied. No token provided.' });
+            { message: 'Access denied. No token provided.' }
+        );
     }
-    // Extract the token from the authorization header
     const token = authHeader.split(' ')[1];
 
     try {
@@ -45,6 +42,7 @@ const checkJwtToken = (req, res, next) => {
         res.status(400).json({ message: 'Invalid token.' });
     }
 }
+
 
 
 
