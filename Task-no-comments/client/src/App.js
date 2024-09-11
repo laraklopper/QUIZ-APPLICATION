@@ -17,14 +17,14 @@ import Page4 from './pages/Page4';
 export default function App() {
   //=======STATE VARIABLES===============
   //User variables
-  const [users, setUsers] = useState([]);
+const [users, setUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [userData, setUserData] = useState({
-    username: '',
-    email: '',
-    dateOfBirth: '',
-    admin: '',
-    password: '',
+    username: '',        
+    email: '',           
+    dateOfBirth: '',     
+    admin: '',           
+    password: '',        
   });
   //Quiz variables
     const [quizList, setQuizList] = useState([]);
@@ -51,123 +51,137 @@ export default function App() {
   
   //============USE EFFECT HOOK TO FETCH USERS======================
   //Fetch users when the component mounts or when loggedIn changes
-  useEffect(() => {
+ useEffect(() => {
     //Function to fetch users
-   const fetchUsers = async () => {
-  try {
-    const token = localStorage.getItem('token');
-    if (!token || !loggedIn) return;
-    
-  // Send a GET request to the server to fetch users
-    const response = await fetch('http://localhost:3001/users/findUsers', {
-      method: 'GET',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+    const fetchUsers = async () => {
+      try {
+        // Retrieve JWT token from localStorage for authentication
+        const token = localStorage.getItem('token');
+        if (!token || !loggedIn) return;// If no token is found, exit the function
+
+      // Send a GET request to the server to fetch users
+         const response = await fetch('http://localhost:3001/users/findUsers', {
+           method: 'GET',//HTTP request methode
+           mode: 'cors',//Enable Cross-Origin Resource Sharing 
+           headers: {
+             'Content-Type': 'application/json',// Specify the content type for the request
+             'Authorization': `Bearer ${token}`,// Attach JWT token for authorization
+          }
+        });
+
+        //Conditional rendering to check if the response is not OK (status code not in the range 200-299) 
+        if (!response.ok) {
+          throw new Error('Failed to fetch users');//Throw an error message if the GET request is unsuccessful
+        }
+
+        // Parse the JSON data from the response body
+        const fetchedUsers = await response.json();
+        setUsers(fetchedUsers); 
+      } 
+      catch (error) {
+        console.error('Error fetching users', error.message);//Log an error message in the console for debugging purposes
+        setError('Error fetching users');//Set the error state with an error message
       }
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to fetch users');
-    }
-
-    const fetchedUsers = await response.json();
-    setUsers(fetchedUsers);
-  } catch (error) {
-    console.error('Error fetching users', error.message);
-    setError('Error fetching users');
-  }
-};
+    };
 
     //Function to fetch the current user details
-  const fetchCurrentUser = async () => {
-  try {
-    const token = localStorage.getItem('token');
-    if (!token) return;
-    
-    //Send a GET request to the server to fetch the current user id
-    const response = await fetch('http://localhost:3001/users/userId', {
-      method: 'GET',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+    const fetchCurrentUser = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) return;
+        
+        //Send a GET request to the server to fetch the current user id
+        const response = await fetch('http://localhost:3001/users/userId', {
+          method: 'GET',
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/json',// Specify the content type 
+            'Authorization': `Bearer ${token}`,// Attach JWT token 
+          }
+        });
+
+        //Response handling
+        if (!response.ok) {
+          throw new Error('Failed to fetch current user');
+        }
+
+        // Parse the JSON data from the response body
+        const fetchedCurrentUser = await response.json();
+        setCurrentUser(fetchedCurrentUser);
       }
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to fetch current user');
-    }
-
-    const fetchedCurrentUser = await response.json();
-    setCurrentUser(fetchedCurrentUser);
-  } catch (error) {
-    console.error('Error fetching current user', error.message);
-    setError('Error fetching current user');
-  }
-};
+      catch (error) {
+        console.error('Error fetching current user', error.message);
+        setError('Error fetching current user');
+      }
+    };
 
     //Conditional rendering to check if the user is logged in
     if (loggedIn) {
-      fetchUsers();// Call the FetchUsers function to fetch the list of users
-      fetchCurrentUser();//Call the FetchCurrentUser function to fetch the current user's details
+      fetchUsers();// Call the FetchUsers function
+      fetchCurrentUser();//Call the FetchCurrentUser function 
     }
-  }, [loggedIn,  navigate/*, fetchUsers, fetchCurrentUser*/]);
+  }, [loggedIn,  navigate]);
+ 
  
   //==============REQUESTS========================
   //-----------GET-------------------------
 // Function to fetch quizzes
-  const fetchQuizzes = useCallback(async () => {
-  try {
-    const token = localStorage.getItem('token');
-//Send a GET request to the server to find all quizzes
-    const response = await fetch('http://localhost:3001/quiz/findQuizzes', {
-      method: 'GET',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+  const fetchQuizzes = useCallback(async () => {//Define an async function to fetch quizzes
+    try {
+      
+      const token = localStorage.getItem('token');
+      
+      //Send a GET request to the server to find all quizzes
+      const response = await fetch('http://localhost:3001/quiz/findQuizzes', {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',// Specify the Content-Type
+          'Authorization': `Bearer ${token}`,// Attach JWT token for authorization
+        }
+      });
+      //Response handling
+      if (!response.ok) {
+        throw new Error('Failed to fetch quizzes');
       }
-    });
+      const quizData = await response.json();
 
-    if (!response.ok) {
-      throw new Error('Failed to fetch quizzes');
+      if (quizData && Array.isArray(quizData.quizList)) {
+        setQuizList(quizData.quizList);// Update the quizList state 
+      } else {
+        throw new Error('Invalid quiz data');
+      }
+    
+    } 
+    catch (error) {
+      console.error('Error fetching quizzes:', error);
+      setError('Error fetching quizzes');
     }
-
-    const quizData = await response.json();
-
-    if (quizData && Array.isArray(quizData.quizList)) {
-      setQuizList(quizData.quizList);
-    } else {
-      throw new Error('Invalid quiz data');
-    }
-
-  } catch (error) {
-    console.error('Error fetching quizzes:', error);
-    setError('Error fetching quizzes');
-  }
-}, []);
- /* The useCallback hook ensures that the function is not 
-  recreated on every render*/
+  },[])
 
  
 
 //===========EVENT LISTENERS============================
-  // Function to handle user logout
- const logout = useCallback(() => {
-  localStorage.removeItem('token');
-  localStorage.removeItem('username');
-  localStorage.removeItem('loggedIn');
-  setLoggedIn(false);
-  setError('');
-  setUserData({ username: '', password: '' });
-  navigate('/');
-}, [navigate]);
+ // Function to handle user logout
+  /* useCallback hook is to handle user logout, 
+  memoized to avoid unnecessary re-renders*/
+  const logout = useCallback (() => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('username');
+    localStorage.removeItem('loggedIn'); 
+    /* Update local state to reflect that the
+    user is no longer logged in*/
+    setLoggedIn(false);
+    setError(''); 
+    setUserData({ username: '', password: '' });
+    /*Use the navigate function to redirect the 
+    user to the login page after logging out*/
+    navigate('/');
+  }, [navigate]);
 
   //===========JSX RENDERING=============================
 
-  return (
+ return (
     <>
       {/* App Container */}
         <Container>
