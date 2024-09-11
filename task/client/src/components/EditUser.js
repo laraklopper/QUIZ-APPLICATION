@@ -1,12 +1,12 @@
 // Import necessary modules and packages
-import React from 'react'
+import React from 'react';// Import the React module to use React functionalities
 //Bootstrap
-import Row from 'react-bootstrap/Row'; 
-import Col from 'react-bootstrap/Col'; 
-import Button from 'react-bootstrap/Button';
+import Row from 'react-bootstrap/Row'; // Import the Row component from react-bootstrap
+import Col from 'react-bootstrap/Col'; // Import the Col component from react-bootstrap
+import Button from 'react-bootstrap/Button'; // Import the Button component from react-bootstrap
 
 //Edit User function component
-export default function EditUser(
+export default function EditUser(//Export default editUser function component
   {//PROPS PASSED FROM PARENT COMPONENT 
         editUserData, 
         handleInputChange, 
@@ -15,11 +15,11 @@ export default function EditUser(
 ){
 
   //=========EVENT LISTENERS================
-  // Function to handle form submission
+ // Function to handle form submission
   const handleUpdate = (e) => {
-    e.preventDefault()
-    console.log('Edit user account');
-    editUser()
+    e.preventDefault()//Prevent default form submission 
+    console.log('Edit user account');//Log a message in the console for debugging purposes
+    editUser()//Call the editUser function
   }
   
     //===================JSX RENDERING===============
