@@ -10,7 +10,7 @@ import PageFooter from '../components/PageFooter';
 import RegistrationForm from '../components/RegistrationForm';
 
 //Registration Function Component
-export default function Registration(
+export default function Registration(//Export the default Registration component
   {//PROPS PASSED FROM PARENT COMPONENT
     setError
   }
@@ -29,9 +29,10 @@ export default function Registration(
      //Function to register a new user  
   const addUser = async () => {//Define an async function to register a new user
     try {
+      //Send a POST request to the server
       const response = await fetch('http://localhost:3001/users/register', {
-        method: 'POST',//HTTP request method
-        mode: 'cors',// Enable Cross-Origin Resource Sharing
+        method: 'POST',
+        mode: 'cors',
         headers: {
           'Content-Type': 'application/json',//Specify the Content-Type as JSON
         },
@@ -44,7 +45,8 @@ export default function Registration(
           password: newUserData.newPassword
         })
       });
-      // Conditional rendering to check if the response is successful (status code in the range 200-299)
+      
+      //Response handling
       if (response.ok) {
         // Clear new user data from state
         setNewUserData({
@@ -54,18 +56,18 @@ export default function Registration(
           newAdmin: false,
           newPassword: ''
         });
-        alert('New User successfully registered')// Notify user of successful registration
+        alert('New User successfully registered')
       } else {
         // Handle errors if response is not successful
-        const errorData = await response.json(); // Attempt to parse the JSON error response from the server
-        // Throw a new Error with the message from the server's response
-        // If the server's response does not include a message, a default error message is used
+        const errorData = await response.json();
+
         throw new Error(errorData.message || 'Error adding user');
       }
     } catch (error) {
-      setError(`Error adding new user: ${error.message}`);//Set the Error State
-      console.error(`Error adding new user: ${error.message}`);//Log an error message in the console for debugging purposes
+      setError(`Error adding new user: ${error.message}`);
+      console.error(`Error adding new user: ${error.message}`);
     }
+  };
   };
    
   //========JSX RENDERING=================
