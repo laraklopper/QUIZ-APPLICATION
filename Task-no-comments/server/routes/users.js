@@ -65,7 +65,6 @@ router.get('/userId',authenticateToken, async (req, res) => {
         and fetch the user excluding the password field*/
         const user = await User.findById(req.user.userId).select('-password');
         
-        //Conditional rendering to check if the user exists
          if (!user) {
              console.error('User not found');
              return res.status(400).json({ message: 'User Not Found'})
@@ -76,7 +75,9 @@ router.get('/userId',authenticateToken, async (req, res) => {
     } 
     catch (error) {
         console.error('Error fetching Users', error.message);
-        res.status(500).json({message: 'Internal Server Error', error: error.message})          
+        res.status(500).json(
+            {message: 'Internal Server Error', error: error.message}
+        )          
     }
 })
 
@@ -90,7 +91,7 @@ router.get('/findUsers', async (req, res) => {
         const users = await User.find(query); 
     
         console.log(users);
-        res.status(200).json(users);// Send the list of users as the response
+        res.status(200).json(users);
     } 
     catch (error) {
         console.error('Error fetching users', error.message);
@@ -102,19 +103,18 @@ router.get('/findUsers', async (req, res) => {
 
 //-------------POST-------------------
 router.post('/login', async (req, res) => {
-    console.log(req.body);//Log the request body in the console for debugging purposes
-    // console.log('User Login')//Log a message in the console for debugging purposes
+    console.log(req.body);
+    // console.log('User Login');
 
     try {
         // Extract username and password from the request body
         const { username, password } = req.body;
         // Find the user in the database by username and password
         const user = await User.findOne({ username, password });
-        console.log(user); //Log the user in console for debugging purposes
+        console.log(user); 
         
-        //Conditional rendering to check if the user exists
         if (!user) {
-            throw new Error('User not found');//Throw an error message if no user is found
+            throw new Error('User not found');
         }
       
         if (username === user.username && password === user.password) {
