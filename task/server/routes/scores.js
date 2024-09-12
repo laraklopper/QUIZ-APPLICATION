@@ -96,7 +96,8 @@ router.get('/allScores', async (req, res) => {
 });*/
 //-----------POST----------------------
 //Route to add a new score
-router.post('/addScore', async (req, res) => {
+//Route to add a new score
+ /*router.post('/addScore', async (req, res) => {
     console.log(req.body); // Log the request body for debugging purposes
 
     try {
@@ -104,7 +105,7 @@ router.post('/addScore', async (req, res) => {
             username, // Extract username from request body
             name,     // Extract quiz name from request body
             score,    // Extract score from request body
-            attempts  // Extract number of attempts from request body
+            // attempts  // Extract number of attempts from request body
         } = req.body;
 
         // Conditional rendering
@@ -136,7 +137,7 @@ router.post('/addScore', async (req, res) => {
             // Update existing score if the new score is higher
             if (score > existingScore.score) {
                 existingScore.score = score;// Update score
-                existingScore.attempts += 1; // Increment attempts
+                // existingScore.attempts += 1; // Increment attempts
                 const updatedScore = await existingScore.save();// Save updated score
                 await updatedScore.populate('userId quizId').execPopulate();// Populate userId and quizId
                 return res.status(200).json(updatedScore);// Return updated score
@@ -151,7 +152,7 @@ router.post('/addScore', async (req, res) => {
                 userId: user._id,// Set the userId field to the _id of the user document
                 quizId: quiz._id,// Set the userId field to the _id of the user document
                 score: Math.floor(score),// Ensure that the value is an integer
-                attempts: attempts || 1// Set the attempts field to the provided value or default to 1 if not provided
+                // attempts: attempts || 1// Set the attempts field to the provided value or default to 1 if not provided
             });
             const savedScore = await newScore.save();//Save the new Score
             await savedScore.populate('userId quizId').execPopulate();//Populate the userId
@@ -161,24 +162,25 @@ router.post('/addScore', async (req, res) => {
         console.error('Error saving score:', error);//Log an error message in the console for debugging purposes
         return res.status(500).json({ error: error.message });// Return a 500 (Internal Server Error) status response
     }
-});
-/*router.post('/addScore', async (req, res) => {
-  try {
-    const { userId, quizId, score, attempts } = req.body;
-    const newScore = new Score({
-      userId,
-      quizId,
-      score,
-      attempts
-    });
-    const savedScore await newScore.save();
-    res.status(201).json({savedScore});
-      console.log(savedScore)
-  } catch (error) {
-    res.status(500).json({ message: 'Error adding score' });
-      console.error('Error saving score')
-  }
 });*/
+router.post('/addScore', async(req, res) => {
+    console.log(req.body);
+
+    try {
+        const { username, name, score } = req.body
+        const newScore = new Score({username, name, score})
+
+        const savedScore =  newScore.save();
+
+        res.status(201).json(savedScore)
+        console.log(savedScore);
+        
+    } catch (error) {
+        console.error('Error saving score:', error);//Log an error message in the console for debugging purposes
+        return res.status(500).json({ error: error.message });// Return a 500 (Internal Server Error) status response
+    }
+})
+
 
 //-------------PUT-----------------------
 //Route to edit existing score
