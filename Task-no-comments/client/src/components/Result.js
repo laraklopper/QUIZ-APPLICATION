@@ -13,16 +13,17 @@ export default function Result({//Export default Result function component
   totalQuestions,
   currentUser,
 }) {
-//=======STATE VARIABLES===============
+  //===========STATE VARIABLES=================
   const [showScore, setShowScore] = useState(true);
+  const [submitted, setSubmitted] = useState(false)
+  const [submissionError, setSubmissionError] = useState(null)
 
   //--------------EVENT LISTENERS---------------
-
   // Function to submit score
- const handleSubmitScore = /*async*/ (e) => {
+  const handleSubmitScore = /*async*/ (e) => {
     // e.preventDefault();
     setSubmitted(true); 
-    setSubmissionError(null); // Clear previous errors
+    setSubmissionError(null); 
     try {
       /*await*/ addScore(); // Call the addScore function 
       console.log('Score successfully submitted');
@@ -30,7 +31,7 @@ export default function Result({//Export default Result function component
     } catch (error) {
       setSubmissionError('Failed to save score');
       console.log('Failed to save score', error.message);
-      setSubmitted(false);
+      setSubmitted(false); 
     }
   };
 
@@ -39,19 +40,18 @@ export default function Result({//Export default Result function component
     setShowScore(false);
   };
 
-  // Function to display the current date in a readable format
-  const currentDate = (date) => {
-    const options = {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
-    };
-    return new Date(date).toLocaleDateString('en-GB', options);
+  // Function to display the current date format
+  const currentDate = () => {
+    const options = { 
+      day: '2-digit', 
+      month: '2-digit', 
+      year: 'numeric' };
+    return new Date().toLocaleDateString('en-GB', options);
   };
 
   //=============JSX RENDERING=================
 
- return (
+  return (
     showScore && (
       <div id='results'>
         <form onSubmit={handleSubmitScore}>
