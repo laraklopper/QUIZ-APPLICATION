@@ -32,7 +32,12 @@ export default function QuizDisplay(//Export default quizDisplay component
 
     //=========REQUESTS============
     //--------POST------------
-  
+  const addScore = useCallback(async() => {
+    try{
+      const token = localStorage.getItem('token');
+      const existingScore = await fetch
+    }catch(error){}
+  })
   // Function to add the user Score
   const addScore = useCallback(async (e) => {//Define an async function to add a users Score
     e.preventDefault()//Prevent default form submission
