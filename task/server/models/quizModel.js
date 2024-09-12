@@ -1,6 +1,6 @@
 // Import necessary modules and packages
 const mongoose = require('mongoose'); // Import the Mongoose library
-const autopopulate = require('mongoose-autopopulate');// Import the autopopulate plugin for Mongoose
+// const autopopulate = require('mongoose-autopopulate');// Import the autopopulate plugin for Mongoose
 
 // Define the schema for quizzes
 const quizSchema = new mongoose.Schema({
@@ -13,21 +13,16 @@ const quizSchema = new mongoose.Schema({
         set: (v) => v.toUpperCase(),// A setter to automatically convert quiz name to uppercase
     },
     //Username of the person who created the quiz
-    userId: {        
-        type: mongoose.Schema.Types.ObjectId,// Define the datatype as ObjectId
-        required: [true, 'Username is required'], //Indicate that the username is required             
-        ref: 'User',  // Reference the User collection
-        autopopulate: true,// Automatically populate the quiz field
-    },
-    /*
-    //Username of the person who created the quiz
     username:{
-        type: String,
-        //Indicate that the username is required and 
-        //add a custom error message
-        requiered: [true, username is required], 
+        type: String,//Define the datatype as a string
+        required: [true, 'Username is required'],
     },
-    */
+  /*userId: {        
+        type: mongoose.Schema.Types.ObjectId,// Define the datatype as ObjectId
+        required: [true, 'Username is required'],            
+        ref: 'User',  
+        autopopulate: true,
+    },*/    
     //Field for questions containing an array of objects
     questions: {
         type: [
