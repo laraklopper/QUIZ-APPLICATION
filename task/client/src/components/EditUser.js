@@ -27,10 +27,12 @@ export default function EditUser(//Export default editUser function component
   return (
         <div>
           <Row>
-            <Col><h3 className='h3'>EDIT ACCOUNT</h3></Col>
+            <Col md={12}>
+              <h3 className='h3'>EDIT ACCOUNT</h3>
+            </Col>
           </Row>
           {/* Form to edit user account */}
-          <form onSubmit={handleUpdate}>
+          <form onSubmit={handleUpdate} id='editUserForm'>
             <Row className='editUserRow'>
               <Col xs={6} className='editUserCol'>
               {/* New username input */}
@@ -61,17 +63,18 @@ export default function EditUser(//Export default editUser function component
               </Col>
             </Row>
               <Row>
-                  <Col xs={12} md={8}>
-                  </Col>
+                  <Col xs={12} md={8}></Col>
                   <Col xs={6} md={4}>
                       <Button 
                       variant="warning" 
-                      type='submit'>
+                      type='submit'
+                      id='editAccountBtn'
+                      >
                         EDIT ACCOUNT
                         </Button>
                   </Col>
               </Row>
           </form>
-        </div >
+        </div>
   )
 }
