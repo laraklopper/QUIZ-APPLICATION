@@ -1,10 +1,9 @@
 // Import necessary modules and packages
-import React, { useState } from 'react';
+import React, { useState } from 'react';// Import the React module to use React functionalities
 //Bootstrap
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Button from 'react-bootstrap/Button';
-
+import Row from 'react-bootstrap/Row'; // Import the Row component from react-bootstrap
+import Col from 'react-bootstrap/Col'; // Import the Col component from react-bootstrap
+import Button from 'react-bootstrap/Button'; // Import the Button component from react-bootstrap
 
 //Add quiz function component
 export default function AddQuiz(
@@ -18,8 +17,7 @@ export default function AddQuiz(
   setCurrentQuestion,
 }) {
   //===========STATE VARIABLES====================
-  // State to manage the error message displayed to the user
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');// State to manage the error message displayed to the user
 
   //============EVENT LISTENERS=========================
   //Function to add a new question
@@ -44,7 +42,7 @@ export default function AddQuiz(
     );
   };
 
-  // Function to delete a question
+ // Function to delete a question
   const deleteNewQuestion =(index) => {
     const newQuestions = questions.filter((_, i) => i !== index); 
     setQuestions(newQuestions)
@@ -55,13 +53,12 @@ export default function AddQuiz(
     if (!quizName || questions.length === 0) {
       setErrorMessage('Please enter a quiz name and add at least one question.');
       return;
-    }
-    // Call the addNewQuiz function passed as a prop
-    addNewQuiz();
+    }    
+    addNewQuiz();// Call the addNewQuiz function
   };
 
   //============JSX RENDERING================
-  return (
+   return (
     <div>
       <Row>
         <Col>
