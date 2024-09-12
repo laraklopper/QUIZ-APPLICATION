@@ -5,7 +5,11 @@ const autopopulate = require('mongoose-autopopulate');// Import the autopopulate
 //Define the score schema
 const scoreSchema = new mongoose.Schema({
     /* Field for username of the user who
-    took the quiz*/
+    took the quiz*/ 
+    username: {
+        type: String,
+        required: true,
+    },
     /*userId: {
         type: mongoose.Schema.Types.ObjectId,// Define the type as ObjectId
         ref: 'User',// Reference the User collection
@@ -16,12 +20,12 @@ const scoreSchema = new mongoose.Schema({
             validator: mongoose.Types.ObjectId.isValid,// Validate the ObjectId format
             message: 'Invalid user Id',//Custom error message if validation fails
         },
-    },*/
-    username: {
-        type: String,
-        required: true,
-    },
+    },*/ 
     // Field for the name of the quiz taken
+     username:{
+        type: String,//Define the datatype as a string
+        required: [true, 'Username is required'],
+    },
     /*quizId: {
         type: mongoose.Schema.Types.ObjectId,// Define the type as ObjectId
         ref: 'Quiz',// Reference the Quiz collection
@@ -33,12 +37,6 @@ const scoreSchema = new mongoose.Schema({
             message: 'Invalid quiz Id',//Custom error message if validation fails
         },
     },*/
-    // Field for the name of the quiz taken
-    /*name: {
-        type: String,
-        required:[true, 'Quiz name is required'],   
-    }
-    */
     score: {
         type: Number,  // Define the type as Number
         default: 0,// Default score value
