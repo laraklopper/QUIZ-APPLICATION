@@ -15,6 +15,36 @@ router.use(express.json()); // Parse incoming JSON requests
 router.use(express.urlencoded({ extended: true })); // Parse URL-encoded data
 mongoose.set('strictPopulate', false); // Disable strict population checks in Mongoose
 
+//=========CUSTOM MIDDLEWARE===========
+//Middleware to verify the JWT token
+const checkJwtToken = (req, res, next) => {
+    const authHeader = req.headers.authorization;
+
+    //Conditional rendering
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        // If there's no token or it doesn't start with 'Bearer', return a 401 response
+        return res.status(401).json(
+            { message: 'Access denied. No token provided.' });
+    }
+    const token = authHeader.split(' ')[1];// Extract the authorization header
+
+    try {
+        // Verify the token using the secret key
+        const decoded = jwt.verify(
+            token, 
+            'secretKey' 
+            /*process.env.JWT_SECRET*/,
+        );
+        req.user = decoded; // Attach decoded user information to the request object
+        console.log('Token provided');
+        next();
+    }
+    catch (error) {
+        //Error handling
+        console.error('No token attatched to the request');
+        res.status(400).json({ message: 'Invalid token.' });
+    }
+}
 //=============ROUTES=====================
 /*
 |================================================|
@@ -30,6 +60,26 @@ mongoose.set('strictPopulate', false); // Disable strict population checks in Mo
 |================|===========|===================|
 */
 //-------------GET-----------------
+//Find userScore for a specific quiz for a specific user by username and quizname
+router.get('/findQuizScores/:id', checkJwtToken, async (req, res) => {
+    // console.log('Finding quiz score');
+    
+    try {
+        const { id } = req.params//Extract the quiz score ID from the URL parameters
+
+        const quizScore = await Score.findById( id ).exec();// Find the score by the given ID
+
+        if (!quizScore) {
+            return res.status(404).json({ error: 'Score not found' });
+        }
+        res.json(quizScore)
+        console.log(quizScore);    
+    } 
+    catch (error) {
+        console.error('Error finding quiz score:', error.message);
+        res.status(500).json({ message: error.message });
+    }
+})
 // Route to fetch scores for a single user
 router.get('/findScores/:username', async (req, res) => {
     try {
@@ -42,8 +92,7 @@ router.get('/findScores/:username', async (req, res) => {
             return res.status(404).json({ error: 'User not found' }); // Send a 404(Not Found) response if the user does not exist
         }
         // Fetch the user score based on the user id
-        const result = await Score.find(// Find scores where userId matches the fetched user._id
-            { userId: (await User.findOne({ username }))._id })
+            const result = await Score.find({ userId: user._id })
             .populate('quizId')// Populate quizId field with quiz details
             .populate('userId')// Populate userId field with user details
             .sort({ createdAt: -1 });// Sort the results by creation date in descending order
@@ -56,6 +105,26 @@ router.get('/findScores/:username', async (req, res) => {
         return res.status(500).json({ error: error.message });// Return a 500 (Internal Server Error) status response
     }
 });
+/*
+// Route to fetch all scores for a single user for all quizzes
+router.get('/findScores/:id', checkJwtToken, async (req, res) => {
+    try {
+        const {id} = req.params
+
+        const userScores = await Score.find({username}).exec();
+
+        if (!userScores || userScores.length === 0) {
+            return res.status(404).json({ message: 'No scores found for this user' });
+        }
+
+
+        res.json({ userScores });
+    } catch (error) {
+        console.error('Error finding user scores:', error);
+        res.status(500).json({ message: 'Error fetching scores' });
+    }
+})
+    */
 
 // Route to fetch all scores
 router.get('/allScores', async (req, res) => {
@@ -70,6 +139,22 @@ router.get('/allScores', async (req, res) => {
     } catch (error) {
         console.error('Error fetching all scores:', error);//Log an error message in the console for debugging purposes
         return res.status(500).json({ error: error.message });// Return a 500 (Internal Server Error) status response
+    }
+});
+
+//Route to fetch scores by quizName
+router.get('/findScores', async (req, res) => {
+    try {
+        // Fetch all score documents from the database
+        const scores = await Score.find({})
+            .populate('quizId')
+            .populate('userId')
+            .sort({ createdAt: -1 });
+        // Return the fetched scores in the response
+        res.json({ scores });
+    } catch (error) {
+        console.error('Error fetching all scores:', error);
+        return res.status(500).json({ error: error.message });
     }
 });
 
