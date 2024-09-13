@@ -1,46 +1,45 @@
-// Import necessary modules and packages
-const express = require('express');
-const router = express.Router();
-const cors = require('cors');
+ Import necessary modules and packages
+const express = require('express');// Import Express to handle routing
+const router = express.Router();// Create a new router object
+const cors = require('cors');// Import CORS middleware to handle cross-origin requests
 // Import the jsonwebtoken module for handling JSON Web Tokens
 const jwt = require('jsonwebtoken');
-const mongoose = require('mongoose');
+const mongoose = require('mongoose');// Import Mongoose for MongoDB interaction
 //Schemas
-const Quiz = require('../models/quizModel');
-const bodyParser = require('body-parser');
-
+const Quiz = require('../models/quizModel');// Import the Quiz model
 //=======SETUP MIDDLEWARE===========
-router.use(cors());
-router.use(express.json());
-router.use(bodyParser.urlencoded({extended:true}))
-mongoose.set('strictPopulate', false);
+// Setup middleware
+router.use(cors()); // Enable CORS for cross-origin requests
+router.use(express.json()); // Parse incoming JSON requests
+// router.use(express.urlencoded({ extended: true })); // Parse URL-encoded data
+mongoose.set('strictPopulate', false); // Disable strict population checks in Mongoose
 
 //==============CUSTOM MIDDLEWARE======================
 //Middleware to verify the JWT token
 const checkJwtToken = (req, res, next) => {
-
     const authHeader = req.headers.authorization;
 
+    //Conditional rendering
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        // If there's no token or it doesn't start with 'Bearer', return a 401 response
         return res.status(401).json(
             { message: 'Access denied. No token provided.' });
     }
-    const token = authHeader.split(' ')[1];
+    const token = authHeader.split(' ')[1];// Extract the authorization header
 
     try {
         // Verify the token using the secret key
         const decoded = jwt.verify( token,'secretKey',);
-        req.user = decoded;
-        console.log('Token provided');
+        req.user = decoded; // Attach decoded user information to the request object
+        console.log('Token provided');// Proceed to the next middleware or route handler
         next();
     } 
     catch (error) {
         //Error handling
-        console.error('No token attatched to the request');
+        console.error('No token attatched to the request');//Log an error message in the console for debugging purposes
         res.status(400).json({ message: 'Invalid token.' });
     }
 }
-
 
 //=============ROUTES====================
 //------------------GET---------------
