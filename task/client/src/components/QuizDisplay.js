@@ -20,7 +20,8 @@ export default function QuizDisplay(//Export default quizDisplay component
     setQuizTimer,
     timer,
     setSelectedQuizId,
-    setUserScores
+    setUserScores,
+    // fetchScores
   }) {
     //======STATE VARIABLES=========== 
   const [quizIndex, setQuizIndex] = useState(0);// Current question index in the quiz
@@ -31,15 +32,74 @@ export default function QuizDisplay(//Export default quizDisplay component
 
 
     //=========REQUESTS============
-    //--------POST------------
+    //-------GET--------------------
+    const checkExistingScore = useCallback(async () => {
+      try {
+        const token = localStorage.getItem('token');
+        
+        if (!token) {
+          alert('Authentication required');
+          console.log();
+          return null;
+        }
 
+        const response = await fetch (`http://localhost:3001/scores/findQuizScores/${currentUser.username}`, {
+          method: 'GET',
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error ('Error fetching scores for the quiz')
+        }
+
+        const result = await response.json()
+        const existingScore = result.userScores.find(score => score.name === quizName)
+        return existingScore || null
+
+
+      } catch (error) {
+        console.error('Error fetching scores:', error.message);
+        setError('Error fetching scores');
+        return null
+      }
+    },[ quizName, setError, currentUser.username]) 
   
-  const addScore = useCallback(async() => {
-    try{
-      const token = localStorage.getItem('token');
-      const existingScore = await fetch
-    }catch(error){}
-  })
+ //--------PUT------------
+   //Function to update score if a score for the quiz already exists and is better than the prevous result/score
+  const updateScore = useCallback(async (scoreId) => {
+
+    try {
+      const token = localStorage.getItem('token')
+      if (!token) {
+        // throw new Error ('No token available')
+        return
+      }
+      //Send a PUT request to the server
+      const response = await fetch (`http://localhost:3001/scores/update/:${scoreId}`, {
+        method: 'PUT',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          score: currentScore
+        })
+      })
+
+      const result = await response.json();
+      setUserScores(prevScores => [result, ...prevScores])
+    } catch (error) {
+      console.error('Error saving score', error.message);
+      setError('Error saving score', error.message)
+    }
+  },[currentScore, setError, setUserScores])
+
+  //----------POST--------------------------------
   // Function to add the user Score
   const addScore = useCallback(async (e) => {//Define an async function to add a users Score
     e.preventDefault()//Prevent default form submission
@@ -81,72 +141,7 @@ export default function QuizDisplay(//Export default quizDisplay component
     }
   }, [currentUser, quizName, setError, setUserScores, currentScore])
 
-    // Function to add the user Score
-  const addScore = useCallback(async (e) => {
-    try {
-      // Fetch the existing score for the user and quiz
-      const existingScoreResponse = await fetch(`http://localhost:3001/scores/findQuizScores`, {
-        method: 'POST',
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: currentUser._id,
-          quizId: selectedQuizId
-        })
-      });
-
-      const existingScore = await existingScoreResponse.json();
-
-      if (existingScore) {
-        // If score exists, update it
-        const response = await fetch(`http://localhost:3001/scores/updateScore/${existingScore._id}`, {
-          method: 'PUT',
-          mode: 'cors',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            score: currentScore,
-            attempts: existingScore.attempts + 1
-          })
-        });
-
-        if (!response.ok) {
-          throw new Error('Error updating score');
-        }
-
-        const result = await response.json();
-        setUserScores(prevScores => [result, ...prevScores]);
-      } else {
-        // If no existing score, create a new one
-        const response = await fetch('http://localhost:3001/scores/addScore', {
-          method: 'POST',
-          mode: 'cors',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            userId: currentUser._id,
-            quizId: selectedQuizId,
-            score: currentScore,
-            attempts: 1
-          })
-        });
-
-        if (!response.ok) {
-          throw new Error('Error saving new score');
-        }
-
-        const result = await response.json();
-        setUserScores(prevScores => [result, ...prevScores]);
-      }
-    } catch (error) {
-      console.error('Error saving score', error.message);
-      setError('Error saving score', error.message);
-    }
-  }, [currentUser, selectedQuizId, currentScore, setUserScores, setError]);
+  
 
   //=======EVENT LISTENERS==========
   // Function to move to the next question
