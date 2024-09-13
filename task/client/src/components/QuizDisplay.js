@@ -32,6 +32,8 @@ export default function QuizDisplay(//Export default quizDisplay component
 
     //=========REQUESTS============
     //--------POST------------
+
+  
   const addScore = useCallback(async() => {
     try{
       const token = localStorage.getItem('token');
@@ -79,6 +81,72 @@ export default function QuizDisplay(//Export default quizDisplay component
     }
   }, [currentUser, quizName, setError, setUserScores, currentScore])
 
+    // Function to add the user Score
+  const addScore = useCallback(async (e) => {
+    try {
+      // Fetch the existing score for the user and quiz
+      const existingScoreResponse = await fetch(`http://localhost:3001/scores/findQuizScores`, {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: currentUser._id,
+          quizId: selectedQuizId
+        })
+      });
+
+      const existingScore = await existingScoreResponse.json();
+
+      if (existingScore) {
+        // If score exists, update it
+        const response = await fetch(`http://localhost:3001/scores/updateScore/${existingScore._id}`, {
+          method: 'PUT',
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            score: currentScore,
+            attempts: existingScore.attempts + 1
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error('Error updating score');
+        }
+
+        const result = await response.json();
+        setUserScores(prevScores => [result, ...prevScores]);
+      } else {
+        // If no existing score, create a new one
+        const response = await fetch('http://localhost:3001/scores/addScore', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userId: currentUser._id,
+            quizId: selectedQuizId,
+            score: currentScore,
+            attempts: 1
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error('Error saving new score');
+        }
+
+        const result = await response.json();
+        setUserScores(prevScores => [result, ...prevScores]);
+      }
+    } catch (error) {
+      console.error('Error saving score', error.message);
+      setError('Error saving score', error.message);
+    }
+  }, [currentUser, selectedQuizId, currentScore, setUserScores, setError]);
 
   //=======EVENT LISTENERS==========
   // Function to move to the next question
