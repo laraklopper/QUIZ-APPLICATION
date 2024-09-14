@@ -22,7 +22,16 @@ const quizSchema = new mongoose.Schema({
         required: [true, 'Username is required'],            
         ref: 'User',  
         autopopulate: true,
-    },*/    
+    },*/
+    /*
+     //Username of the person who created the quiz
+    createdBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        // Automatically populate the quiz field
+        autopopulate: true,
+        required: [true, 'Username is required'], 
+    },*/  
     //Field for questions containing an array of objects
     questions: {
         type: [
