@@ -1,75 +1,74 @@
 // Import necessary modules and packages
 const mongoose = require('mongoose');// Import the Mongoose library
-const autopopulate = require('mongoose-autopopulate');// Import the autopopulate plugin for Mongoose
+// const autopopulate = require('mongoose-autopopulate');// Import the autopopulate plugin for Mongoose
 
 //Define the score schema
 const scoreSchema = new mongoose.Schema({
     /* Field for username of the user who
-    took the quiz*/ 
-    username: {
+    took the quiz*/
+     username: {
         type: String,
-        required: true,
+        required: [true, 'username is required'],
     },
-    /*userId: {
-        type: mongoose.Schema.Types.ObjectId,// Define the type as ObjectId
+    /* userId: {
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'User',// Reference the User collection
         autopopulate: true,// Automatically populate the quiz field
-        required: true,//Indicate that the username is required
-        // Validate to ensure the quiz is a valid objectId
+        required: true,
+        //Validate to ensure the username is a valid objectId
         validate: {
-            validator: mongoose.Types.ObjectId.isValid,// Validate the ObjectId format
+            validator: mongoose.Types.ObjectId.isValid,
             message: 'Invalid user Id',//Custom error message if validation fails
         },
-    },*/ 
+    }, */
     // Field for the name of the quiz taken
-     username:{
-        type: String,//Define the datatype as a string
-        required: [true, 'Username is required'],
+     name: {
+        type: String,
+        required:[true, 'Quiz name is required'],   
     },
-    /*quizId: {
-        type: mongoose.Schema.Types.ObjectId,// Define the type as ObjectId
-        ref: 'Quiz',// Reference the Quiz collection
+    /* quizId: {
+        type: mongoose.Schema.Types.ObjectId,
+        // Reference the Quiz collection
+        ref: 'Quiz',
         autopopulate: true,// Automatically populate the quiz field
-        required: [true, 'Quiz name is required'],//Indicate that the quizName is required
+        required: [true, 'Quiz name is required'],
         // Validate to ensure the username is a valid objectId
-        validate:{
-            validator: mongoose.Types.ObjectId.isValid,// Validate the ObjectId format
+        validate: {
+            validator: mongoose.Types.ObjectId.isValid,
             message: 'Invalid quiz Id',//Custom error message if validation fails
         },
     },*/
+    //Field for the score
     score: {
-        type: Number,  // Define the type as Number
-        default: 0,// Default score value
-        required: true, //Indicate that the score is required
-        set: (v) => Math.floor(v),//Ensure the score is an integer
+        type: Number,// Define the type as Number
+        default: 0,
+        required: true,
+        //Ensure the score is an integer
+        set: (v) => Math.floor(v),
         /*Validate to ensure the score is a valid integer*/
         validate: {
-            validator: Number.isInteger, // Validate that score is an integer
+            validator: Number.isInteger,
             message: 'Score must be an integer',//Custom error message if validation fails
         },
     },
     //Field for the number of times the user has attempted the quiz
     attempts: {
-        type: Number,  // Define the type as Number
-        default: 0,//Default value for attempts
-        // required: true,   //State that the number of attempts is required
-        set: (v) => Math.floor(v), // Ensure attempts is an integer
-    }, 
-       //Field for the date of the current attempt
+        type: Number,  
+        default: 1,
+        set: (v) => Math.floor(v),
+    },
+    //Field for the date of the current attempt
     date: {
-        type: Date,
+        type: Date,//Define the dataType as a date
         default: Date.now,
         required: true,
     },
-}, {timestamps: true})
-// Automatically adds createdAt and updatedAt fields
+},{timestamps: true});
 
 // Apply autopopulate plugin to the schema
-scoreSchema.plugin(autopopulate);
+// scoreSchema.plugin(autopopulate);
 
-// Create indexes on userId and quizId for faster lookups
-// scoreSchema.index({ userId: 1 }); // Create an index on userId
-// scoreSchema.index({ quizId: 1 }); // Create an index on quizId
+scoreSchema.index({ username: 1, name: 1 }, { unique: true });
 
 // Export the score model based on the scoreSchema
 module.exports = mongoose.model('Score', scoreSchema);
