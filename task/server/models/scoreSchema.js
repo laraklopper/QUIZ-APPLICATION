@@ -13,7 +13,7 @@ const scoreSchema = new mongoose.Schema({
     /* userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',// Reference the User collection
-        autopopulate: true,// Automatically populate the quiz field
+        // autopopulate: true,// Automatically populate the quiz field
         required: true,
         //Validate to ensure the username is a valid objectId
         validate: {
@@ -30,7 +30,7 @@ const scoreSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         // Reference the Quiz collection
         ref: 'Quiz',
-        autopopulate: true,// Automatically populate the quiz field
+        // autopopulate: true,// Automatically populate the quiz field
         required: [true, 'Quiz name is required'],
         // Validate to ensure the username is a valid objectId
         validate: {
@@ -68,7 +68,7 @@ const scoreSchema = new mongoose.Schema({
 // Apply autopopulate plugin to the schema
 // scoreSchema.plugin(autopopulate);
 
-scoreSchema.index({ username: 1, name: 1 }, { unique: true });
+// scoreSchema.index({ username: 1, name: 1 }, { unique: true });
 
 // Export the score model based on the scoreSchema
 module.exports = mongoose.model('Score', scoreSchema);
