@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');// Import Mongoose for MongoDB interaction
 //Schemas
 const Quiz = require('../models/quizModel');// Import the Quiz model
-
+const User = require('../models/userSchema')
 
 //=======SETUP MIDDLEWARE===========
 // Setup middleware
@@ -16,6 +16,7 @@ router.use(express.json()); // Parse incoming JSON requests
 router.use(express.urlencoded({ extended: true })); // Parse URL-encoded data
 mongoose.set('strictPopulate', false); // Disable strict population checks in Mongoose
 
+//==============CUSTOM MIDDLEWARE======================
 //==============CUSTOM MIDDLEWARE======================
 //Middleware to verify the JWT token
 const checkJwtToken = (req, res, next) => {
@@ -41,11 +42,26 @@ const checkJwtToken = (req, res, next) => {
         console.error('No token attatched to the request');//Log an error message in the console for debugging purposes
         res.status(400).json({ message: 'Invalid token.' });
     }
-}
+};
 
+//Middleware to add the username to the quiz
+const currentUser = async (req, res, next) => {
+    try {
+        const user = await User.findUserId(req.user.userId).select('Username') // Find user by ID and select username
+
+        if (!username) {
+            return res.status(404).json({ message: 'Username not found' })
+        }
+        req.user.username = user.username; // Attach username to the request object
+        next(); // Proceed to the next middleware
+    } catch (error) {
+        console.error('username not found');
+        res.status(500).json({ message: 'Internal server error.' });
+    }
 
 //=============ROUTES====================
 //------------------GET---------------
+//Route to GET a specific quiz using the quiz Id
 //Route to GET a specific quiz using the quiz Id
 router.get('/findQuiz/:id', checkJwtToken, async (req, res) => {
     try {
@@ -75,11 +91,11 @@ router.get('/findQuiz/:id', checkJwtToken, async (req, res) => {
         }
 
         res.json(quiz); // If the quiz is found, send it as the JSON response
-        console.log(quiz);// Log the quiz in the console for debugging purposes
+        console.log(quiz);
     }
     catch (error) {
-        console.error('Error finding quiz:', error.message); // Log an error message in the console for debugging purposes
-        res.status(500).json({ message: error.message });// Respond with a 500 Internal Server Error status and the error message
+        console.error('Error finding quiz:', error.message); 
+        res.status(500).json({ message: error.message });
     }
 });
      
@@ -104,12 +120,14 @@ router.get('/findQuizzes', checkJwtToken,  async (req, res) => {
 });
 
 
+
 //------------POST--------------
 //Route to add new quiz
-router.post('/addQuiz', async (req, res) => {
+//Route to add new quiz
+router.post('/addQuiz',  async (req, res) => {
     console.log(req.body);
     // Extract the quiz details from the request body
-    const { name, questions/*,username */ } = req.body;
+    const { name, questions /*,username */ } = req.body;
 
     // Conditional rendering to check that the quiz has a name and exactly 5 questions
     if (!name || !questions || questions.length !== 5) {
@@ -131,14 +149,12 @@ router.post('/addQuiz', async (req, res) => {
         const newQuiz = new Quiz({
             name,         // The name of the quiz
             questions,    // Array of questions for the quiz
+            // username
+            // createdBy: req.user.userId
         });
-
-
         const savedQuiz = await newQuiz.save();// Save the new quiz to the database
         
         res.status(201).json(savedQuiz);// Send the saved quiz as a response with a 201 Created status
-
-
         console.log(savedQuiz);//Log the saved quiz in the console for debugging purposes
 
     } 
@@ -149,9 +165,7 @@ router.post('/addQuiz', async (req, res) => {
     }
 })
 
-
 //-------------------PUT--------------------------
-// Route to edit a quiz
 router.put('/editQuiz/:id', checkJwtToken,  async (req, res) => {
     // Extract quiz ID from the request parameters
     const { id } = req.params;
@@ -206,9 +220,6 @@ router.put('/editQuiz/:id', checkJwtToken,  async (req, res) => {
     };
 });
 
-
-
-
 //--------DELETE---------------
 // Route to delete a quiz
 router.delete('/deleteQuiz/:id', checkJwtToken,async (req, res) => {
@@ -241,6 +252,5 @@ router.delete('/deleteQuiz/:id', checkJwtToken,async (req, res) => {
             { message: 'Internal Server Error'});
     }
 });
-
 // Export the router to be used in other parts of the application
 module.exports = router; 
