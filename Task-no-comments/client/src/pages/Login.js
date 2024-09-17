@@ -22,12 +22,14 @@ export default function Login(
       //Function to submitLogin
    const submitLogin = async () => {//Define an async function to submitLogin
     try {
+         const token = localStorage.getItem('token');
       //Send a POST request to the server
       const response = await fetch('http://localhost:3001/users/login', {
         method: 'POST',
         mode: 'cors',
         headers: {
-          'Content-Type': 'application/json',// Specify the Content-Type
+          'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify({
           username: userData.username,
