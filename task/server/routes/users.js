@@ -1,10 +1,10 @@
 // Import necessary modules and packages
-const express = require('express');
-const router = express.Router();
-const jwt = require('jsonwebtoken');
-const cors = require('cors');
+const express = require('express');// Import Express to handle routing
+const router = express.Router();// Create a new router object
+const jwt = require('jsonwebtoken');// Import the jsonwebtoken module for handling JSON Web Tokens
+const cors = require('cors');// Import CORS middleware to handle cross-origin requests
 //Schemas
-const User = require('../models/userSchema');
+const User = require('../models/userSchema');//Import the user schema
 //Import custom middleware
 // const {authenticateToken, checkAge} = require('./middleware');
 
@@ -13,7 +13,6 @@ router.use(cors()); // Enable Cross-Origin Resource Sharing
 router.use(express.json()); // Parse incoming JSON requests
 
 //=========CUSTOM MIDDLEWARE==================
-
 // Middleware to verify JWT and extract user info
 const authenticateToken = (req, res, next) => {
     // Extract the authorization header
@@ -24,15 +23,45 @@ const authenticateToken = (req, res, next) => {
     if (token == null) return res.sendStatus(401);// If no token, return unauthorized
 
     // Verify the token using a secret key
-    jwt.verify(token,
-        'secretKey',//SecretKey
+    jwt.verify(token,//token to verify
+        'secretKey',//SecretKey for signing the token
+        /*process.env.JWT_SECRET,*///secret key used for signing the token stored in enviromental variables
         (err, user) => {
             if (err) return res.sendStatus(403);// If token invalid, return forbidden
             req.user = user;// Attach user info to request object
+            // req.userId = decoded.userId;
+
             next();// Proceed to the next middleware or route handler
         });
+        
 };
 
+/*
+//Middleware function to ensure that the request contains a valid JWT
+const verifyToken = async (req, res, next) => {
+    // Extract the token from the Authorization header
+    const token = req.headers['authorization'];
+
+    //Conditional rendering to check if a token is provided
+    if (!token) {
+        return res.status(403).json({ message: 'No token provided' });
+    }
+            // Verify the token using the JWT secret from environment variables
+    jwt.verify(
+        token, 
+        process.env.JWT_SECRET,//secret key used for signing the token stored in enviromental variables 
+        (err, decoded) => {
+        //Conditional rendering to check if an error occurs during verification
+            if (err) {
+            // If there is an error verifying the token , respond with a 401 Unauthorized status
+            return res.status(401).json({ message: 'Unauthorized access' });
+            }
+            // If the token is valid, extract the userId from the decoded token
+        req.userId = decoded.userId; 
+        next();// Proceed to the next middleware or route handler
+    });
+
+}*/
 //Middleware function to check that admin user is 18 years or older
 const checkAge = (req, res, next) => {
     // Extract the date of birth from the request body
@@ -60,19 +89,6 @@ const checkAge = (req, res, next) => {
 };
 
 //=============ROUTES=====================
-/*
-|================================================|
-| CRUD OPERATION | HTTP VERB | EXPRESS METHOD    |
-|================|===========|===================|
-|CREATE          | POST      |  router.post()    |
-|----------------|-----------|-------------------|
-|READ            | GET       |  router.get()     |  
-|----------------|-----------|-------------------|     
-|UPDATE          | PUT       |  router.put()     |
-|----------------|-----------|-------------------|
-|DELETE          | DELETE    |  router.delete()  |
-|================|===========|===================|
-*/
 //------------------GET---------------
 //Route to handle GET requests to fetch a single user
 router.get('/userId',authenticateToken, async (req, res) => {
@@ -283,19 +299,18 @@ router.delete('/deleteUser/:id', async (req, res) => {
         if (!removedUser) {                    
             return res.status(404).json({ message: 'User not found' });
         }
+        // console.log(removedUser);
+        
         res.json({
             message: 'User Successfully deleted',
             deletedUserId: removedUser._id
         })
-
     } 
     catch (error) {
         console.error('Error deleting user:', error.message);
         res.status(500).json({ error: 'Failed to delete User' });
     }
 })
-
-
 
 // Export the router to be used in other parts of the application
 module.exports = router;
