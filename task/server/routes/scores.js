@@ -61,13 +61,14 @@ const checkJwtToken = (req, res, next) => {
 */
 //-------------GET-----------------
 //Find userScore for a specific quiz for a specific user by username and quizname
-router.get('/findQuizScores/:id', checkJwtToken, async (req, res) => {
+router.get('/findQuizScores/:quizName/:username', checkJwtToken, async (req, res) => {
     // console.log('Finding quiz score');
     
     try {
-        const { id } = req.params//Extract the quiz score ID from the URL parameters
+        const { quizName, username } = req.params;
 
-        const quizScore = await Score.findById( id ).exec();// Find the score by the given ID
+        const quizScore = await Score.findOne({name: quizName,username})
+        .exec();
 
         if (!quizScore) {
             return res.status(404).json({ error: 'Score not found' });
@@ -79,8 +80,9 @@ router.get('/findQuizScores/:id', checkJwtToken, async (req, res) => {
         console.error('Error finding quiz score:', error.message);
         res.status(500).json({ message: error.message });
     }
-})
-// Route to fetch scores for a single user
+});
+
+// Route to fetch all scores for a single user
 router.get('/findScores/:username', async (req, res) => {
     try {
         const { username } = req.params; // Extract username from route parameters
@@ -88,206 +90,88 @@ router.get('/findScores/:username', async (req, res) => {
         // Fetch the user document based on the username
         const user = await User.findOne({ username }).exec();
         //Conditional rendering to check if the user exists
-        if (!user) {
-            return res.status(404).json({ error: 'User not found' }); // Send a 404(Not Found) response if the user does not exist
+        if (!user) { 
+            // Send a 404(Not Found) response if the user does not exist
+            return res.status(404).json({ error: 'User not found' });
         }
         // Fetch the user score based on the user id
-            const result = await Score.find({ userId: user._id })
-            .populate('quizId')// Populate quizId field with quiz details
-            .populate('userId')// Populate userId field with user details
+        const result = await Score.find({ username: user.username })
+            .populate('name')//quizName
             .sort({ createdAt: -1 });// Sort the results by creation date in descending order
 
-        res.json({ userScores: result });        // Return the user scores in the response
-        // console.log(result);
-        
-    } catch (error) {
-        console.error('Error finding user scores:', error);//Log an error message in the console for debugging purposes
-        return res.status(500).json({ error: error.message });// Return a 500 (Internal Server Error) status response
-    }
-});
-/*
-// Route to fetch all scores for a single user for all quizzes
-router.get('/findScores/:id', checkJwtToken, async (req, res) => {
-    try {
-        const {id} = req.params
-
-        const userScores = await Score.find({username}).exec();
-
-        if (!userScores || userScores.length === 0) {
-            return res.status(404).json({ message: 'No scores found for this user' });
-        }
-
-
-        res.json({ userScores });
+        res.json({ userScores: result });        
+        console.log(result);
     } catch (error) {
         console.error('Error finding user scores:', error);
-        res.status(500).json({ message: 'Error fetching scores' });
-    }
-})
-    */
-
-// Route to fetch all scores
-router.get('/allScores', async (req, res) => {
-    try {
-        // Fetch all score documents from the database
-        const allScores = await Score.find()// Find all score entries
-            .populate('quizId')// Populate the quizId field with details from the Quiz collection
-            .populate('userId')// Populate the userId field with details from the User collection
-            .sort({ createdAt: -1 });// Sort the results by creation date in descending order
-        // Return the fetched scores in the response
-        res.json({ allScores });
-    } catch (error) {
-        console.error('Error fetching all scores:', error);//Log an error message in the console for debugging purposes
-        return res.status(500).json({ error: error.message });// Return a 500 (Internal Server Error) status response
-    }
-});
-
-//Route to fetch scores by quizName
-router.get('/findScores', async (req, res) => {
-    try {
-        // Fetch all score documents from the database
-        const scores = await Score.find({})
-            .populate('quizId')
-            .populate('userId')
-            .sort({ createdAt: -1 });
-        // Return the fetched scores in the response
-        res.json({ scores });
-    } catch (error) {
-        console.error('Error fetching all scores:', error);
         return res.status(500).json({ error: error.message });
     }
 });
 
-// Route to find a specific user's score for a quiz
-/*router.post('/findQuizScores', async (req, res) => {
-    try {
-        const { username, quizId } = req.body;
 
-        if (!username || !quizId) {
-            return res.status(400).json({ error: 'Username and quizId are required' });
-        }
-        
-        const user = await User.findOne({ username });
-        if (!user) return res.status(404).json({ error: 'User not found' });
-
-        const score = await Score.findOne({ userId: user._id, quizId });
-        if (!score) return res.status(404).json({ error: 'Score not found' });
-
-        res.json(score);
-    } catch (error) {
-        console.error('Error finding quiz score:', error);
-        return res.status(500).json({ error: error.message });
-    }
-});*/
 //-----------POST----------------------
 //Route to add a new score
-//Route to add a new score
- /*router.post('/addScore', async (req, res) => {
-    console.log(req.body); // Log the request body for debugging purposes
-
-    try {
-        const {
-            username, // Extract username from request body
-            name,     // Extract quiz name from request body
-            score,    // Extract score from request body
-            // attempts  // Extract number of attempts from request body
-        } = req.body;
-
-        // Conditional rendering
-        if (!username || !name || score === undefined || isNaN(score)) {
-            return res.status(400).json({
-                // Return a 400 (Bad request) response error if validation fails
-                error: 'Username, quiz name, and a valid score are required.',
-            });
-        }
-
-        // Fetch user and quiz
-        const user = await User.findOne({ username }).exec();
-        if (!user) {
-            throw new Error('User not found'); // Throw error if user is not found
-        }
-
-
-        //Fetch the Quiz by the quizName
-        const quiz = await Quiz.findOne({ name }).exec();
-        if (!quiz) {
-            throw new Error('Quiz not found');// Throw error if quiz is not found
-        }
-
-        // Check if a score entry for this user and quiz already exists
-        const existingScore = await Score.findOne(
-            { userId: user._id, quizId: quiz._id }).exec();
-
-        if (existingScore) {
-            // Update existing score if the new score is higher
-            if (score > existingScore.score) {
-                existingScore.score = score;// Update score
-                // existingScore.attempts += 1; // Increment attempts
-                const updatedScore = await existingScore.save();// Save updated score
-                await updatedScore.populate('userId quizId').execPopulate();// Populate userId and quizId
-                return res.status(200).json(updatedScore);// Return updated score
-            } else {
-                // Return existing score if the new score is not higher
-                await existingScore.populate('userId quizId').execPopulate(); // Populate userId and quizId
-                return res.status(200).json(existingScore);// Return existing score
-            }
-        } else {
-            // Create a new score entry
-            const newScore = new Score({
-                userId: user._id,// Set the userId field to the _id of the user document
-                quizId: quiz._id,// Set the userId field to the _id of the user document
-                score: Math.floor(score),// Ensure that the value is an integer
-                // attempts: attempts || 1// Set the attempts field to the provided value or default to 1 if not provided
-            });
-            const savedScore = await newScore.save();//Save the new Score
-            await savedScore.populate('userId quizId').execPopulate();//Populate the userId
-            return res.status(201).json(savedScore);//Return the newly created score
-        }
-    } catch (error) {
-        console.error('Error saving score:', error);//Log an error message in the console for debugging purposes
-        return res.status(500).json({ error: error.message });// Return a 500 (Internal Server Error) status response
-    }
-});*/
 router.post('/addScore', async(req, res) => {
     console.log(req.body);
 
     try {
-        const { username, name, score } = req.body
-        const newScore = new Score({username, name, score})
+        const { username, name, score} = req.body
+        // Conditional rendering to check if a score already exists for the user and quiz
+        const existingScore = await Score.findOne({username, name}).exec();
 
-        const savedScore =  newScore.save();
+        if (existingScore && existingScore.score >= score) {
+            return res.status(200).json({ message: "New score is not higher than the existing score" });
+        }
+
+        const newScore = existingScore
+            ? await Score.findByIdAndUpdate(
+                existingScore._id,
+                { score, $inc: { attempts: 1 } },
+                { new: true }
+            )
+            : await new Score({ username, name, score }).save();
+
+
+        // If no existing score, create a new one
+        // const newScore = new Score({username, name, score})
+
+        const savedScore = await  newScore.save();
 
         res.status(201).json(savedScore)
         console.log(savedScore);
         
-    } catch (error) {
-        console.error('Error saving score:', error);//Log an error message in the console for debugging purposes
-        return res.status(500).json({ error: error.message });// Return a 500 (Internal Server Error) status response
+    } 
+    catch (error) {
+        console.error('Error saving score:', error);
+        return res.status(500).json({ error: error.message });
     }
 })
-
-
-//-------------PUT-----------------------
+//----------------PUT--------------------
 //Route to edit existing score
-/*router.put('/updateScore/:id', async (req, res) => {
-    try {
-        const { _id, score, attemps } = req.body;
-        const updatedScore = await Score.findByIdAndUpdate(
-            _id,
-            { score, attempts },
+router.put('/updateScore/:id', async (req, res) => {   
+    try { 
+        const { id } = req.params
+        const { score } = req.body;
+
+        const editedScore = await Score.findByIdAndUpdate(
+            id,
+            // {score},
+            { score, $inc: { attempts: 1 }},
             { new: true } // Return the updated document
         );
-        if (updatedScore) {
-            res.json(updatedScore);
-        } else {
-            res.status(404).json({ message: 'Score not found' });
-        }
+
+        
+        if (!editedScore) { 
+            res.status(404).json({ message: 'Score not found' });            
+        };
+        
+        res.status(200).json(editedScore);
     } catch (error) {
         res.status(500).json({ message: 'Error updating score' });
         console.error('Error updating score')
     }
 })
 
-})*/
 // Export the router to be used in other parts of the application
 module.exports = router;
+
+
