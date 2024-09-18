@@ -33,9 +33,10 @@ const checkJwtToken = (req, res, next) => {
         const decoded = jwt.verify(
             token, 
             'secretKey' 
-            /*process.env.JWT_SECRET*/,
+            /*process.env.JWT_SECRET*/,//secret key used for signing the token stored in enviromental variables
         );
         req.user = decoded; // Attach decoded user information to the request object
+        // req.userId = decoded.userId;
         console.log('Token provided');
         next();
     }
@@ -62,23 +63,27 @@ const checkJwtToken = (req, res, next) => {
 //-------------GET-----------------
 //Find userScore for a specific quiz for a specific user by username and quizname
 router.get('/findQuizScores/:quizName/:username', checkJwtToken, async (req, res) => {
-    // console.log('Finding quiz score');
+    // console.log('Finding quiz score');//Log a message in the console for debugging purposes
     
     try {
-        const { quizName, username } = req.params;
+        const { quizName, username } = req.params;// Extract quiz name and username from the request parameters
 
-        const quizScore = await Score.findOne({name: quizName,username})
-        .exec();
+        // Query the Score collection to find the user's score for the specified quiz
+        const quizScore = await Score.findOne({ name: quizName, username })//The findOne() method is used to search for a single document that matches the given criteria
+            .exec();
 
+      //Conditional rendering to check if a score exists
         if (!quizScore) {
+             // If the score is not found, return a 404 response
             return res.status(404).json({ error: 'Score not found' });
         }
-        res.json(quizScore)
-        console.log(quizScore);    
+
+        res.json(quizScore);// Return the quiz score in JSON format
+        console.log(quizScore);// Log the score in score for debugging purposes    
     } 
     catch (error) {
-        console.error('Error finding quiz score:', error.message);
-        res.status(500).json({ message: error.message });
+        console.error('Error finding quiz score:', error.message);//Log an error message in the console for debugging purpose
+        res.status(500).json({ message: error.message });// Return a 500 (Internal Server Error) response for server issues
     }
 });
 
@@ -102,8 +107,8 @@ router.get('/findScores/:username', async (req, res) => {
         res.json({ userScores: result });        
         console.log(result);
     } catch (error) {
-        console.error('Error finding user scores:', error);
-        return res.status(500).json({ error: error.message });
+        console.error('Error finding user scores:', error);//Log an error message in the console for debugging purpose
+        return res.status(500).json({ error: error.message });//send a 500 (Internal Server Error) response if something goes wrong
     }
 });
 
