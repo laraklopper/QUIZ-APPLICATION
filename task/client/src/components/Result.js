@@ -21,22 +21,22 @@ export default function Result(//Export default Result function component
 
   //--------------EVENT LISTENERS---------------
   // Function to submit score
-  const handleSubmitScore = useCallback( async (e) => {
-    e.preventDefault()
-    setSubmitted(true); // Indicate submission in progress
-    setSubmissionError(null); // Clear previous errors
+ const handleSubmitScore = useCallback(async (e) => {
+    e.preventDefault();//Prevent default form submission
+    setSubmitted(true);// Indicate submission in progress
+    setSubmissionError(null);// Clear previous errors
     try {
-      await addScore(); // Call the addScore function 
-      setSubmitted(false);// Reset submission state on failure
-      // console.log(currentScore);
-      // console.log('Score successfully submitted');
+      await addScore();// Call the addScore function 
+      console.log(currentScore);
+      console.log('Score successfully submitted');
     } catch (error) {
       setSubmissionError('Failed to save score');
-      console.log('Failed to save score', error.message);//Log an error message for debugging purposes
-      setSubmitted(false); // Reset submission state on failure
+      console.error('Failed to save score', error.message);//Log an error message for debugging purposes
+    } finally {
+      setSubmitted(false);// Reset submission state on failure
     }
-  },[addScore]);
-
+  }, [addScore, currentScore]);
+  
 // console.log(quizName)
 
   // Function to hide the result display
@@ -45,13 +45,13 @@ export default function Result(//Export default Result function component
   };
 
   // Function to display the current date format
-  // const currentDate = () => {
-  //   const options = { 
-  //     day: '2-digit', 
-  //     month: '2-digit', 
-  //     year: 'numeric' };
-  //   return new Date().toLocaleDateString('en-GB', options);
-  // };
+  const currentDate = () => {
+    const options = { 
+      day: '2-digit', 
+      month: '2-digit', 
+      year: 'numeric' };
+    return new Date().toLocaleDateString('en-GB', options);
+  };
 
   //=============JSX RENDERING=================
 
@@ -92,7 +92,7 @@ export default function Result(//Export default Result function component
             <Col xs={6} md={4} className='resultsCol'>             
             </Col>
           </Row>
-          {/* <Row>
+          <Row className='dateRow'>
             <Col xs={6} md={4}>
              <input
                 type='text'
@@ -103,7 +103,7 @@ export default function Result(//Export default Result function component
               />
             </Col>
             <Col xs={6} md={4}></Col>
-          </Row> */}
+          </Row>
           <Row>
             <Col xs={6} md={4}></Col>
             <Col xs={6} md={4}>
