@@ -6,7 +6,7 @@ import Row from 'react-bootstrap/Row'; // Import the Row component from react-bo
 import Col from 'react-bootstrap/Col'; // Import the Col component from react-bootstrap
 import Dropdown from 'react-bootstrap/Dropdown';// Import the Dropdown component from react-bootstrap
 import DropdownButton from 'react-bootstrap/DropdownButton';// Import the DropdownButton component from react-bootstrap
-import Button from 'react-bootstrap/Button'; // Import the Button component from react-bootstrap
+// import Button from 'react-bootstrap/Button'; // Import the Button component from react-bootstrap
 //Components
 import Header from '../components/Header';//Import the Header function component
 import Footer from '../components/Footer';//Import the Footer function component
@@ -32,7 +32,7 @@ const fetchScores = useCallback(async () => {//Define an async function to fetch
     const token =localStorage.getItem('token'); //Retrieve the token from localStorage
     const username = localStorage.getItem('username');//Retrieve the username from localStorage
     //Send a GET request to the server to find scores
-    const response = await fetch (`http://localhost:3001/scores/findScores/${username}`, {
+    const response = await fetch (`http://localhost:3001/scores/findScores/:${username}`, {
       method: 'GET',//HTTP request method
       mode: 'cors',//Enable Cors for cross-origin resourcing
       headers: {
@@ -121,9 +121,9 @@ const fetchScores = useCallback(async () => {//Define an async function to fetch
             {/* PastScores */}
             <div id="pastScoresOutput">
               {/* Button to trigger fetching past scores */}
-              <Button variant="primary" type="button" onClick={fetchScores}>
+              {/* <Button variant="primary" type="button" onClick={fetchScores}>
                 FETCH SCORES
-              </Button>
+              </Button> */}
               {/* Conditional rendering to check if there 
               are scores to display */}
               {userScores.length > 0 ? (
@@ -140,7 +140,8 @@ const fetchScores = useCallback(async () => {//Define an async function to fetch
                         key={index}
                         onClick={() => setSelectedQuiz(score.quizName)}
                       >
-                        {score.quizName}
+                          {score.name}
+                        // {score.quizName}
                       </Dropdown.Item>
                     ))}
                   </DropdownButton>
@@ -149,7 +150,7 @@ const fetchScores = useCallback(async () => {//Define an async function to fetch
                     quizResults.map((score, index) => (
                       <div key={index}>
                         {/*Quiz name*/}
-                        <p>Quiz Name: {score.quizName}</p>
+                        <p>Quiz Name: {score.name}</p>
                         {/*Highest score*/}
                         <p>Score: {score.score}</p>
                         {/*Date of highest score*/}
