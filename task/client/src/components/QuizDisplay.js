@@ -87,8 +87,8 @@ export default function QuizDisplay(//Export default quizDisplay component
         method: 'PUT',//HTTP request method
         mode: 'cors',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',// Specify the content type
+          'Authorization': `Bearer ${token}`,//Add the Authorization header 
         },
         body: JSON.stringify({
           score: currentScore// Send the updated score in the request body
