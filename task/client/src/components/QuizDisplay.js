@@ -47,28 +47,37 @@ export default function QuizDisplay(//Export default quizDisplay component
 
         //Send a GET request to the server 
         const response = await fetch (`http://localhost:3001/scores/findQuizScores/${quizName}/${currentUser.username}`, {
-          method: 'GET',
-          mode: 'cors',
+          method: 'GET',//HTTP request method
+          mode: 'cors',//Enable Cross-Origin Resource Sharing 
           headers: {
             'Content-Type': 'application/json', 
             'Authorization': `Bearer ${token}`,
           }
         });
 
-      
+      /* Conditional rendering to check if the response
+          is not successful (status code is not in the range 200-299)*/
         if (!response.ok) {
-          throw new Error ('Error fetching scores for the quiz');
+          throw new Error ('Error fetching scores for the quiz');//Throw an error message if the GET request is unsuccessful
         }
 
         const result = await response.json();// Parse the JSON response
-        // Find the existing score for the current quiz
-        const existingScore = result.userScores.find(score => score.name === quizName)
-        return existingScore || null; 
+         // Find the existing score for the current quiz
+        // Conditional rendering if userScores is an array and contains objects with a name property
+        if (Array.isArray(result.userScores)) {
+          // Find the existing score for the current quiz
+          const existingScore = result.userScores.find(score => score.name === quizName);
+          return existingScore || null; // Return the found score or null if not found
+        } else {
+          // Handle unexpected data structure
+          console.error('Invalid data structure for userScores');//Log an error message in the console for debugging purposes
+          return null;
+        }
 
 
       } catch (error) {
         console.error('Error fetching scores:', error.message);
-        setError('Error fetching scores');
+        setError('Error fetching scores');// Update the error state to display an error message in the UI
         return null;//Return null in the case of an error
       }
     },[ quizName, setError, currentUser.username])
