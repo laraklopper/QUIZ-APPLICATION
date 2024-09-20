@@ -19,8 +19,9 @@ export default function Page1(//Export default Page1 function component
      currentUser,
      selectedQuiz,
      setSelectedQuiz,
-     userScores,
-     setUserScores
+     userScores = [],
+     setUserScores,
+    quiz
     }
   ) {
 
@@ -30,9 +31,9 @@ export default function Page1(//Export default Page1 function component
 const fetchScores = useCallback(async () => {//Define an async function to fetch userScores
   try {
     const token =localStorage.getItem('token'); //Retrieve the token from localStorage
-    const username = localStorage.getItem('username');//Retrieve the username from localStorage
+    //const username = localStorage.getItem('username');//Retrieve the username from localStorage
     //Send a GET request to the server to find scores
-    const response = await fetch (`http://localhost:3001/scores/findScores/:${username}`, {
+    const response = await fetch (`http://localhost:3001/scores/findScores`, {
       method: 'GET',//HTTP request method
       mode: 'cors',//Enable Cors for cross-origin resourcing
       headers: {
@@ -55,7 +56,8 @@ const fetchScores = useCallback(async () => {//Define an async function to fetch
       setUserScores(quizScores.userScores); // Update state with fetched scores
     } 
     else {
-      throw new Error('Invalid data type');//Throw an error message if the data type is invalid
+      //Throw an error message if the data type is invalid
+      throw new Error('Invalid data type');
     }
     
   } catch (error) {
@@ -66,8 +68,8 @@ const fetchScores = useCallback(async () => {//Define an async function to fetch
 
   // Filter the results by the selected quiz name
   const quizResults = selectedQuiz
-    ? userScores.filter(score => score.quizName === selectedQuiz)  // Filter the scores based on the selected quiz
-    : [];
+    ? userScores.filter(score => score.quizName === selectedQuiz)  
+    : [];// Filter the scores based on the selected quiz
 
   // useEffect hook to fetch scores when the component mounts
     useEffect (() => {
@@ -109,54 +111,46 @@ const fetchScores = useCallback(async () => {//Define an async function to fetch
       </section>
       {/* Section2 - Displays user's past scores */}
       <section className="section2">
-        <Row>
+        <Row className='scoreDisplayRow'>
           {/* Past Scores */}
           <Col>
             <h2 className="h2">PAST SCORES</h2>
           </Col>
         </Row>
-        <Row>
-          <Col xs={6} md={4}></Col>
+        <Row className='scoreDisplayRow'>
+          <Col xs={6} md={4} className='scoreDisplayCol'></Col>
           <Col xs={6} md={4} className="scoreDisplayCol">
             {/* PastScores */}
             <div id="pastScoresOutput">
-              {/* Button to trigger fetching past scores */}
-              {/* <Button variant="primary" type="button" onClick={fetchScores}>
-                FETCH SCORES
-              </Button> */}
               {/* Conditional rendering to check if there 
               are scores to display */}
               {userScores.length > 0 ? (
-                <div>
+                <div className='userScores'>
                   {/* Dropdown for quiz selection */}
-                  <DropdownButton
-                    id="dropdown-basic-button"
-                    title={selectedQuiz || 'Select a Quiz'}
+                  <Form.Select
+                    title={selectedQuiz || 'SELECT'}
+                    aria-label="Select"
+                      id='scoreDisplay'
+                      value={selectedQuiz || ''}
+                    onChange={(e) => setSelectedQuiz(e.target.value)}
                   >
-                    {/* Map through the user scores and display 
-                    them in the dropdown */}
-                    {userScores.map((score, index) => (
-                      <Dropdown.Item
-                        key={index}
-                        onClick={() => setSelectedQuiz(score.quizName)}
-                      >
-                          {score.name}
-                        // {score.quizName}
-                      </Dropdown.Item>
-                    ))}
-                  </DropdownButton>
+                    {/* Map through the user scores*/}
+                    {userScores.map((scores, index)=> {
+                        <option value>SELECT SCORES</option>            
+                    })}
+                    </Form.Select>                   
                   {/* Display quizResults scores for the selected quiz */}
                   {quizResults.length > 0 ? (
                     quizResults.map((score, index) => (
                       <div key={index}>
-                        {/*Quiz name*/}
-                        <p>Quiz Name: {score.name}</p>
+                        <p className='scoreText'>Quiz Name: {score.name}</p>
                         {/*Highest score*/}
-                        <p>Score: {score.score}</p>
+                        <p className='scoreText'>Score: {score.score}</p>
                         {/*Date of highest score*/}
-                        <p>Date: {new Date(score.date).toLocaleDateString()}</p>
+                        <p className='scoreText'>
+                          Date: {new Date(score.date).toLocaleDateString()}</p>
                         {/*Total number of attempts*/}
-                        <p>Total Attempts: {score.attempts}</p>
+                        <p className='scoreText'>Total Attempts: {score.attempts}</p>
                       </div>
                     ))
                   ) : (
