@@ -1,6 +1,6 @@
 // Import necessary modules and packages
 const mongoose = require('mongoose'); // Import the Mongoose library
-// const autopopulate = require('mongoose-autopopulate');// Import the autopopulate plugin for Mongoose
+const autopopulate = require('mongoose-autopopulate');// Import the autopopulate plugin for Mongoose
 
 // Define the schema for quizzes
 const quizSchema = new mongoose.Schema({
