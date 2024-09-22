@@ -53,7 +53,7 @@ export default function App() {//Export default App function component
   //Fetch users when the component mounts or when loggedIn changes
   useEffect(() => {
     //Function to fetch users
-    const fetchUsers = async () => {
+    const fetchUsers = async () => {//Define an async function to fetch all users
       try {
         // Retrieve JWT token from localStorage for authentication
         const token = localStorage.getItem('token');
@@ -127,8 +127,7 @@ export default function App() {//Export default App function component
 // Function to fetch quizzes
   const fetchQuizzes = useCallback(async () => {//Define an async function to fetchQuizzes
     try {
-      // Retrieve the JWT token from localStorage
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token');// Retrieve the JWT token from localStorage
       
       //Send a GET request to the server to find all quizzes
       const response = await fetch('http://localhost:3001/quiz/findQuizzes', {
