@@ -1,16 +1,16 @@
 // Import necessary modules and packages
 const express = require('express');// Import Express to handle routing
 const router = express.Router();// Create a new router object
-const jwt = require('jsonwebtoken');// Import the jsonwebtoken module for handling JSON Web Tokens
-const cors = require('cors');// Import CORS middleware to handle cross-origin requests
+const jwt = require('jsonwebtoken');
+const cors = require('cors');
 //Schemas
-const User = require('../models/userSchema');//Import the user schema
+const User = require('../models/userSchema');
 //Import custom middleware
 // const {authenticateToken, checkAge} = require('./middleware');
 
 //=======SETUP MIDDLEWARE===========
-router.use(cors()); // Enable Cross-Origin Resource Sharing
-router.use(express.json()); // Parse incoming JSON requests
+router.use(cors()); 
+router.use(express.json()); 
 
 //=========CUSTOM MIDDLEWARE==================
 // Middleware to verify JWT and extract user info
@@ -19,17 +19,19 @@ const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     // Extract the token from the header
     const token = authHeader && authHeader.split(' ')[1];
-
-    if (token == null) return res.sendStatus(401);// If no token, return unauthorized
+    
+    // If no token, return unauthorized
+    if (token == null) return res.sendStatus(401);
 
     // Verify the token using a secret key
     jwt.verify(token,//token to verify
         'secretKey',//SecretKey for signing the token
-        /*process.env.JWT_SECRET,*///secret key used for signing the token stored in enviromental variables
+        /*process.env.JWT_SECRET,*/
+        //secret key used for signing the token stored in enviromental variables
         (err, user) => {
-            if (err) return res.sendStatus(403);// If token invalid, return forbidden
-            req.user = user;// Attach user info to request object
-            // req.userId = decoded.userId;
+            if (err) return res.sendStatus(403);
+            req.user = user;
+            // req.userId = decoded.userId;// Attach user info to request object
 
             next();// Proceed to the next middleware or route handler
         });
@@ -38,12 +40,10 @@ const authenticateToken = (req, res, next) => {
 
 //Middleware function to check that admin user is 18 years or older
 const checkAge = (req, res, next) => {
-    // Extract the date of birth from the request body
     const { dateOfBirth } = req.body;
 
-    //Conditional rendering to check if the date of birth is entered
     if (!dateOfBirth) {
-        console.error('Date of Birth is required');//Log an error message in the console for debugging purposes
+        console.error('Date of Birth is required');
         return res.status(400).json(
             { error: 'Date of Birth is required' }
         );
@@ -67,26 +67,24 @@ const checkAge = (req, res, next) => {
 //------------------GET---------------
 //Route to handle GET requests to fetch a single user
 router.get('/userId',authenticateToken, async (req, res) => {
-    // console.log('Finding User');//Log a message in the console for debugging purposes
+    // console.log('Finding User');
     try {
-        /* Retrieve the user ID from the authenticated token 
-        and fetch the user excluding the password field*/
+ 
         const user = await User.findById(req.user.userId).select('-password');
         
-        //Conditional rendering to check if the user exists
+       
          if (!user) {
-             console.error('User not found');//Log an error message in the console for debugging purposes
-             // If no user is found, log an error and send a 400 response
+             console.error('User not found');
              return res.status(400).json({ message: 'User Not Found'})
          }
 
-        res.status(200).json(user); // Return the users in the response
-        console.log('User details', user);//Log the user details in the console for debugging purposes
+        res.status(200).json(user); 
+        console.log('User details', user);
          
     } 
     catch (error) {
-        console.error('Error fetching Users', error.message);//Log an error message in the console for debugging purpose
-        res.status(500).json(//send a 500 response if something goes wrong
+        console.error('Error fetching Users', error.message);
+        res.status(500).json(
             {message: 'Internal Server Error', error: error.message}
         )
     }
@@ -95,20 +93,19 @@ router.get('/userId',authenticateToken, async (req, res) => {
 
 //Route to GET all users
 router.get('/findUsers', async (req, res) => {
-    // console.log('Finding Users');//Log a message in the console for debugging purposes
+    // console.log('Finding Users');
     try {
         
-        const { username } = req.query;// Extract the username from the query parameters
-        // If a username is provided, use it to filter users, otherwise return all users
+        const { username } = req.query;
         const query = username ? { username } : {};
-        const users = await User.find(query); // Fetch users based on the query object
+        const users = await User.find(query); 
     
-        console.log(users);// Log the fetched users for debugging purposes
-        res.status(200).json(users);// Send the list of users as the response
+        console.log(users);
+        res.status(200).json(users);
     } 
     catch (error) {
-        console.error('Error fetching users', error.message);//Log an error message in the console for debugging purpose
-        res.status(500).json(//send a 500 (Internal Server Error) response if something goes wrong
+        console.error('Error fetching users', error.message);
+        res.status(500).json(
             { message: 'Internal server Error' }
         );
     }
@@ -118,55 +115,50 @@ router.get('/findUsers', async (req, res) => {
 //-------------POST-------------------
 //Route to send POST request to login endpoint
 router.post('/login', async (req, res) => {
-    console.log(req.body);//Log the request body in the console for debugging purposes
-    // console.log('User Login');//Log a message in the console for debugging purposes
+    console.log(req.body);
+    // console.log('User Login');
 
-    try {
-        // Extract username and password from the request body
+    try {       
         const { username, password } = req.body;
         // Find the user in the database by username and password
         const user = await User.findOne({ username, password });
-        console.log(user); //Log the user in console for debugging purposes
+        console.log(user); 
         
-        //Conditional rendering to check if the user exists
         if (!user) {
-            throw new Error('User not found');//Throw an error message if no user is found
+            throw new Error('User not found');
         }
       
-        //Conditional rendering to check if the user credentials are valid
         if (username === user.username && password === user.password) {
             // Generate a JWT token for authentication
             const jwtToken = jwt.sign(
-                { userId: user._id },// Payload containing user ID
-                     'secretKey',// Secret key for token signing
+                { userId: user._id },
+                     'secretKey',
                         /*process.env.JWT_SECRET,*/
                         {
-                            expiresIn: '12h',// Token expiration time
-                            algorithm: 'HS256',// Signing algorithm
+                            expiresIn: '12h',
+                            algorithm: 'HS256',
                         }
                     );
             // Send the generated JWT token as a JSON response
             res.json(
-                { 'token': jwtToken }//Send the generated token back to the client
+                { 'token': jwtToken }
             )
         } 
         else {
-            //Throw an error message if the user credentials are incorrect
             throw new Error('Password Incorrect');
         }
      
     } catch (error) {
-        console.error('Login Failed: Username or password are incorrect');//Log an error message in the console for debugging purposes
-        res.status(401).json(//Send a 401 status error message to the client indicating an authentication failure
+        console.error('Login Failed: Username or password are incorrect');
+        res.status(401).json(
             { message: 'User not authenticated' })
     }
 })
 
 //Route to send a POST request the register endpoint
 router.post('/register', checkAge, async (req, res) => {
-    // console.log(req.body);//Log the request body in the console for debugging purposes
+    // console.log(req.body);
     try {
-        // Extract user details from the request body, with 'admin' defaulting to false
         const { username, email, dateOfBirth, password, admin = false } = req.body;
         
       
@@ -176,7 +168,6 @@ router.post('/register', checkAge, async (req, res) => {
                 { message: 'Username, email, date of birth, and password are required' });
         }
       
-        // Conditional rendering to check if a user with the same username already exists
         const existingUser = await User.findOne({ username });
 
         if (existingUser) {
@@ -199,22 +190,22 @@ router.post('/register', checkAge, async (req, res) => {
 
         // Generate JWT token for the newly registered user
         const token = jwt.sign(
-            { _id: savedUser._id },// Payload containing the user's ID
-            'secretKey', // Secret key used to sign the token
+            { _id: savedUser._id },
+            'secretKey', 
             /*process.env.JWT_SECRET,*/
             {
-                expiresIn: '12h',// Token expiration time set to 12 hours
-                algorithm: 'HS256'// Specify the signing algorithm 
+                expiresIn: '12h',
+                algorithm: 'HS256'
             }
         );
 
         // Send the generated JWT token and saved user details in the response
         res.status(201).json({ token, user: savedUser });
-        console.log(savedUser);//Log the new user in the console for debugging purposes
+        console.log(savedUser);
 
     } 
     catch (error) {
-        console.error('Failed to add User');//Log an error message in the console for debugging purpose
+        console.error('Failed to add User');
         return res.status(500).json({ error: 'Internal Server Error' })
     }
 })
@@ -223,15 +214,12 @@ router.post('/register', checkAge, async (req, res) => {
 //-------------PUT-----------------
 //Route to edit a user account
 router.put('/editAccount/:id', async (req, res) => {
-    console.log(req.body);//Log the request body in the console for debugging purposes
+    console.log(req.body);
     
-    console.log('edit Account');// Log a message in the console for debugging purposes
+    console.log('edit Account');
     try {        
-        // Extract the user ID from the request parameters
         const { id } = req.params;
-        // Extract the username and email from the request body
         const { username, email } = req.body;
-
 
         // Create an object to hold the fields that will be updated
         const updateUser = {};
@@ -240,15 +228,14 @@ router.put('/editAccount/:id', async (req, res) => {
 
         // Find the user by ID and update the relevant fields
         const updatedAccount = await User.findByIdAndUpdate(
-            id, // The ID of the user to update
-            updateUser, // The fields to update
-            { new: true } // Return the updated document
+            id,
+            updateUser, 
+            { new: true } 
         );
 
 
-        //Conditional rendering to check if the updated user is found
         if (!updatedAccount) {
-            // If the updated user is not found send a 404(Not Found) status respons and an error message
+            
             return res.status(404).json({ message: 'User not found' })
         }
         console.log('Updated User Account:', updatedAccount);
@@ -260,7 +247,7 @@ router.put('/editAccount/:id', async (req, res) => {
         );
     } 
     catch (error) {
-        console.error(`Error occured while updating User Account ${error.message}`);//Log an error message in the console for debugging purposes
+        console.error(`Error occured while updating User Account ${error.message}`)
         return res.status(500).json({ message: 'Internal server error' })
 
     }
@@ -271,27 +258,23 @@ router.put('/editAccount/:id', async (req, res) => {
 //Route to send a DELETE request to the /deleteUser endpoint
 router.delete('/deleteUser/:id', async (req, res) => {
     try {
-        // Extract the user ID from the request parameters
         const { id } = req.params; 
         // Find the user by ID and delete the document
         const removedUser = await User.findByIdAndDelete(id);
 
-        //Conditional rendering to check if the user exists
         if (!removedUser) {                    
-            //If the user is not found send a 404(Not Found) status response with an error message
             return res.status(404).json({ message: 'User not found' });
         }
-        // console.log(removedUser);//Log the removed user in the console for debugging purposes
+        console.log(removedUser);
         
         res.json({
             message: 'User Successfully deleted',
             deletedUserId: removedUser._id
         })
 
-
     } 
     catch (error) {
-        console.error('Error deleting user:', error.message);//Log an error message in the console for debugging purposes
+        console.error('Error deleting user:', error.message);
         res.status(500).json({ error: 'Failed to delete User' });
     }
 })
