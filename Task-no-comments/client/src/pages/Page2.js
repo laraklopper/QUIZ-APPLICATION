@@ -1,14 +1,15 @@
 // Import necessary modules and packages
-import React, { useCallback, useEffect, useState } from 'react';// Import the React module to use React functionalities
-import '../CSS/Page2.css'; // Import custom CSS file for styling Page2
+// Import the React module to use React functionalities
+import React, { useCallback, useEffect, useState } from 'react';
+import '../CSS/Page2.css'; 
 // Bootstrap
-import Row from 'react-bootstrap/Row';// Import the Row component from react-bootstrap
-import Col from 'react-bootstrap/Col';// Import the Col component from react-bootstrap
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 // Components
-import Header from '../components/Header';//Import the Header function component
-import QuizDisplay from '../components/QuizDisplay';//Import the QuizDisplay function component
-import Footer from '../components/Footer';//Import the Footer function component
+import Header from '../components/Header';
+import QuizDisplay from '../components/QuizDisplay';
+import Footer from '../components/Footer';
 
 // Page 2 function component
 export default function Page2(//Export default page2 function component
@@ -31,11 +32,10 @@ export default function Page2(//Export default page2 function component
 ) {
   // =========STATE VARIABLES====================
   //QuizVariables
-  const [selectedQuizId, setSelectedQuizId] = useState(''); // State to store the selected quiz ID
+  const [selectedQuizId, setSelectedQuizId] = useState(''); 
   //Timer variables
-  const [timer, setTimer] = useState(10);// Timer for the quiz
-  const [quizTimer, setQuizTimer] = useState(false);// Boolean to control the timer visibility
-
+  const [timer, setTimer] = useState(10);
+  const [quizTimer, setQuizTimer] = useState(false);
 
   //============USE EFFECT HOOK==================
   /* useEffect to fetch quizzes when the component 
@@ -57,41 +57,44 @@ export default function Page2(//Export default page2 function component
   //=========REQUEST================
   //-----------GET-----------------------
   // Function to fetch a single quiz
-  const fetchQuiz = useCallback(async (quizId) => {//Define async function to fetch a single Quiz
+  const fetchQuiz = useCallback(async (quizId) => {
     try {
      
       if (!quizId) return;// Exit early if no quiz is selected
-      const token = localStorage.getItem('token');//Retrieve authentication token from localStorage
+      //Retrieve authentication token from localStorage
+      const token = localStorage.getItem('token');
       if (!token) return;// Return if no token is found
 
       // Send a GET request to fetch quiz data from the server
       const response = await fetch(`http://localhost:3001/quiz/findQuiz/${quizId}`, {
         method: 'GET',//HTTP request method
-        mode: 'cors',//Enable Cors for cross-origin resourcing
+        mode: 'cors',
         headers: {//Setup request headers
-          'Content-Type': 'application/json',//Specify the content-type in the payload as JSON
+          'Content-Type': 'application/json',//Specify the Content-Type
           'Authorization': `Bearer ${token}`,//Attatch the token 
         }
       })
 
-      /* Conditional rendering to check if the response
-        is not successful (status code is not in the range 200-299)*/
+      //Response handling
       if (!response.ok) {
-        throw new Error('Failed to fetch quiz');//Throw an error message if the GET request is unsuccessful
+        throw new Error('Failed to fetch quiz');
       }
      
       const fetchedQuiz = await response.json(); // Parse the JSON response
       console.log(fetchedQuiz)
-      // Conditional rendering to check if fetchedQuiz is valid
+
       if (!fetchedQuiz || !fetchedQuiz.questions) {
-        throw new Error('Invalid quiz data');// Throw error if the data type is invalid
+        throw new Error('Invalid quiz data');
       }
 
       // Shuffle the questions to randomize their order
       const shuffledQuestions = fetchedQuiz.questions.map(question => {
-        const optionsWithCorrectAnswer = [...question.options, question.correctAnswer];// Combine options and correct answer
-        const shuffledOptions = shuffleArray(optionsWithCorrectAnswer);// Shuffle the options
-        return { ...question, options: shuffledOptions }; // Return the question with shuffled options
+        // Combine options and correct answer
+        const optionsWithCorrectAnswer = [...question.options, question.correctAnswer];
+        // Shuffle the options
+        const shuffledOptions = shuffleArray(optionsWithCorrectAnswer);
+        // Return the question with shuffled options
+        return { ...question, options: shuffledOptions }; 
       });
 
 
@@ -101,13 +104,13 @@ export default function Page2(//Export default page2 function component
         prevQuizList.map((q) => (q._id === quizId ? fetchedQuiz : q))
       );
       setQuestions(shuffledQuestions);
-      setQuizName(fetchedQuiz.name);// Set the quiz name
-      setQuiz(fetchedQuiz);// Set the fetched quiz
-      console.log(fetchedQuiz.name);//Log the fetched quiz name in the console for  debugging purposes
+      setQuizName(fetchedQuiz.name);
+      setQuiz(fetchedQuiz);
+      console.log(fetchedQuiz.name);
     } 
     catch (error) {
-      setError(`Error fetching quiz: ${error.message}`);// Set the error state and an error messsage
-      console.error(`Error fetching quiz: ${error.message}`);//Log an error message in the console for debugging purposes
+      setError(`Error fetching quiz: ${error.message}`);
+      console.error(`Error fetching quiz: ${error.message}`);
     }
   }, [setQuizList, setError, setQuestions, setQuizName, setQuiz])
 
@@ -144,7 +147,8 @@ export default function Page2(//Export default page2 function component
                 {/* Form to select a quiz */}               
               <Form.Select  
               id='quizSelect' 
-                // Set the selected value to the current quiz ID from the state
+                /* Set the selected value to the 
+                current quiz ID from the state*/
                 value={selectedQuizId} 
               onChange={(e) => {handleSelectQuiz(e)}}//Handle Quiz selection
               >
