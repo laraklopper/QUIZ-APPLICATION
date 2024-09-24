@@ -34,7 +34,8 @@ const checkJwtToken = (req, res, next) => {
         const decoded = jwt.verify(
             token, 
             'secretKey' 
-            /*process.env.JWT_SECRET*/,//Secret key used for signing the token stored in enviromental variables
+            //Secret key used for signing the token stored in enviromental variables
+            /*process.env.JWT_SECRET*/,
         );
         req.user = decoded; 
         console.log('Token provided');
@@ -133,9 +134,10 @@ router.post('/addScore', checkJwtToken, async(req, res) => {
             return res.status(404).json({message: 'Quiz not found'})
         }
 
-        // Check if a score already exists for the user and the quiz
         // const existingScore = await Score.findOne({ username, name }).exec();
+
         const existingScore = await Score.findOne({ username, name: quiz._id }).exec();
+        
         // If the existing score is higher or equal, don't update
         if (existingScore && existingScore.score >= score) {
             return res.status(200).json(
