@@ -1,8 +1,10 @@
 // Import necessary modules and packages
-import React from 'react';// Import the React module to use React functionalities
+// Import the React module to use React functionalities
+import React from 'react';
 //Bootstrap
-import Col from 'react-bootstrap/Col'; // Import the Col component from react-bootstrap
-import Button from 'react-bootstrap/Button'; // Import the Button component from react-bootstrap
+import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
+
 
 // UserViewBtn component
 export default function UserViewBtn(
