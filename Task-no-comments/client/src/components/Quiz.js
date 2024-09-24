@@ -1,9 +1,10 @@
 // Import necessary modules and packages
-import React, { useEffect, useState } from 'react';// Import the React module to use React functionalities
+// Import the React module to use React functionalities
+import React, { useEffect, useState } from 'react';
 // Bootstrap
-import Row from 'react-bootstrap/Row';//Import Bootstrap Row 
-import Col from 'react-bootstrap/Col';//Import Col from Bootstrap
-import Button from 'react-bootstrap/Button';//Import Bootstrap Button Component
+import Row from 'react-bootstrap/Row'; 
+import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
 
 // Quiz function component
 export default function Quiz({
