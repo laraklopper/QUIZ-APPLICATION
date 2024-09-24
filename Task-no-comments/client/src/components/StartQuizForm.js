@@ -9,11 +9,11 @@ import Button from 'react-bootstrap/Button';
 //StartQuizForm function component
 export default function StartQuizForm(
     {//PROPS PASSED FROM PARENT COMPONENT
-        quiz,// The selected quiz object, used to display quiz name
-        quizTimer,// Boolean state indicating whether the quiz timer is active
-        setQuizTimer,// Function to update the quiz timer state
-        quizStarted,// Boolean state to check if quiz has started
-        handleQuizStart// Function that handles the quiz start 
+        quiz,
+        quizTimer,
+        setQuizTimer,
+        quizStarted,
+        handleQuizStart
     }) {
 
     //=======JSX RENDERING=============
