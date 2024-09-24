@@ -1,8 +1,9 @@
-import React, { useCallback, useState } from 'react';// Import the React module to use React functionalities
+// Import the React module to use React functionalities
+import React, { useCallback, useState } from 'react';
 //Bootstrap
-import Row from 'react-bootstrap/Row'; // Import the Row component from react-bootstrap
-import Col from 'react-bootstrap/Col'; // Import the Col component from react-bootstrap
-import Button from 'react-bootstrap/Button'; // Import the Button component from react-bootstrap
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
 
 // Result function component
 export default function Result(//Export default Result function component
@@ -15,25 +16,25 @@ export default function Result(//Export default Result function component
 }
 ) {
   //===========STATE VARIABLES=================
-  const [showScore, setShowScore] = useState(true);// State to control the visibility of the result display
-  const [submitted, setSubmitted] = useState(false)//Boolean to indicate if the score has been submitted
-  const [submissionError, setSubmissionError] = useState(null)//State to indicate if an error occured while submitting the score
+  const [showScore, setShowScore] = useState(true);
+  const [submitted, setSubmitted] = useState(false);
+  const [submissionError, setSubmissionError] = useState(null);
 
   //--------------EVENT LISTENERS---------------
   // Function to submit score
   const handleSubmitScore = useCallback( async (e) => {
     e.preventDefault()
-    setSubmitted(true); // Indicate submission in progress
-    setSubmissionError(null); // Clear previous errors
+    setSubmitted(true);
+    setSubmissionError(null); 
     try {
       await addScore(); // Call the addScore function 
       console.log(currentScore);
     } catch (error) {
       setSubmissionError('Failed to save score');
-      console.error('Failed to save score', error.message);//Log an error message for debugging purposes
+      console.error('Failed to save score', error.message);
     }
     finally{
-      setSubmitted(false)// Reset submission state on failure
+      setSubmitted(false)
     }
   },[addScore, currentScore]);
 
