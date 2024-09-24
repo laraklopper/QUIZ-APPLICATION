@@ -1,17 +1,17 @@
 // Import necessary modules and packages
-import React, { useState } from 'react';// Import the React module to use React functionalities
+// Import the React module to use React functionalities
+import React, { useState } from 'react';
 //Bootstrap
-import Row from 'react-bootstrap/Row'; // Import the Row component from react-bootstrap
-import Col from 'react-bootstrap/Col'; // Import the Col component from react-bootstrap
-import Button from 'react-bootstrap/Button'; // Import the Button component from react-bootstrap
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button'; 
 
 
 //Add quiz function component
-export default function AddQuiz(//Export default AddQuiz function component
+export default function AddQuiz(
   {//PROPS PASSED FROM PARENT COMPONENT
   quizName,
   setQuizName, 
-  // currentUser,
   questions, 
   setQuestions,
   addNewQuiz,
@@ -19,19 +19,18 @@ export default function AddQuiz(//Export default AddQuiz function component
   setCurrentQuestion,
 }) {
   //===========STATE VARIABLES====================
-  const [errorMessage, setErrorMessage] = useState('');// State to manage the error message displayed to the user
-
+  const [errorMessage, setErrorMessage] = useState('');
+  
   //============EVENT LISTENERS=========================
   //Function to add a new question
   const handleAddQuestion = () => {
     if (questions.length >= 5) {
       alert('You must add up to 5 questions.'); 
-      console.log('You must add up to 5 questions.');//Log a message in the console for debugging purporses
+      console.log('You must add up to 5 questions.');
       return;// Exit the function to prevent adding more questions
     }
     //Conditional rendering
     if (!currentQuestion.questionText  || !currentQuestion.correctAnswer  || currentQuestion.options.some(opt => !opt)) {
-      // Set an error message if any field is empty
       setErrorMessage('Please fill in all fields before adding a question.');
       return;// Exit the function to prevent adding incomplete questions
     }
@@ -82,8 +81,6 @@ export default function AddQuiz(//Export default AddQuiz function component
                   name='quizName'
                   value={quizName}
                   onChange={(e) =>
-                    /* Event handler for the onChange event, 
-                    triggered when the input value changes*/
                     setQuizName(e.target.value)
                   }
                   autoComplete='off'
@@ -145,8 +142,6 @@ export default function AddQuiz(//Export default AddQuiz function component
                   type='text'
                   name='correctAnswer'
                   value={currentQuestion.correctAnswer} 
-                  /* Handle the change even t to update the state 
-                  when the input value changes*/
                 onChange={(e) => setCurrentQuestion(
                   {
                     ...currentQuestion, 
