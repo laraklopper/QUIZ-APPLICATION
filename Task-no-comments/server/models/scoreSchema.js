@@ -31,7 +31,7 @@ const scoreSchema = new mongoose.Schema({
         /*Validate to ensure the username is a valid objectId*/
         validate: {
             validator: mongoose.Types.ObjectId.isValid,
-            message: 'Invalid quiz Id',//Custom error message if validation fails
+            message: 'Invalid quiz Id',
         },
     },
     /*name: {
