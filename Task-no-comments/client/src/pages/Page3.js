@@ -1,15 +1,16 @@
 // Import necessary modules and packages
-import React, { useCallback, useEffect, useState } from 'react';// Import the React module to use React functionalities
-import '../CSS/Page3.css';//Import CSS stylesheet
+// Import the React module to use React functionalities
+import React, { useCallback, useEffect, useState } from 'react';
+import '../CSS/Page3.css';
 // Bootstrap
-import Row from 'react-bootstrap/Row'; // Bootstrap Row component for layout
-import Col from 'react-bootstrap/Col'; // Bootstrap Col component for layout
+import Row from 'react-bootstrap/Row'; 
+import Col from 'react-bootstrap/Col'; 
 import Button from 'react-bootstrap/Button';
 // Components
-import Header from '../components/Header';//Import the Header function component
-import AddQuiz from '../components/AddQuiz';//Import the AddQuiz function component
-import Footer from '../components/Footer';//Import the Footer function component
-import EditQuiz from '../components/EditQuiz';//Import the EditQuiz function component
+import Header from '../components/Header';
+import AddQuiz from '../components/AddQuiz';
+import Footer from '../components/Footer';
+import EditQuiz from '../components/EditQuiz';
 
 // Page3 function component
 export default function Page3(
@@ -31,15 +32,15 @@ export default function Page3(
   
   // ========STATE VARIABLES===============
   //Edit quiz variables
-  const [newQuizName, setNewQuizName] = useState('');// State to store new quiz name
-  const [update, setUpdate] = useState(false);    // Toggle between edit mode and normal mode 
-  const [newQuestions, setNewQuestions] = useState([])  // State to store new questions when editing a quiz
-  const [quizToUpdate, setQuizToUpdate] = useState(null); // State to store the quiz ID of the quiz being updated 
+  const [newQuizName, setNewQuizName] = useState('');
+  const [update, setUpdate] = useState(false);    
+  const [newQuestions, setNewQuestions] = useState([])  
+  const [quizToUpdate, setQuizToUpdate] = useState(null); 
   const [editQuizIndex, setEditQuizIndex] = useState( 
     { editQuestionText: '', 
       editCorrectAnswer: '', 
       editOptions: ['', '', ''] });
-  const [formError, setFormError] = useState(null);// Form error for validation
+  const [formError, setFormError] = useState(null);
 
   
   
@@ -54,30 +55,30 @@ export default function Page3(
   // ----------POST-------------------
   //Function to add a new quiz
   const addNewQuiz = async () => {
-    //Conditional rendering to check that the quiz has exacly 5 questions
     if (questions.length !== 5) {     
-      alert('You must add exactly 5 questions.');// Alert if the number of questions is incorrect
+      alert('You must add exactly 5 questions.');
       return;// Exit the function to prevent further execution
     }
     // Create a quiz object to send to the server
     const quiz = {
-      name: quizName,// Quiz name entered by the user
+      name: quizName,
       // username: currentUser.username, 
-      questions,// The array of questions
+      questions,
     }
     try {
-      
-      const token = localStorage.getItem('token');// Retrieve the authentication token from localStorage
+      // Retrieve the authentication token from localStorage
+      const token = localStorage.getItem('token');
 
       //Send a POST request to the server to add a new quiz
       const response = await fetch('http://localhost:3001/quiz/addQuiz', {
         method: 'POST',//HTTP request method
-        mode: 'cors', // Enable cross-origin resource sharing
+        mode: 'cors', 
         headers: {
           'Content-Type': 'application/json',//Specify the content-type 
-          'Authorization': `Bearer ${token}`,// Attach the token in the Authorization header  
+          'Authorization': `Bearer ${token}`,// Attach the token  
         },
-        body: JSON.stringify(quiz) // Convert the quiz object to a JSON string before sending
+        // Convert the quiz object to a JSON string before sending
+        body: JSON.stringify(quiz) 
       });
   
       // Handle the response from the server
@@ -91,41 +92,40 @@ export default function Page3(
         setQuestions([]);
       } 
       else {
-        throw new Error('There was an error creating the quiz');//Throw an error message if the POST request is unsuccessful
+        throw new Error('There was an error creating the quiz');
       }
     } 
     catch (error) {
       //Error handling
-      console.error('There was an error creating the quiz:', error);//Log an error message in the console for debugging purposes
-      setError('There was an error creating the quiz');// Set the Error State with an error message
+      console.error('There was an error creating the quiz:', error);
+      setError('There was an error creating the quiz');
       alert('There was an error creating the quiz');
     }
   };
 
   // ---------------PUT-----------------------
   //Function to edit a quiz
-  const editQuiz = async (quizId) => {//Define an async function to edit a quiz
-
-    // Conditional rendering to check if the number of questions is exactly 5
+  const editQuiz = async (quizId) => {
+    
     if (questions.length !== 5) {
-      // Set form error if the validation fails
       setFormError('You must have exactly 5 questions.');
       return;// Exit the function to prevent further execution
     }
     try {
       // Retrieve the JWT token from local storage
       const token = localStorage.getItem('token');
+      
       //Send a PUT request to the server to edit a quiz
       const response = await fetch(`http://localhost:3001/quiz/editQuiz/${quizId}`, {
         method: 'PUT',//HTTP request method
-        mode: 'cors',// Enable Cross-origin resource sharing
+        mode: 'cors',
         headers: {
-          'Content-Type': 'application/json',//Specify the Content-Type in the payload as JSON
+          'Content-Type': 'application/json',//Specify the Content-Type
           'Authorization': `Bearer ${token}`,// Attach the token 
         },
         body: JSON.stringify({
-          name: newQuizName, // The new quiz name provided by the user
-          questions: newQuestions,// The new array of questions                  
+          name: newQuizName, 
+          questions: newQuestions,              
             })
       });
 
@@ -140,25 +140,24 @@ export default function Page3(
         // Reset the edit form by clearing the state variables
         setEditQuizIndex([
           {
-            editQuestionText: '',  // Clear the edited question text
-            editCorrectAnswer: '',  // Clear the edited correct answer
-            editOptions: ['', '', ''] // Clear the edited answer options
+            editQuestionText: '',  
+            editCorrectAnswer: '',  
+            editOptions: ['', '', ''] 
           }
         ]);
-
-        setQuizToUpdate(null);  // Reset the quiz being updated
-        setNewQuizName('');     // Clear the new quiz name input
-        setNewQuestions([]);    // Clear the new questions array
+        setQuizToUpdate(null); 
+        setNewQuizName('');   
+        setNewQuestions([]);    
       } 
       
       else {
-        throw new Error('Error editing quiz');//Throw an error message if the PUT request is unsuccessful
+        throw new Error('Error editing quiz');
       }
 
     } 
     catch (error) {
-      console.error(`Error editing the quiz: ${error}`);//Log an error message in the console for debugging purposes
-      setError(`Error editing the quiz: ${error}`);//Set the Error State with an error message
+      console.error(`Error editing the quiz: ${error}`);
+      setError(`Error editing the quiz: ${error}`);
     }
   }
 
@@ -172,26 +171,25 @@ export default function Page3(
       //Send a DELETE request to server to delete a quiz
       const response = await fetch(`http://localhost:3001/quiz/deleteQuiz/${quizId}`, {
         method: 'DELETE',//HTTP request method
-        mode: 'cors',//Enable Cross-Origin resource sharing mode
+        mode: 'cors',
         headers: {
-          'Content-Type': 'application/json',//Specify the Content-Type in the payload as JSON
+          'Content-Type': 'application/json',//Specify the Content-Type
           'Authorization': `Bearer ${token}`,// Attach the token 
         }
       });
       
       //Response handling
       if (response.ok) {
-        // If the request is successful, remove the quiz from the quizList
         setQuizList(quizList.filter(q => q._id !== quizId));
       } 
       else {
-        throw new Error('Error deleting quiz');//Throw an Error message if the DELETE request is unsuccessful
+        throw new Error('Error deleting quiz');
       }
       
     } 
     catch (error) {
-      setError(`Error deleting quiz: ${error}`);// Set the error state to display the error in the UI
-      console.error(`Error deleting quiz: ${error}`);//Log an error message in the console for debugging purposes
+      setError(`Error deleting quiz: ${error}`);
+      console.error(`Error deleting quiz: ${error}`);
     }
   }
  
