@@ -1,80 +1,46 @@
 // Import necessary modules and packages
-import React, { useEffect, useCallback } from 'react';// Import the React module to use React functionalities
-import '../CSS/Page1.css'//Import CSS stylesheet
+import React, { useEffect } from 'react';// Import the React module to use React functionalities
+import '../CSS/Page1.css';// Import the CSS file for the Page1 component's styling
 //Bootstrap
-import Row from 'react-bootstrap/Row'; // Import the Row component from react-bootstrap
-import Col from 'react-bootstrap/Col'; // Import the Col component from react-bootstrap
-import Dropdown from 'react-bootstrap/Dropdown';// Import the Dropdown component from react-bootstrap
-import DropdownButton from 'react-bootstrap/DropdownButton';// Import the DropdownButton component from react-bootstrap
-// import Button from 'react-bootstrap/Button'; // Import the Button component from react-bootstrap
+import Row from 'react-bootstrap/Row'; // Bootstrap Row component for layout
+import Col from 'react-bootstrap/Col'; // Bootstrap Col component for layout
+import FormSelect from 'react-bootstrap/FormSelect'; // Bootstrap form select component
 //Components
 import Header from '../components/Header';//Import the Header function component
 import Footer from '../components/Footer';//Import the Footer function component
+import Instructions from '../components/Instructions';//Import Instructions function component
 
 //Page1 function component
 export default function Page1(//Export default Page1 function component
   { //PROPS PASSED FROM PARENT COMPONENT 
-    logout,
-    setError,
+     logout,
+    // scores,
+    // setScores,
+    loggedIn,
      currentUser,
      selectedQuiz,
      setSelectedQuiz,
-     userScores = [],
-     setUserScores,
-    quiz
+     userScores = [],   
+     fetchScores
     }
   ) {
 
-//=============REQUESTS===================
-//---------------GET---------------------
-//Function to display the Scores list from the database
-const fetchScores = useCallback(async () => {//Define an async function to fetch userScores
-  try {
-    const token =localStorage.getItem('token'); //Retrieve the token from localStorage
-    //const username = localStorage.getItem('username');//Retrieve the username from localStorage
-    //Send a GET request to the server to find scores
-    const response = await fetch (`http://localhost:3001/scores/findScores`, {
-      method: 'GET',//HTTP request method
-      mode: 'cors',//Enable Cors for cross-origin resourcing
-      headers: {
-        'Content-Type': 'application/json',// Specify the Content-Type 
-        'Authorization': `Bearer ${token}`,// Authorization header 
+  //==============USE EFFECT HOOK===============
+// useEffect hook to fetch scores when the component mounts
+    useEffect (() => {
+      //Conditional rendering to check if the user is logged in
+      if (loggedIn === true) {
+        fetchScores()// Call the fetchScores function 
       }
-    })
+      
+    },[fetchScores, loggedIn])
 
-    /* Conditional rendering to check if the response
-       is not successful (status code is not in the range 200-299)*/
-    if (!response.ok) {
-      // Throw an error if GET request status is not OK(unsuccessful)
-      throw new Error('Unable to fetch user scores');
-    }
-
-    const quizScores = await response.json(); // Parse the response JSON data
-
-    // Conditional rendering to check if the fetched data is valid and an array
-    if (quizScores && Array.isArray(quizScores.userScores)) {
-      setUserScores(quizScores.userScores); // Update state with fetched scores
-    } 
-    else {
-      //Throw an error message if the data type is invalid
-      throw new Error('Invalid data type');
-    }
-    
-  } catch (error) {
-    console.error('Error fetching userScores', error.message);//Log an error message in the console for debugging purposes
-    setError(`Error fetching userScores: ${error.message}`);  // Set the error state and an error messsage
-  }
-},[setUserScores, setError])
 
   // Filter the results by the selected quiz name
   const quizResults = selectedQuiz
-    ? userScores.filter(score => score.quizName === selectedQuiz)  
-    : [];// Filter the scores based on the selected quiz
-
-  // useEffect hook to fetch scores when the component mounts
-    useEffect (() => {
-      fetchScores()// Call the fetchScores function 
-    },[fetchScores])
+    // Filter the scores based on the selected quiz
+    ? userScores.filter(score => score.name === selectedQuiz)  
+    : [];//If no quiz is selected return an empty array
     
 //========JSX RENDERING================
 
@@ -96,16 +62,9 @@ const fetchScores = useCallback(async () => {//Define an async function to fetch
               </label>
             </div>
           </Col>
-          {/* Instructions Section */}
+         {/* Instructions Section */}
           <Col xs={6} id="instructions">
-            <h2 id="instructionsHeading">HOW TO PLAY:</h2>
-            {/* Explain how the application works */}
-            <ul id="instructText">
-              <li className="instruction">Select a quiz from the list</li>
-              <li className="instruction">Select the optional timer option</li>
-              <li className="instruction">Each quiz consists of 5 multiple choice questions</li>
-              <li className="instruction">Users are not authorized to play quizzes they created</li>
-            </ul>
+            <Instructions/>         
           </Col>
         </Row>
       </section>
