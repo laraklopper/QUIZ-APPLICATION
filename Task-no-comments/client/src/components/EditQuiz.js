@@ -1,10 +1,10 @@
 // Import necessary modules and packages
-import React, { useEffect, useState } from 'react';// Import the React module to use React functionalities
+// Import the React module to use React functionalities
+import React, { useEffect, useState } from 'react';
 //Bootstrap
-import Row from 'react-bootstrap/Row'; // Import the Row component from react-bootstrap
-import Col from 'react-bootstrap/Col'; // Import the Col component from react-bootstrap
-import Button from 'react-bootstrap/Button'; // Import the Button component from react-bootstrap
-
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col'; 
+import Button from 'react-bootstrap/Button'; 
 
 //EditQuiz function component
 export default function EditQuiz(//Export default editQuiz Function component
@@ -19,58 +19,44 @@ export default function EditQuiz(//Export default editQuiz Function component
     newQuizName,
     newQuestions,
     setNewQuestions,
-
   }
 ) {
   //=============STATE VARIABLES======================
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);  // State to track the index of the current question being edited
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0); 
 
 
   //=========USE EFFECT HOOK==================
   /* Effect to initialize and update the editQuizIndex state when 
   quiz or currentQuestionIndex changes*/
   useEffect(() => {
-    // Conditional rendering to check if the object is available
     if (quiz) {
-      // Update the editQuizIndex state with data from the current question
       setEditQuizIndex({
-        editQuestionText: quiz.questions[currentQuestionIndex]?.questionText || '',// Set the question text or empty if undefined
-        editCorrectAnswer: quiz.questions[currentQuestionIndex]?.correctAnswer || '',// Set the correct answer or empty if undefined
-        editOptions: quiz.questions[currentQuestionIndex]?.options || ['', '', '']// Set options or default to 3 empty strings
+        editQuestionText: quiz.questions[currentQuestionIndex]?.questionText || '',
+        editCorrectAnswer: quiz.questions[currentQuestionIndex]?.correctAnswer || '',
+        editOptions: quiz.questions[currentQuestionIndex]?.options || ['', '', '']
       })
     }
   }, [quiz, currentQuestionIndex, setEditQuizIndex])
 
   //============EVENT LISTENERS=================
 
-
   // Function to edit a question
 const handleEditQuestion = () => {
-  // Conditional rendering to check if there are any new questions to update
-    if (newQuestions.length === 0) {
-      // If no questions are available, alert the user and stop the function execution
+    if (newQuestions.length === 0) {     
       alert('No questions to update');
       return;// Exit the function
     }
-    // Copy the newQuestions array to avoid directly mutating the state
+  
   const updatedQuestions = [...newQuestions];
-  /* Update the specific question being edited  
-  with the current editQuizIndex state*/
     updatedQuestions[currentQuestionIndex] = { ...editQuizIndex };
-    setNewQuestions(updatedQuestions); // Update the state with the new list of questions
-  // Update the quiz list with the modified quiz
+    setNewQuestions(updatedQuestions); 
     setQuizList(
-      //Map over the existing quizzes
       quizList.map(q =>
-        // Check if the quiz's ID matches the ID of the quiz being edited
         q._id === quiz._id 
-          // Update the quiz's questions and name
           ? { ...q, questions: updatedQuestions, name: newQuizName } 
-          : q  // If it doesn't match, return the quiz unchanged
+          : q  
       ));
   };
-
- 
 
   //==============JSX RENDERING====================
   
