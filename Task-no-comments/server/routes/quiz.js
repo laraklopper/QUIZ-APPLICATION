@@ -14,8 +14,6 @@ mongoose.set('strictPopulate', false);
 
 //==============CUSTOM MIDDLEWARE======================
 //Middleware to verify the JWT token
-//==============CUSTOM MIDDLEWARE======================
-//Middleware to verify the JWT token
 const checkJwtToken = (req, res, next) => {
     const authHeader = req.headers.authorization;
 
