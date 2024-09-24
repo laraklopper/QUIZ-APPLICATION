@@ -1,9 +1,10 @@
 // Import necessary modules and packages
-import React from 'react';// Import the React module to use React functionalities
+// Import the React module to use React functionalities
+import React from 'react';
 // Bootstrap
-import Row from 'react-bootstrap/Row'; // Import the Row component from react-bootstrap
-import Col from 'react-bootstrap/Col'; // Import the Col component from react-bootstrap
-import Button from 'react-bootstrap/Button'; // Import the Button component from react-bootstrap
+import Row from 'react-bootstrap/Row'; 
+import Col from 'react-bootstrap/Col'; 
+import Button from 'react-bootstrap/Button'; 
 
 //LoginForm function component
 export default function LoginForm(
@@ -20,16 +21,15 @@ export default function LoginForm(
   //Function for handling user login data changes
   const handleUserLogin = (event) => {
     const { name, value } = event.target;
-    // Update userData state with new values
     setUserData((prevState) => (
-      { ...prevState, [name]: value }// Spread previous state and update the specific field
+      { ...prevState, [name]: value }
     ));
   };
 
     // Function to handle user Login
     const handleLogin = (e) => {
-      e.preventDefault()// Prevent  defualt form submissione
-      // console.log('logging In');//Log a message in the console for debugging purposes
+      e.preventDefault();
+      // console.log('logging In');
       submitLogin();// Call the submitLogin function
     }
 
