@@ -1,13 +1,14 @@
 // Import necessary modules and packages
-import React, { useState } from 'react';// Import the React module to use React functionalities
-import '../CSS/registration.css'//Import CSS stylesheet
+// Import the React module to use React functionalities
+import React, { useState } from 'react';
+import '../CSS/registration.css';
 //Bootstrap
-import Row from 'react-bootstrap/Row'; // Import the Row component from react-bootstrap
-import Col from 'react-bootstrap/Col'; // Import the Col component from react-bootstrap
+import Row from 'react-bootstrap/Row'; 
+import Col from 'react-bootstrap/Col'; 
 //Components
-import MainHeader from '../components/MainHeader';//Import the MainHeader function component
-import PageFooter from '../components/PageFooter';//Import the PageFooter function component
-import RegistrationForm from '../components/RegistrationForm';//Import the RegistrationForm function component
+import MainHeader from '../components/MainHeader';
+import PageFooter from '../components/PageFooter';
+import RegistrationForm from '../components/RegistrationForm';
 
 //Registration Function Component
 export default function Registration(//Export the default Registration component
@@ -21,7 +22,6 @@ export default function Registration(//Export the default Registration component
     // const [newDateOfBirth, setNewDateOfBirth] = useState('');
     // const [newAdmin, setNewAdmin] = useState(false);
     // const [newPassword, setNewPassword] = useState('')
-    // State to manage new user data
   const [newUserData, setNewUserData] = useState({
     newUsername: '',
     newEmail: '',
@@ -32,16 +32,18 @@ export default function Registration(//Export the default Registration component
   //==========REQUESTS========================
   //------------POST------------------------
      //Function to register a new user  
-  const addUser = async () => {//Define an async function to register a new user
+ const addUser = async () => {
     try {
-      const token = localStorage.getItem('token');// Retrieve token from localStorage
+      // Retrieve the JWT token from localStorage
+      const token = localStorage.getItem('token');
+      
       //Send a POST request to the server
       const response = await fetch('http://localhost:3001/users/register', {
-        method: 'POST',//HTTP reqeuest method
-        mode: 'cors',//Enable CORS for Cross Origin Resource Sharing
+        method: 'POST',//HTTP request method
+        mode: 'cors',
         headers: {
-          'Content-Type': 'application/json',//Specify the Content-Type in the payload as JSON
-          'Authorization': `Bearer ${token}`// Attach the token in the Authorization header
+          'Content-Type': 'application/json',// Specify the Content-Type 
+          'Authorization': `Bearer ${token}`,// Attach JWT token
         },
         body: JSON.stringify({
           username: newUserData.newUsername,
@@ -51,10 +53,9 @@ export default function Registration(//Export the default Registration component
           password: newUserData.newPassword
         })
       });
-      
+
       //Response handling
       if (response.ok) {
-        // Clear new user data from state
         setNewUserData({
           newUsername: '',
           newEmail: '',
@@ -62,18 +63,18 @@ export default function Registration(//Export the default Registration component
           newAdmin: false,
           newPassword: ''
         });
-        alert('New User successfully registered')//Notify the user of successful registration
+        alert('New User successfully registered');
       } else {
-        // Handle errors if response is not successful
         // Attempt to parse the JSON error response from the server
-        const errorData = await response.json(); 
-        // Throw a new Error with the message from the server's response
-        // If the server's response does not include a message, a default error message is used
+        const errorData = await response.json();
+         // Throw a new Error with the message from the server's response
+        /* If the server's response does not include a message, 
+        a default error message is used*/
         throw new Error(errorData.message || 'Error adding user');
       }
     } catch (error) {
-      setError(`Error adding new user: ${error.message}`);// Set the error state to display the error in the UI
-      console.error(`Error adding new user: ${error.message}`);//Log an error message in the console for debugging purposes
+      setError(`Error adding new user: ${error.message}`);
+      console.error(`Error adding new user: ${error.message}`);
     }
   };
    
