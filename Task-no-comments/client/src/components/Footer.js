@@ -1,9 +1,10 @@
 // Import necessary modules and packages
-import React from 'react';// Import the React module to use React functionalities
+// Import the React module to use React functionalities
+import React from 'react';
 //Bootstrap
-import Row from 'react-bootstrap/Row'; // Import the Row component from react-bootstrap
-import Col from 'react-bootstrap/Col'; // Import the Col component from react-bootstrap
-import Button from 'react-bootstrap/Button'; // Import the Button component from react-bootstrap
+import Row from 'react-bootstrap/Row'; 
+import Col from 'react-bootstrap/Col'; 
+import Button from 'react-bootstrap/Button'; 
 
 // Footer function component
 export default function Footer(//Export default footer function component
