@@ -12,7 +12,6 @@ const Quiz = require('../models/quizModel');
 // Setup middleware
 router.use(cors()); 
 router.use(express.json()); 
-router.use(express.urlencoded({ extended: true })); 
 mongoose.set('strictPopulate', false); 
 
 //=============ROUTES=====================
