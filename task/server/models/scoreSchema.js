@@ -4,6 +4,11 @@ const mongoose = require('mongoose');// Import the Mongoose library
 
 //Define the score schema
 const scoreSchema = new mongoose.Schema({
+     // Field for the name of the quiz taken
+     name: {
+        type: String,
+        required:[true, 'Quiz name is required'],   
+    },
     /* Field for username of the user who
     took the quiz*/
      username: {
@@ -20,13 +25,8 @@ const scoreSchema = new mongoose.Schema({
             validator: mongoose.Types.ObjectId.isValid,
             message: 'Invalid user Id',//Custom error message if validation fails
         },
-    }, */
-    // Field for the name of the quiz taken
-     name: {
-        type: String,
-        required:[true, 'Quiz name is required'],   
-    },
-    /* quizId: {
+    }, 
+    quizId: {
         type: mongoose.Schema.Types.ObjectId,
         // Reference the Quiz collection
         ref: 'Quiz',
