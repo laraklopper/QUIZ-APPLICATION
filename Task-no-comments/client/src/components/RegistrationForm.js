@@ -1,9 +1,10 @@
 // Import necessary modules and packages
-import React from 'react';// Import the React module to use React functionalities
+// Import the React module to use React functionalities
+import React from 'react';
 //Bootstrap
-import Row from 'react-bootstrap/Row'; // Import the Row component from react-bootstrap
-import Col from 'react-bootstrap/Col'; // Import the Col component from react-bootstrap
-import Button from 'react-bootstrap/Button'; // Import the Button component from react-bootstrap
+import Row from 'react-bootstrap/Row'; 
+import Col from 'react-bootstrap/Col'; 
+import Button from 'react-bootstrap/Button'; 
 
 //RegistrationForm function component
 export default function RegistrationForm(//Export the default RegistrationForm component
@@ -17,7 +18,7 @@ export default function RegistrationForm(//Export the default RegistrationForm c
   //============EVENT LISTENERS=================    
     //Function handle user registration
   const handleRegistration = (e) => {
-    e.preventDefault();//Prevent default form submission
+    e.preventDefault();
     console.log('Registering new user');
     addUser(); //Call the addUser function
   }
@@ -29,7 +30,6 @@ export default function RegistrationForm(//Export the default RegistrationForm c
     // Determine the new value based on the input type
     // If the input type is 'checkbox', use `checked`, otherwise use `value`
     const newValue = type === 'checkbox' ? checked : value;
-    // Spread the previous state and update the specific field based on `name`
     setNewUserData(prevState => (
       { ...prevState, [name]: newValue }));
   };
