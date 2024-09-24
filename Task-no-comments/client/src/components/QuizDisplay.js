@@ -1,11 +1,13 @@
-import React, { useCallback, useState } from 'react';// Import the React module to use React functionalities
+// Import necessary modules and packages
+// Import the React module to use React functionalities
+import React, { useCallback, useState } from 'react';
 //Components
-import StartQuizForm from '../components/StartQuizForm';//Import the StartQuiz function component
-import Quiz from './Quiz';//Import the Quiz function component
-import Result from './Result';//Import the results function component
+import StartQuizForm from '../components/StartQuizForm';
+import Quiz from './Quiz';
+import Result from './Result';
 
 //QuizDisplay Function component
-export default function QuizDisplay(//Export default quizDisplay component
+export default function QuizDisplay(
   {// PROPS PASSED FROM PARENT COMPONENT
     selectedQuizId, 
     quiz, 
