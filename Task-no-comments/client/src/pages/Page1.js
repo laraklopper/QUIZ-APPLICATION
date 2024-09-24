@@ -1,53 +1,46 @@
 // Import necessary modules and packages
-import React, { useEffect } from 'react';// Import the React module to use React functionalities
-import '../CSS/Page1.css';// Import the CSS file for the Page1 component's styling
+import React, { useEffect } from 'react';
+import '../CSS/Page1.css';
 //Bootstrap
-import Row from 'react-bootstrap/Row'; // Bootstrap Row component for layout
-import Col from 'react-bootstrap/Col'; // Bootstrap Col component for layout
-import FormSelect from 'react-bootstrap/FormSelect'; // Bootstrap form select component
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import FormSelect from 'react-bootstrap/FormSelect'; 
 //Components
-import Header from '../components/Header'; // Import the Header component
-import Footer from '../components/Footer';//Import the Footer function component
-import Instructions from '../components/Instructions';//Import Instructions function component
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import Instructions from '../components/Instructions';
 
 //Page1 function component
 export default function Page1(//Export default Page1 function component
   { //PROPS PASSED FROM PARENT COMPONENT 
-    logout,
-    // scores,
-    // setScores,
-    loggedIn,
+     logout,
+     loggedIn,
      currentUser,
      selectedQuiz,
      setSelectedQuiz,
      userScores = [],   
-     fetchScores
-     
+     fetchScores     
     }
   ) {
 
 //==============USE EFFECT HOOK===============
 // useEffect hook to fetch scores when the component mounts
     useEffect (() => {
-      //Conditional rendering to check if the user is logged in
       if (loggedIn === true) {
-        fetchScores()// Call the fetchScores function 
-      }
-      
+        fetchScores();// Call the fetchScores function 
+      }      
     },[fetchScores, loggedIn])
     
   // Filter the results by the selected quiz name
   const quizResults = selectedQuiz
-    // Filter the scores based on the selected quiz
     ? userScores.filter(score => score.name === selectedQuiz)  
-    : [];//If no quiz is selected return an empty array
+    : [];
 
 //========JSX RENDERING================
 
   return (
     <>
     {/* HEADER */}
-      {/* Render the Header component with a heading prop */}
     <Header heading='HOME'/>
     {/* Section1: welcome message and instructions */}
       <section id="page1Section1">
@@ -79,15 +72,15 @@ export default function Page1(//Export default Page1 function component
         <Row className='scoreDisplayRow'>
           <Col className="scoreDisplayCol">
             <div id="pastScoresOutput">
-              {/* Conditional rendering to check if the user has any scores */}
+              {/* Conditional rendering to check 
+              if the user has any scores */}
               {userScores.length > 0 ? (
                 <div id='pastScoresDisplay'>
                   {/* Select dropdown for quiz selection */}
                   <FormSelect
                   title={selectedQuiz || 'SELECT'}
                     aria-label="Select a Quiz"
-                    value={selectedQuiz || ''}//The value of the selected quiz
-                    // Handle quiz selection
+                    value={selectedQuiz || ''}
                     onChange={(e) => setSelectedQuiz(e.target.value)}
                     id='scoreList'
                   >
