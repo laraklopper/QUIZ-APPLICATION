@@ -20,9 +20,9 @@ export default function Quiz({
   setQuizIndex
 }) {
   // =============STATE VARIABLES=====================
-  const [selectedOption, setSelectedOption] = useState(null);// State to track the selected answer option 
-  const [feedback, setFeedback] = useState('');// Feedback message for correct/incorrect answers              
-  const [timeLeft, setTimeLeft] = useState(10);// Timer state for countdown
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [feedback, setFeedback] = useState('');         
+  const [timeLeft, setTimeLeft] = useState(10);
 
   // ========USE EFFECT HOOK==================
   /* Effect to reset the question index to the first 
@@ -35,7 +35,7 @@ export default function Quiz({
 
   // Effect to manage the timer countdown
   useEffect(() => {
-    if (!quizTimer) return;//Conditional rendering to check if the timer is disabled
+    if (!quizTimer) return;
 
     setTimeLeft(timer);//Initial timer value
     let isMounted = true;// Flag to check component mount status
@@ -43,12 +43,11 @@ export default function Quiz({
     const interval = setInterval(() => {
       if (isMounted) {
         setTimeLeft((prevTime) => {// Update the timeLeft state
-          // Conditional rendering to check 
           /*if timeLeft is less than or equal to 1, clear 
           the interval and handle the next question*/
           if (prevTime<= 1) {
             clearInterval(interval);// Stop the interval timer
-            //Call the handleNextQuestion function and move to the next question
+            //Call the handleNextQuestion function
             handleNextQuestion(); 
             return 0// Set timeLeft to 0
           }
@@ -59,9 +58,10 @@ export default function Quiz({
     }, 1000);// Timer updates every second (1000 milliseconds)
 
     return () => {
-      // Set isMounted to false to prevent state updates after unmount
+      /* Set isMounted to false to prevent state 
+      updates after unmount*/
       isMounted = false
-      clearInterval(interval);// Clear the interval to prevent memory leaks
+      clearInterval(interval);
     }
   }, [timer, handleNextQuestion, quizTimer]);
 
@@ -73,7 +73,8 @@ export default function Quiz({
   // =======Utility function============
   // Function to format the timer into mm:ss format
   const formatTimer = (seconds) => {
-    const minutes = Math.floor(seconds / 60);  // Calculate the number of minutes
+    // Calculate the number of minutes
+    const minutes = Math.floor(seconds / 60);  
     const secs = seconds % 60; // Calculate the remaining seconds
     // Return the formatted time as a string in mm:ss format
     // Pad seconds with a leading zero if less than 10
@@ -84,26 +85,26 @@ export default function Quiz({
   /* Function to handle answer selection and 
   update the score if correct */
   const handleAnswerClick = (isCorrect) => {
-    /*/ Conditional rendering to check if 
+    /*Conditional rendering to check if 
     the selected answer is correct*/
     if (isCorrect) {
-      setCurrentScore(currentScore + 1); // Increment the score if the answer is correct
-      setFeedback('correct');// Set feedback message for correct answer
+      setCurrentScore(currentScore + 1); 
+      setFeedback('correct');
     } else {
-      setFeedback('incorrect');//Display a feedback message for incorrect answer
+      setFeedback('incorrect');
     }
-    setTimeout(() => setFeedback(''), 1000)  // Clear the feedback message after 1 second
+    // Clear the feedback message after 1 second
+    setTimeout(() => setFeedback(''), 1000)  
   };
 
   /* Function to handle option click and 
   update the selected option */
   const handleOptionClick = (option) => {
     setSelectedOption(option);  // Update the selected option
-    /*/ Check if the selected option is the correct 
+    /* Check if the selected option is the correct 
     answer and update the score accordingly*/
     handleAnswerClick(option === questions[quizIndex].correctAnswer);
-    //Call the handleNextQuestion function and move to the next question
-    handleNextQuestion();
+    handleNextQuestion();//Call the handleNextQuestion function 
   };
 
   // =================JSX RENDERING======================
@@ -151,7 +152,7 @@ export default function Quiz({
               {/* Map through and render options as buttons */}
               {questions[quizIndex].options.map((option, index) => (
                 <Button
-                  key={index} // Unique key for each button to identify which items have changed
+                  key={index} 
                   variant={selectedOption === option ? 'success' : 'secondary'}
                   className='answerOption'
                   name='options'
@@ -178,7 +179,9 @@ export default function Quiz({
           <Col xs={6} md={4}>
             <div>
               {/* Display the current score */}
-              <p id='resultText'>RESULT: {currentScore} of {selectedQuiz.questions.length}</p>
+              <p id='resultText'>
+                RESULT: {currentScore} of {selectedQuiz.questions.length}
+               </p>
             </div>
           </Col>
           <Col xs={6} md={4}></Col>
