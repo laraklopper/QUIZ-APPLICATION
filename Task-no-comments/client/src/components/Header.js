@@ -1,7 +1,9 @@
-import React from 'react';// Import the React module to use React functionalities
+// Import necessary modules and packages
+// Import the React module to use React functionalities
+import React from 'react';
 //Bootstrap
-import Row from 'react-bootstrap/Row';//Import Bootstrap Row 
-import Col from 'react-bootstrap/Col';//Import Col from Bootstrap
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 // Import Link from react-router-dom for navigation
 import { Link } from 'react-router-dom';
 
