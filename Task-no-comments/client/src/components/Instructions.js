@@ -1,6 +1,11 @@
-import React from 'react'
+// Import the React module to use React functionalities
+import React from 'react';
 
+//Instructions function component
 export default function Instructions() {
+
+  //========JSX RENDERING==============
+  
   return (
             <div>
               <h2 id="instructionsHeading">HOW TO PLAY:</h2>
