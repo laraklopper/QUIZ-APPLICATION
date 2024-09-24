@@ -1,25 +1,26 @@
 // Import necessary modules and packages
-import React, { useEffect, useState, useCallback } from 'react';// Import the React module to use React functionalities
-import './App.css';//Import CSS stylesheet
+// Import the React module to use React functionalities
+import React, { useEffect, useState, useCallback } from 'react';
+import './App.css';
 // React Router components
 import {  Route, Routes, useNavigate } from 'react-router-dom';
 //Bootstrap
-import Container from 'react-bootstrap/Container';// Import the Container component from react-bootstrap
+import Container from 'react-bootstrap/Container';
 //Pages
-import Login from './pages/Login';//Import Login (LOGIN)
-import Registration from './pages/Registration';//Import Registration (REGISTRATION)
-import Page1 from './pages/Page1';//Import Page1 (HOME)
-import Page2 from './pages/Page2';//Import Page2 (GAME)
-import Page3 from './pages/Page3';//Import Page3 (ADD QUESTIONS)
-import Page4 from './pages/Page4';//Import Page4 (USER ACCOUNT)
+import Login from './pages/Login';//LOGIN
+import Registration from './pages/Registration';//REGISTRATION
+import Page1 from './pages/Page1';//HOME
+import Page2 from './pages/Page2';//GAME
+import Page3 from './pages/Page3';//ADD QUESTIONS
+import Page4 from './pages/Page4';//USER ACCOUNT
 
 //App function component
 export default function App() {//Export default App function component
   //=======STATE VARIABLES===============
   //User variables
-  const [users, setUsers] = useState([]);//State used to store a list of all the users
-  const [currentUser, setCurrentUser] = useState(null);  //State to store the user currently loggedIn
-  const [userData, setUserData] = useState({  //State to store userData for login
+  const [users, setUsers] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [userData, setUserData] = useState({ 
     username: '',        
     email: '',           
     dateOfBirth: '',    
@@ -27,26 +28,27 @@ export default function App() {//Export default App function component
     password: '',        
   });
   //Quiz variables
-  const [quizList, setQuizList] = useState([]);//State to store the List of all quizzes
-  const [questions, setQuestions] = useState([]);  //List of questions in the quiz
-  const [quiz, setQuiz] = useState(null);//Currently selected quiz
-  const [quizName, setQuizName] = useState(''); //State to store the quizName 
-  const [currentQuestion, setCurrentQuestion] = useState({  // Current question being added
+  const [quizList, setQuizList] = useState([]);
+  const [questions, setQuestions] = useState([]);
+  const [quiz, setQuiz] = useState(null);
+  const [quizName, setQuizName] = useState(''); 
+  const [currentQuestion, setCurrentQuestion] = useState({
     questionText: '',
     correctAnswer: '',
     options: ['', '', ''],
   });
+  const [selectedQuiz, setSelectedQuiz] = useState(null);
   //Score variables
-  const [userScores, setUserScores] = useState({ // State to store the current user's quiz scores
+  const [userScores, setUserScores] = useState({ 
     result: '',
     date: '',
     attemptNumber: ''
   });
-  const [scores, setScores] =useState([]);// State to hold scores
+  const [scores, setScores] =useState([]);
   // Event and UI-related states
-  const [error, setError] = useState(null); //State to handle errors during data fetching
-  const [loggedIn, setLoggedIn] = useState(false);//Boolean to track whether or not the user is currently logged in
-  const [selectedQuiz, setSelectedQuiz] = useState(null);// State to store the selected quiz
+  const [error, setError] = useState(null); 
+  const [loggedIn, setLoggedIn] = useState(false);
+  
 
   //===========Navigation======================
   // Hook to navigate between different routes
@@ -58,31 +60,30 @@ export default function App() {//Export default App function component
     //Function to fetch users
     const fetchUsers = async () => {
       try {
-        const token = localStorage.getItem('token');// Retrieve the JWT token from localStorage
-        if (!token || !loggedIn) return;// If no token is found, exit the function
+        const token = localStorage.getItem('token');
+        if (!token || !loggedIn) return;
 
       // Send a GET request to the server to fetch users
          const response = await fetch('http://localhost:3001/users/findUsers', {
            method: 'GET',//HTTP request method
-           mode: 'cors',//Enable Cross-Origin Resource Sharing 
+           mode: 'cors',
            headers: {
-             'Content-Type': 'application/json',// Specify the content type 
-             'Authorization': `Bearer ${token}`,//Add the Authorization header 
+             'Content-Type': 'application/json',// Specify the Content-Type
+             'Authorization': `Bearer ${token}`,// Attach JWT token 
           }
         });
 
-        /* Conditional rendering to check if the response
-        is not successful (status code is not in the range 200-299)*/
+        //Response handling
         if (!response.ok) {
-          throw new Error('Failed to fetch users');//Throw an error message if the GET request is unsuccessful
+          throw new Error('Failed to fetch users');
         }
         
         const fetchedUsers = await response.json();// Parse the JSON data from the response body
         setUsers(fetchedUsers); 
       } 
       catch (error) {
-        console.error('Error fetching users', error.message);//Log an error message in the console for debugging purposes
-        setError('Error fetching users');// Set the error state to display the error in the UI
+        console.error('Error fetching users', error.message);
+        setError('Error fetching users');
       }
     };
 
@@ -90,32 +91,31 @@ export default function App() {//Export default App function component
     const fetchCurrentUser = async () => {
       try {
         
-        const token = localStorage.getItem('token');// Retrieve the JWT token from localStorage
-        if (!token) return;// If no token is found, exit the function
+        const token = localStorage.getItem('token');
+        if (!token) return;
 
         //Send a GET request to the server to fetch the current user id
         const response = await fetch('http://localhost:3001/users/userId', {
           method: 'GET',//HTTP request method
-          mode: 'cors',//Enable Cross-Origin resource sharing mode
+          mode: 'cors',
           headers: {
-            'Content-Type': 'application/json',// Specify the content type
-            'Authorization': `Bearer ${token}`,// Attach JWT token for authorization
+            'Content-Type': 'application/json',// Specify the Content-Type
+            'Authorization': `Bearer ${token}`,// Attach JWT token 
           }
         });
      
-        /* Conditional rendering to check if the response
-        is not successful (status code is not in the range 200-299)*/
+      //Response handling
         if (!response.ok) {
-          throw new Error('Failed to fetch current user');//Throw an error message if the GET request is unsuccessful
+          throw new Error('Failed to fetch current user');
         }
-
-        const fetchedCurrentUser = await response.json(); // Parse and set the current user's details
-        setCurrentUser(fetchedCurrentUser);// Update state with fetched user details
+       // Parse and set the current user's details
+        const fetchedCurrentUser = await response.json();
+        setCurrentUser(fetchedCurrentUser);
 
       }
       catch (error) {
-        console.error('Error fetching current user', error.message);//Log an error message in the console for debugging purposes
-        setError('Error fetching current user');// Set the error state to display the error in the UI
+        console.error('Error fetching current user', error.message);
+        setError('Error fetching current user');
       }
     };
 
@@ -135,15 +135,16 @@ export default function App() {//Export default App function component
 // Function to fetch quizzes
   const fetchQuizzes = useCallback(async () => {
     try {  
-      const token = localStorage.getItem('token');// Retrieve the JWT token from localStorage
+      // Retrieve the JWT token from localStorage
+      const token = localStorage.getItem('token');
       
       //Send a GET request to the server to find all quizzes
       const response = await fetch('http://localhost:3001/quiz/findQuizzes', {
         method: 'GET',//HTTP request method
-        mode: 'cors',// Enable Cross-Origin Resource Sharing
+        mode: 'cors',
         headers: {
-          'Content-Type': 'application/json',// Specify the Content-Type in the payload as JSON
-          'Authorization': `Bearer ${token}`,// Attach JWT token to the Authorization header
+          'Content-Type': 'application/json',// Specify the Content-Type 
+          'Authorization': `Bearer ${token}`,// Attach JWT token 
         }
       });
 
@@ -172,20 +173,25 @@ export default function App() {//Export default App function component
   //Function to fetch scores list from database
 const fetchScores= useCallback(async () => {
   try {
-    const token = localStorage.getItem('token');//Retrieve the JWT token from LocalStorage
-    const username = localStorage.getItem('username')//Retrieve the username from localStorage
+    //Retrieve the JWT token from LocalStorage
+    const token = localStorage.getItem('token');
+    //Retrieve the username from localStorage
+    const username = localStorage.getItem('username')
+    
     //send GET request to server to find scores
     const response = await fetch(`http://localhost:3001/scores/findScores/${username}`, {
       method: 'GET',//HTTP request method
       mode: 'cors',
       headers: {
-        'Content-Type': 'application/json', //Specify the Content-Type in the payload as JSON
-        'Authorization': `bearer ${token}`,//Attatch the token in the Authorization header
+        'Content-Type': 'application/json', //Specify the Content-Type 
+        'Authorization': `bearer ${token}`,//Attatch the token
       }
     })
+    
+    //Response handling
     // if (response.status === 401) throw new Error('Unauthorized access. Please log in.');
      if (!response.ok) {
-      throw new Error('Unable to fetch user scores')//Throw an error message if the GET request is unsuccessful
+      throw new Error('Unable to fetch user scores');
      }
 
      const quizScores = await response.json();//Parse JSON response
@@ -194,36 +200,28 @@ const fetchScores= useCallback(async () => {
       setUserScores(quizScores.userScores); // Update state with fetched scores
     }
     else {     
-      throw new Error('Invalid data type');//Throw an error message if the data type is invalid
+      throw new Error('Invalid data type');
     }
 
   } catch (error) {
-    console.error('Error fetching userScores', error.message);//Log an error message in the console for debugging purposes
-    setError(`Error fetching userScores: ${error.message}`);// Set the error state to display the error in the UI
+    console.error('Error fetching userScores', error.message);
+    setError(`Error fetching userScores: ${error.message}`);
   }
 },[setUserScores, setError]);
 //===========EVENT LISTENERS============================
   // Function to handle user logout
-  /* useCallback hook is to handle user logout, 
-  memoized to avoid unnecessary re-renders*/
   const logout = useCallback (() => {
     //Clear localStorage
-    /* Remove JWT token from localStorage 
-    to clear authentication*/
     localStorage.removeItem('token');
     localStorage.removeItem('username');
     localStorage.removeItem('loggedIn');  
-    /* Update loggedIn state to reflect that the 
-    user is no longer logged in*/
     setLoggedIn(false);
-    setError(''); // Clear any existing error messages
+    setError(''); 
     setUserData(
       { 
         username: '', 
         password: '' 
       });//Reset the userData
-    /*Use the navigate function to redirect the
-    user to the login page after logging out*/
     navigate('/');
   }, [navigate]);
 
@@ -241,7 +239,7 @@ const fetchScores= useCallback(async () => {
                 <Route path='/' element={
                   <Page1
                    scores={scores}
-                      setScores={setScores}
+                    setScores={setScores}
                     logout={logout} 
                     loggedIn={loggedIn}
                     quizName={quizName}
