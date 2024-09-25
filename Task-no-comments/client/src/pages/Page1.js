@@ -1,14 +1,15 @@
 // Import necessary modules and packages
-import React, { useEffect } from 'react';// Import the React module to use React functionalities
-import '../CSS/Page1.css';// Import the CSS file for the Page1 component's styling
+// Import the React module to use React functionalities
+import React, { useEffect } from 'react';
+import '../CSS/Page1.css';
 //Bootstrap
-import Row from 'react-bootstrap/Row'; // Bootstrap Row component for layout
-import Col from 'react-bootstrap/Col'; // Bootstrap Col component for layout
-import FormSelect from 'react-bootstrap/FormSelect'; // Bootstrap form select component
+import Row from 'react-bootstrap/Row'; 
+import Col from 'react-bootstrap/Col'; 
+import FormSelect from 'react-bootstrap/FormSelect'; 
 //Components
-import Header from '../components/Header'; // Import the Header component
-import Footer from '../components/Footer';//Import the Footer function component
-import Instructions from '../components/Instructions';//Import Instructions function component
+import Header from '../components/Header'; 
+import Footer from '../components/Footer';
+import Instructions from '../components/Instructions';
 
 //Page1 function component
 export default function Page1(//Export default Page1 function component
