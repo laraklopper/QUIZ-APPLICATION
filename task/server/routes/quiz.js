@@ -111,6 +111,8 @@ router.post('/addQuiz',  async (req, res) => {
     // Conditional rendering to check that the quiz has a name and exactly 5 questions
     if (!name || !questions || questions.length !== 5) {
         return res.status(400).json({message: 'Quiz name and exactly 5 questions are required'});
+        /*  A HTTP 400 Bad Request client error response status code indicates that 
+            the server would not process the request due to something the server considered to be a client error */
     }
 
     try {           
