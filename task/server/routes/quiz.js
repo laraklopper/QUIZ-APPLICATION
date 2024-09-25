@@ -19,7 +19,7 @@ mongoose.set('strictPopulate', false); // Disable strict population checks in Mo
 const checkJwtToken = async (req, res, next) => {
     const authHeader = req.headers.authorization;
 
-    //Conditional rendering
+    //Conditional rendering to check if the Authorization header is missing or does not start with 'Bearer 
     if (!authHeader || !authHeader.startsWith('Bearer ')) 
         {return res.status(401).json({ message: 'Access denied. No token provided.' });
     }
@@ -29,8 +29,8 @@ const checkJwtToken = async (req, res, next) => {
         // Verify the token using the secret key
         const decoded = jwt.verify( token,'secretKey',);
         req.user = decoded; // Attach decoded user information to the request object
-        console.log('Token provided');
-        next();
+        console.log('Token provided');//Log a message in thw console for debugging purposes
+        next();// Proceed to the next middleware or route handler
     } 
     catch (error) {
         //Error handling
@@ -39,11 +39,6 @@ const checkJwtToken = async (req, res, next) => {
     }
 };
 
-/*
-//Middleware to delete all scores for the quiz if the quiz is deleted
-const deleteQuizScores= async (req, res, next) => {
-    
-}*/
 //=============ROUTES====================
 //------------------GET---------------
 //Route to GET a specific quiz using the quiz Id
