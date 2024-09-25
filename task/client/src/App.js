@@ -47,8 +47,11 @@ export default function App() {//Export default App function component
   const [error, setError] = useState(null); //Error message
   const [loggedIn, setLoggedIn] = useState(false); //Boolean to track whether or not the user is currently logged in
   const [selectedQuiz, setSelectedQuiz] = useState(null);// State to store the selected quiz
+ 
+  //===========Navigation======================
   // Hook to navigate between different routes
   const navigate = useNavigate()
+  
   //============USE EFFECT HOOK TO FETCH USERS======================
   //Fetch users when the component mounts or when loggedIn changes
   useEffect(() => {
@@ -74,18 +77,18 @@ export default function App() {//Export default App function component
           throw new Error('Failed to fetch users');//Throw an error message if the GET request is unsuccessful
         }
 
-        // Parse the JSON data from the response body
-        const fetchedUsers = await response.json();
-        setUsers(fetchedUsers); 
+        const fetchedUsers = await response.json();// Parse the JSON data from the response body
+        setUsers(fetchedUsers); // Update state with fetched user details 
+        
       } 
       catch (error) {
         console.error('Error fetching users', error.message);//Log an error message in the console for debugging purposes
-        setError('Error fetching users');//Set the error state with an error message
+        setError('Error fetching users');// Set the error state to display the error in the UI
       }
     };
 
     //Function to fetch the current user details
-    const fetchCurrentUser = async () => {
+    const fetchCurrentUser = async () => {//Define an async function to fetch the current user
       try {
         // Retrieve JWT token from localStorage for authentication
         const token = localStorage.getItem('token');
@@ -107,7 +110,8 @@ export default function App() {//Export default App function component
 
         // Parse the JSON data from the response body
         const fetchedCurrentUser = await response.json();    // Parse and set the current user's details
-        setCurrentUser(fetchedCurrentUser);// Update state with fetched user details
+        setCurrentUser(fetchedCurrentUser);// Update the `currentUser` state with the fetched user details.
+        console.log(fetchedCurrentUser);//Log the current User details in the console for debugging purposes
       }
       catch (error) {
         console.error('Error fetching current user', error.message);//Log an error message in the console for debugging purposes
@@ -121,7 +125,9 @@ export default function App() {//Export default App function component
       fetchCurrentUser();//Call the FetchCurrentUser function to fetch the current user's details
     }
   }, [loggedIn,  navigate]);
- 
+ // This effect runs when `loggedIn` or `navigate` changes.
+// When `loggedIn` changes (user logs in or out), the effect triggers the appropriate fetch requests.
+// The `navigate` is also included as a dependency in case navigation affects the user state.
   //==============REQUESTS========================
   //-----------GET-------------------------
 // Function to fetch quizzes
@@ -134,7 +140,7 @@ export default function App() {//Export default App function component
         method: 'GET',//HTTP request method
         mode: 'cors',// Enable Cross-Origin Resource Sharing
         headers: {
-          'Content-Type': 'application/json',// Specify the Content-Type
+          'Content-Type': 'application/json',// Specify the Content-Type in the request payload
           'Authorization': `Bearer ${token}`,// Attach JWT token for authorization
         }
       });
