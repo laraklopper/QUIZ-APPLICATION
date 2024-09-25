@@ -1,12 +1,16 @@
 // Import necessary modules and packages
 const mongoose = require('mongoose');
-const autopopulate = require('mongoose-autopopulate');
+// const autopopulate = require('mongoose-autopopulate');
 
 //Define the score schema
 const scoreSchema = new mongoose.Schema({
       /* Field for username of the user who
     took the quiz*/
-    userId: {
+      username: {
+        type: String,
+        required: true,
+    },
+    /*userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',// Reference the User collection
         autopopulate: true,// Automatically populate the quiz field
@@ -14,13 +18,10 @@ const scoreSchema = new mongoose.Schema({
         /*Validate to ensure the username is a valid objectId*/
         validate: {
             validator: mongoose.Types.ObjectId.isValid,
-            message: 'Invalid user Id',//Custom error message if validation fails
+            message: 'Invalid user Id',
         },
-    }, 
-    /*username: {
-        type: String,
-        required: true,
-    },*/
+    }, */
+  
     // Field for the name of the quiz taken
     quizId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -33,12 +34,11 @@ const scoreSchema = new mongoose.Schema({
             validator: mongoose.Types.ObjectId.isValid,
             message: 'Invalid quiz Id',
         },
-    },
-    /*name: {
+    },*/
+    name: {
         type: String,
         required:[true, 'Quiz name is required'],   
     },
-    */
     //Field for the score
     score: {
         type: Number,// Define the type as Number
@@ -68,11 +68,11 @@ const scoreSchema = new mongoose.Schema({
 // Automatically adds createdAt and updatedAt fields
 
 // Apply autopopulate plugin to the schema
-scoreSchema.plugin(autopopulate);
+// scoreSchema.plugin(autopopulate);
 
 // Create indexes on userId and quizId for faster lookups
-scoreSchema.index({ userId: 1 }); // Create an index on userId
-scoreSchema.index({ quizId: 1 }); // Create an index on quizId
+// scoreSchema.index({ userId: 1 }); // Create an index on userId
+// scoreSchema.index({ quizId: 1 }); // Create an index on quizId
 
 // Export the score model based on the scoreSchema
 module.exports = mongoose.model('Score', scoreSchema);
