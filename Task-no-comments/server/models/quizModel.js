@@ -12,19 +12,20 @@ const quizSchema = new mongoose.Schema({
         unique: true,
         set: (v) => v.toUpperCase(),
     },
-    //Username of the person who created the quiz
-    userId: {        
+     //Username of the person who created the quiz
+    /* userId: {
         type: mongoose.Schema.Types.ObjectId,
-        required: [true, 'Username is required'],              
-        ref: 'User',  
+        ref: 'User', // Reference to the 'User' collection by ObjectId
+        // Automatically populate the quiz field
         autopopulate: true,
+        required: [true, 'Username is required'], 
     },
-      /*
+    */
     username:{
         type: String,
         required: true,
     }
-    */
+    
     //Field for questions containing an array of objects
     questions: {
         type: [
@@ -69,7 +70,7 @@ function arrayLimit5(val) {
 
 quizSchema.index({userId: 1})
 // Apply the autopopulate plugin to the schema
-quizSchema.plugin(autopopulate);
+// quizSchema.plugin(autopopulate);
 
 // Export the mongoose model for 'Quiz' using the defined schema
 module.exports = mongoose.model('Quiz', quizSchema);
