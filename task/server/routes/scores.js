@@ -70,7 +70,7 @@ router.get('/findQuizScores/:quizName/:username',  checkJwtToken, async (req, re
     } 
     catch (error) {
         console.error('Error finding quiz score:', error.message);//Log an error message in the console for debugging purposes
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: error.message });// Return 500 status code for server error
     }
 })
 
@@ -109,10 +109,12 @@ router.get('/findScores/:username', async (req, res) => {
         const { username } = req.params; 
 
         // Fetch the user document based on the username
+        // Use `findOne` to locate a user with the provided username
         const user = await User.findOne({ username }).exec();
 
-        // Check if the user exists
+        // Conditional rendering to check if the user exists
         if (!user) { 
+                    // If no user is found with the given username, return a 404 error
             return res.status(404).json({ error: 'User not found' });
         }
 
@@ -123,10 +125,10 @@ router.get('/findScores/:username', async (req, res) => {
             .exec()
 
         res.json({ userScores: result });// Return the user scores in JSON format        
-        console.log(result);// Log the fetched scores for debugging
+        console.log(result);// Log the fetched scores for debugging purposes
     } catch (error) {
         console.error('Error finding user scores:', error);//Log an error message in the console for debugging purposes
-        return res.status(500).json({ error: error.message });// Respond with a 500 Internal Server Error
+        return res.status(500).json({ error: error.message });// Respond with a 500 (Internal Server Error) response
     }
 });
 
