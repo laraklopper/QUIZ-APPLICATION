@@ -33,8 +33,10 @@ const checkJwtToken = (req, res, next) => {
         // Verify the token using the secret key
         const decoded = jwt.verify(
             token, 
+            /*Secret key used for signing the token 
+            stored in enviromental variables*/
             'secretKey' 
-            /*process.env.JWT_SECRET*/,//Secret key used for signing the token stored in enviromental variables
+            /*process.env.JWT_SECRET*/,
         );
         req.user = decoded; 
         console.log('Token provided');
@@ -78,15 +80,15 @@ router.get('/findScores', async (req, res) => {
         // const userId = req.user._id;
         const  {username} = req.query; //Extract the username from query parameters
 
-        // let userScores;
+        let userScores;
         // Conditional rendering to check if a username is provided, and find scores accordingly
-        /* if(username){
+        if(username){
             //Find scores for a specific user 
             userScores = await Score.find({ username }).exec();
         }else{
             // Find all scores if no username is provided
             const userScores = await Score.find(req.body).exec(); 
-        }*/
+        }
         
         // Find all scores for the user
         const userScores = await Score.find(req.body).exec(); 
