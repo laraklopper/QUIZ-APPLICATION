@@ -2,41 +2,31 @@
 const express = require('express');// Import Express to handle routing
 const router = express.Router();// Create a new router object
 const cors = require('cors');// Import CORS middleware to handle cross-origin requests
-// Import the jsonwebtoken module for handling JSON Web Tokens
-const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');// Import Mongoose for MongoDB interaction
 //Schemas
 const Quiz = require('../models/quizModel');// Import the Quiz model
-const Score = require('../models/scoreSchema')
+const Score = require('../models/scoreSchema');//Import the Score model
+const {checkJwtToken} = require('./middleware');//Import Custon middleware
 //=======SETUP MIDDLEWARE===========
 // Setup middleware
 router.use(cors()); // Enable CORS for cross-origin requests
 router.use(express.json()); // Parse incoming JSON requests
 mongoose.set('strictPopulate', false); // Disable strict population checks in Mongoose
 
-//==============CUSTOM MIDDLEWARE======================
-//Middleware to verify the JWT token
-const checkJwtToken = async (req, res, next) => {
-    const authHeader = req.headers.authorization;
-
-    //Conditional rendering to check if the Authorization header is missing or does not start with 'Bearer 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) 
-        {return res.status(401).json({ message: 'Access denied. No token provided.' });
+// Utility function to validate the structure of the questions array
+const validateQuestions = (questions) => {
+    // Ensure that the questions array exists, is an array, and has exactly 5 items
+    if (!Array.isArray(questions) || questions.length !== 5) {
+        return false;
     }
-    const token = authHeader.split(' ')[1];// Extract the authorization header
-
-    try {
-        // Verify the token using the secret key
-        const decoded = jwt.verify( token,'secretKey',);
-        req.user = decoded; // Attach decoded user information to the request object
-        console.log('Token provided');//Log a message in thw console for debugging purposes
-        next();// Proceed to the next middleware or route handler
-    } 
-    catch (error) {
-        //Error handling
-        console.error('No token attatched to the request');//Log an error message in the console for debugging purposes
-        res.status(400).json({ message: 'Invalid token.' });
+    // Loop through each question to validate its fields
+    for (const question of questions) {
+        // Each question must have questionText, correctAnswer, and exactly 3 options
+        if (!question.questionText || !question.correctAnswer || question.options.length !== 3) {
+            return false;
+        }
     }
+    return true; // Return true if all questions are valid
 };
 
 //=============ROUTES====================
