@@ -9,22 +9,21 @@ import Button from 'react-bootstrap/Button'; // Import the Button component from
 //EditQuiz function component
 export default function EditQuiz(//Export default editQuiz Function component
   {//PROPS PASSED FROM PARENT COMPONENT
-    quiz, 
-    setQuizList, 
-    quizList,
-    editQuizIndex,
-    setEditQuizIndex,
-    editQuiz,
-    setNewQuizName,
-    newQuizName,
-    newQuestions,
-    setNewQuestions,
+   quiz,                // The quiz object passed from the parent component
+  setQuizList,         // Function to update the list of quizzes
+  quizList,            // The current list of all quizzes
+  editQuizIndex,       // Object holding the state of the question being edited (e.g., text, options)
+  setEditQuizIndex,    // Function to update the current question's edit state
+  editQuiz,            // Function to submit the final quiz edit
+  setNewQuizName,      // Function to update the new quiz name
+  newQuizName,         // Current value of the edited quiz name
+  newQuestions,        // Array holding the new set of questions after edits
+  setNewQuestions      // Function to update the list of questions after edits
 
   }
 ) {
   //=============STATE VARIABLES======================
-  // State to track the index of the current question being edited
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);  // State to track the index of the current question being edited
 
   //=========USE EFFECT HOOK==================
   /* Effect to initialize and update the editQuizIndex state when 
@@ -93,14 +92,14 @@ const handleEditQuestion = () => {
           </label>
               {/* Edit quizName input field */}
             <input
-              type='text'
-              name='newQuizName'
-              value={newQuizName}
-              onChange={(e) => setNewQuizName(e.target.value)}
-              autoComplete='off'
-              placeholder={quiz.name}
-              id='newQuizName'
-              className='editQuizInput'
+               type='text'//Input type
+                name='newQuizName'//Name attribute to identify the form control
+                value={newQuizName}//The current value of the input field, controlled by the React state variable 
+                onChange={(e) => setNewQuizName(e.target.value)}// Event handler that updates the `newQuizName` state 
+                autoComplete='off'//Disable the browser from autocompleting the previous input
+                placeholder={quiz.name}// Placeholder text, set to the existing quiz name from the `quiz` object
+                id='newQuizName'
+                className='editQuizInput'
             />  
             </div>
           </Col>
