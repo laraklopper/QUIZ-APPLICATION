@@ -41,12 +41,10 @@ export default function EditQuiz(//Export default editQuiz Function component
   }, [quiz, currentQuestionIndex, setEditQuizIndex])
 
   //============EVENT LISTENERS=================
-
-
   // Function to edit a question
 const handleEditQuestion = () => {
   // Conditional rendering to check if there are any new questions to update
-    if (newQuestions.length === 0) {
+    if (/*newQuestions.length*/quizList.questions === 0) {
       // If no questions are available, alert the user and stop the function execution
       alert('No questions to update');
       return;// Exit the function
