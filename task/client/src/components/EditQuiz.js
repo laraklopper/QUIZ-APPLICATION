@@ -44,6 +44,10 @@ export default function EditQuiz(//Export default editQuiz Function component
     }
   }, [quizList, currentQuestionIndex, setEditQuizIndex, quiz])
 
+  if (!quiz || !quiz.questions) {
+    return <div>Loading...</div>// Handle loading or error states
+  }
+
   //============EVENT LISTENERS=================
   // Function to edit a question
 const handleEditQuestion = () => {
