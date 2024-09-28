@@ -121,24 +121,20 @@ export default function Page3(
         },
         body: JSON.stringify({
           name: newQuizName, // The new quiz name provided by the user
-          questions: newQuestions,// The new array of questions                  
+          questions: editQuestionIndex,// The new array of questions       
+          // question: editQuizIndex.editQuestionText,// Edited question text
+          // correctAnswer: editQuizIndex.editCorrectAnswer,// Correct answer for the question
+          // options: editQuizIndex.editOptions   // Options for the question
             })
       });
       //Response handling
       if (response.ok) {
         const updatedQuiz = await response.json();// Parse the updated quiz data from the response
         // Update the quiz list with the modified quiz data
-        setQuizList(quizList.map(q => 
-          (q._id === updatedQuiz._id ? updatedQuiz : q)
-        ));
+        setQuizList(quizList.map(q => (q._id === updatedQuiz._id ? updatedQuiz : q)));
+        
         // Reset the edit form by clearing the state variables
-        setEditQuizIndex([
-          {
-            editQuestionText: '',  // Clear the edited question text
-            editCorrectAnswer: '',  // Clear the edited correct answer
-            editOptions: ['', '', ''] // Clear the edited answer options
-          }
-        ]);
+        setEditQuizIndex([{editQuestionText: '',  editCorrectAnswer: '', editOptions: ['', '', ''] }]);
 
         setQuizToUpdate(null);  // Reset the quiz being updated
         setNewQuizName('');     // Clear the new quiz name input
