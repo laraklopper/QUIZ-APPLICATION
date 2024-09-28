@@ -36,6 +36,8 @@ router.get('/findQuiz/:id', checkJwtToken, async (req, res) => {
     try {
         const { id } = req.params;// Retrieve the quiz ID from the request parameters
 
+         /*Conditional rendering to check if the quizId 
+        is a valid MongoDB ObjectId*/
         if (!mongoose.Types.ObjectId.isValid(id)) {
             // If not valid, respond with a 400 Bad Request status and an error message
             return res.status(400).json({
@@ -43,6 +45,15 @@ router.get('/findQuiz/:id', checkJwtToken, async (req, res) => {
                 message: 'Invalid quiz ID'
             });
         }
+
+         /*Conditional rendering to check if the quizId
+       is a valid MongoDB ObjectId*/
+        /* if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid quiz ID'
+            });
+        }*/
         
         // Find the quiz by its ID and populate the 'userId' field with the 'username'
         // Populate the 'userId' field with the associated 'username' from the User collection
@@ -56,7 +67,8 @@ router.get('/findQuiz/:id', checkJwtToken, async (req, res) => {
             return res.status(404).json({ message: 'Quiz not found' });
         }
 
-        res.json(quiz); // If the quiz is found, send it as the JSON response
+        res.status(200).json(quiz); // If the quiz is found, send it as the JSON response
+        // res.json(quiz); // If the quiz is found, send it as the JSON response
         console.log(quiz);// Log the quiz in the console for debugging purposes
     }
     catch (error) {
@@ -75,8 +87,13 @@ router.get('/findQuizzes',   async (req, res) => {
         const quizzes = await Quiz.find({}).
             populate('userId', 'username') // Populate the 'userId' field with 'username'
             .exec(); //Execute the query
-        res.json({ quizList: quizzes }) // Send the list of quizzes in the response as JSON
-        // console.log(quizzes);//Log the quizzes in the console for debugging purposes
+          res.status(200).json(
+                { 
+                    success: true, 
+                    quizList: quizzes 
+                });
+        // res.json({ quizList: quizzes }) // Send the list of quizzes in the response as JSON
+        console.log(quizzes);//Log the quizzes in the console for debugging purposes
     } 
     catch (error) 
     {//Error handling
@@ -89,7 +106,7 @@ router.get('/findQuizzes',   async (req, res) => {
 //------------POST--------------
 //Route to add new quiz
 router.post('/addQuiz',  async (req, res) => {
-    console.log(req.body);
+    console.log(req.body);//Log the request body in the console for debugging purpose
     // Extract the quiz details from the request body
     const { name, questions /*,username */ } = req.body;
 
@@ -133,8 +150,8 @@ router.post('/addQuiz',  async (req, res) => {
 //-------------------PUT--------------------------
 // Route to edit a quiz
 router.put('/editQuiz/:id', checkJwtToken,  async (req, res) => {
-    // Extract quiz ID from the request parameters
-    const { id } = req.params;
+   
+    const { id } = req.params; // Extract quiz ID from the request parameters
     console.log(req.body);//Log the request body in the console for debugging purposes
 
     // Extract name and questions from the request body
@@ -167,12 +184,17 @@ router.put('/editQuiz/:id', checkJwtToken,  async (req, res) => {
             return res.status(404).json({ message: 'Quiz not found' });
         }
 
-        res.json({ updatedQuiz });
-        console.log(updatedQuiz);      
+       // res.json({ updatedQuiz });//Respond with the updated quiz in JSON format
+        // Respond with the updated quiz
+        res.status(200).json({
+            success: true, // Indicate success
+            updatedQuiz // Return the updated quiz
+        });
+        console.log(updatedQuiz);//Log the updated quiz in the console for debugging purposes      
     } 
     catch (error) {
-        console.error('Error editing quiz:', error);
-        return res.status(500).json({ error: error.message });
+        console.error('Error editing quiz:', error);//Log an error message in the console for debugging purposes
+        return res.status(500).json({ error: error.message });// Respond with a 500 Internal Server Error status and the error message
     };
 });
 
@@ -183,27 +205,39 @@ router.delete('/deleteQuiz/:id', checkJwtToken,async (req, res) => {
     const { id } = req.params;// Extract quiz ID from the request parameters
     
     try {
-
-        
         // Find the quiz by its ID and delete it from the database
         const deletedQuiz = await Quiz.findByIdAndDelete(id);
-        
+
+        //Conditional rendering to check if the quiz is found
         if (!deletedQuiz) {
             // If the quiz is not found, respond with a 404 Not Found status
             return res.status(404).json({message: 'Quiz not found'});
         }
 
-        // Delete quiz scores
+        /* if (!deletedQuiz) {
+            return res.status(404).json({
+                success: false,
+                message: 'Quiz not found'
+            });
+        }*/
+        // Delete all scores related to the deleted quiz
         await Score.deleteMany({name: deletedQuiz.name})
 
-        console.log('Deleted Quiz:', deletedQuiz);// Log the deleted quiz for debugging purposes
+        console.log('Deleted Quiz:', deletedQuiz);// Log the deleted quiz in the console for debugging purposes
+         /*res.status(200).json({
+            success: true,
+            message: 'Quiz successfully deleted'
+        });*/
         res.json({ message: 'Quiz successfully deleted' })
     } 
     catch (error) {
         //Error handling
         console.error('Error deleting quiz:', error);//Log an error message in the console for debugging purposes
         return res.status(500).json({ message: error.message });// Respond with a 500 Internal Server Error status
-
+/* return res.status(500).json({
+            success: false, // Indicate failure
+            message: error.message // Return the error message
+        });*/
     }
 });
 
