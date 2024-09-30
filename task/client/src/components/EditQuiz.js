@@ -23,16 +23,15 @@ export default function EditQuiz(//Export default editQuiz Function component
 ) {
   //=============STATE VARIABLES======================
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);// State to track the index of the current question being edited
-
-
+  
   //=========USE EFFECT HOOK==================
   /* Effect to initialize and update the editQuizIndex 
   state when quiz or currentQuestionIndex changes*/
   useEffect(() => {
     //Conditional rendering 
-    if (quizList && Array.isArray(quizList.questions) && quizList.questions.length > 0) {
-      // Retrieve the current question based on the currentQuestionIndex state
-      const currentQuestion = quizList.questions[currentQuestionIndex];
+    if (quiz &&  Array.isArray(quiz.questions) &&  quiz.questions.length > 0 && currentQuestionIndex < quiz.questions.length) {
+      
+      const currentQuestion = quizList.questions[currentQuestionIndex];// Retrieve the current question based on the currentQuestionIndex state
 
       setEditQuizIndex({// Update the editQuizIndex state with the current question's details
         editQuestionText: currentQuestion?.questionText || '',// Set the question text or empty if undefined
@@ -44,10 +43,7 @@ export default function EditQuiz(//Export default editQuiz Function component
     }
   }, [quizList, currentQuestionIndex, setEditQuizIndex, quiz])
 
-  if (!quiz || !quiz.questions) {
-    return <div>Loading...</div>// Handle loading or error states
-  }
-
+ 
   //============EVENT LISTENERS=================
   // Function to edit a question
 const handleEditQuestion = () => {
@@ -62,6 +58,12 @@ const handleEditQuestion = () => {
       alert('No questions to update');//Alert the user if no questions exist
       return;// Exit and stop further execution of the function
     }
+
+  if (currentQuestionIndex >= quiz.questions.length) {
+    console.error('Current question index is out of bounds');// Log the error mesage in the console for debugging purposes
+    alert('Invalid question Index')
+    return;
+  }
     // Copy the newQuestions array to avoid directly mutating the state
   const updatedQuestions = [...newQuestions];
 
@@ -88,31 +90,43 @@ const handleEditQuestion = () => {
 
   //Function to handle navigation between questions
   const handleNavigation = useCallback((direction) => {
-    if (quiz.questions && Array.isArray(quizList.questions)) {
+    if (quiz.questions && Array.isArray(quiz.questions)) {
         //Conditional rendering to check if the request is to move to the previous question
     if (direction === 'previous' && currentQuestionIndex > 0) {
-      // Navigate to the previous question
+       // Navigate to the previous question
+      //Decrement the currentQuestion by 1
       setCurrentQuestionIndex((prevIndex) => prevIndex -1)//Decrement the currentQuestion by 1
     } 
       //Conditional rendering to check if the navigation request is to move to the next question.
     else if (direction === 'next' && currentQuestionIndex < quizList.questions.length - 1){
       // Navigate to the next question
+      //Increment the currentQuestionIndex by 1
       setCurrentQuestionIndex((prevIndex) => prevIndex + 1);;//Increment the currentQuestionIndex by 1
     }
     }
-  },[currentQuestionIndex, quiz.questions, quizList.questions])
+  },[currentQuestionIndex, quiz.questions])
 
   //Function to handle form submission
   const handleEditQuiz= useCallback(async () => {
     try {
       await editQuiz(quiz._id);// Call the editQuiz function with the current quiz's ID
-      // alert('Quiz updated successfully!'),; // Notify the user of success
+      alert('Quiz updated successfully!'),; // Notify the user of success
       console.log('Quiz successufully updated');//Log a success message in the console for debugging purposes
     } catch (error) {
       console.error(`Failed to edit quiz`, error.message);// Log the error mesage in the console for debugging purposes
       alert(`Failed to edit quiz`, error.message)// Notify the user of the failure
     }
   },[editQuiz, quiz._id])
+
+  //==================CONDITIONAL RENDERING=================
+  // Handle loading or error states
+  if (!quiz || !Array.isArray(quiz.questions)) {
+    return <div>Loading...</div>;
+  }
+  //Ensure currentQuestion index is valid
+  if(currentQuestionIndex >= quiz.questions.length){
+    return <div>Invalid question index</div>
+  }
   //==============JSX RENDERING====================
   
   return (
@@ -172,7 +186,7 @@ const handleEditQuestion = () => {
             })
           }
                 autoComplete='off'// Disable the browser's autocomplete 
-          placeholder={quiz.questions[currentQuestionIndex]?.quiz.questions[currentQuestionIndex].questionText || ''}
+          placeholder={quiz.questions[currentQuestionIndex]?.questionText || ''}
           className='editQuizInput'
           id='editQuestionInput'
             />
@@ -188,7 +202,7 @@ const handleEditQuestion = () => {
             <input
             type='text'
                 name='correctAnswer'//Name for form identification and accessibility
-                value={setEditQuizIndex.correctAnswer}// input value to the correctAnswer state
+                value={setEditQuizIndex.editCorrectAnswer}// input value to the correctAnswer state
                 onChange={(e) => setEditQuizIndex({
                   // Spread the current state to retain other properties
                 ...editQuizIndex,
