@@ -163,13 +163,13 @@ router.put('/editQuiz/:id', checkJwtToken,  async (req, res) => {
     }
     
     try {
-        // for (const question of questions) {
-        //     if (!question.questionText || !question.correctAnswer || question.options.length !== 3) {
-        //         return res.status(400).json({
-        //             message: 'Each question must have a question text, a correct answer, and exactly 3 options' 
-        //         });
-        //     }
-        // }
+        for (const question of questions) {
+            if (!question.questionText || !question.correctAnswer || question.options.length !== 3) {
+                return res.status(400).json({
+                    message: 'Each question must have a question text, a correct answer, and exactly 3 options' 
+                });
+            }
+        }
 
         // Update the quiz
         const updatedQuiz = await Quiz.findByIdAndUpdate(
