@@ -151,26 +151,46 @@ router.post('/addQuiz',  async (req, res) => {
 // Route to edit a quiz
 router.put('/editQuiz/:id', checkJwtToken,  async (req, res) => {
    
-    const { id } = req.params; // Extract quiz ID from the request parameters
+     const { id } = req.params; // Extract quiz ID from the request parameters
     console.log(req.body);//Log the request body in the console for debugging purposes
 
     // Extract name and questions from the request body
     const { name, questions } = req.body;
 
-    // Conditional rendering to check that the name and questions are properly provided
+  // Conditional rendering to check that the name and questions are properly provided
     if (!name || !Array.isArray(questions) || questions.length !== 5) {
-        return res.status(400).json({message: 'Quiz name and exactly 5 questions are required'});
-    }
+        //Return a 400(Bad request) 
+        return res.status(400).json(
+            {
+                success: false,
+                message: 'Quiz name and exactly 5 questions are required'
+            }
+        )}
     
     try {
-        for (const question of questions) {
-            if (!question.questionText || !question.correctAnswer || question.options.length !== 3) {
-                return res.status(400).json({
-                    message: 'Each question must have a question text, a correct answer, and exactly 3 options' 
+       //Iterate over each question to validate its structure.
+        for (const [index, question] of questions.entries()) {
+            if (
+                !question.questionText ||// Ensure 'questionText' is provided
+                !question.correctAnswer ||// Ensure 'correctAnswer' is provided
+                !Array.isArray(question.options) ||// Ensure 'options' is an array
+                question.options.length !== 3// Ensure there are exactly 3 options
+            ) {
+                return res.status(400).json({//Return a 400(Bad request) 
+
+                    success: false,
+                    message: `Each question must have a question text, a correct answer, and exactly 3 options. 
+                    Issue found in question ${index + 1}.`//Include the question index for debugging
                 });
             }
-        }
 
+    /*      for (const question of questions) {
+        if (!question.questionText || !question.correctAnswer || question.options.length !== 3) {
+            return res.status(400).json({
+                message: 'Each question must have a question text, a correct answer, and exactly 3 options' 
+            });
+        }
+    }*/
         // Update the quiz
         const updatedQuiz = await Quiz.findByIdAndUpdate(
             id, // ID of the quiz to update
@@ -194,7 +214,11 @@ router.put('/editQuiz/:id', checkJwtToken,  async (req, res) => {
     } 
     catch (error) {
         console.error('Error editing quiz:', error);//Log an error message in the console for debugging purposes
-        return res.status(500).json({ error: error.message });// Respond with a 500 Internal Server Error status and the error message
+        // return res.status(500).json({ error: error.message });
+         return res.status(500).json({// Respond with a 500 Internal Server Error status and the error message
+            success: false, // Indicate failure
+            error: error.message // Return the error message
+        });
     };
 });
 
