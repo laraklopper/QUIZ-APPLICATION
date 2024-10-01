@@ -232,9 +232,11 @@ router.put('/editQuiz/:id', checkJwtToken,  async (req, res) => {
 // Route to delete a quiz
 router.delete('/deleteQuiz/:id', checkJwtToken,async (req, res) => {
     const { id } = req.params;// Extract quiz ID from the request parameters
-    
+        console.log(`Attempting to delete quiz with ID: ${id}`);// Log the incoming request parameters for debugging purposes
+
     try {
         // Find the quiz by its ID and delete it from the database
+                //If no quiz is found with the provided ID, `deletedQuiz` will be `null`
         const deletedQuiz = await Quiz.findByIdAndDelete(id);
 
         //Conditional rendering to check if the quiz is found
@@ -249,8 +251,10 @@ router.delete('/deleteQuiz/:id', checkJwtToken,async (req, res) => {
                 message: 'Quiz not found'
             });
         }*/
-        // Delete all scores related to the deleted quiz
-        await Score.deleteMany({name: deletedQuiz.name})
+       // Delete all scores related to the deleted quiz
+        //Delete many removes all documents matching the specified criteria
+        await Score.deleteMany({name: deletedQuiz.name});
+        //The Score model uses the name field to associate scores with quizzes
 
         console.log('Deleted Quiz:', deletedQuiz);// Log the deleted quiz in the console for debugging purposes
          /*res.status(200).json({
