@@ -6,13 +6,14 @@ const mongoose = require('mongoose');// Import Mongoose for MongoDB interaction
 //Schemas
 const Quiz = require('../models/quizModel');// Import the Quiz model
 const Score = require('../models/scoreSchema');//Import the Score model
-const {checkJwtToken} = require('./middleware');//Import Custon middleware
+const {checkJwtToken} = require('./middleware');//Import Custom middleware
 //=======SETUP MIDDLEWARE===========
 // Setup middleware
 router.use(cors()); // Enable CORS for cross-origin requests
 router.use(express.json()); // Parse incoming JSON requests
 mongoose.set('strictPopulate', false); // Disable strict population checks in Mongoose
 
+/*
 // Utility function to validate the structure of the questions array
 const validateQuestions = (questions) => {
     // Ensure that the questions array exists, is an array, and has exactly 5 items
@@ -27,7 +28,7 @@ const validateQuestions = (questions) => {
         }
     }
     return true; // Return true if all questions are valid
-};
+};*/
 
 //=============ROUTES====================
 //------------------GET---------------
@@ -59,6 +60,7 @@ router.get('/findQuiz/:id', checkJwtToken, async (req, res) => {
         // Populate the 'userId' field with the associated 'username' from the User collection
         const quiz = await Quiz.findById(id)
         .populate('userId', 'username')// Populate the userId field with the username
+        .lean()//Return a plain JS object
         .exec()//Execute the query
         
         //Conditional rendering to check if the quiz is found
@@ -113,7 +115,7 @@ router.post('/addQuiz',  async (req, res) => {
     // Conditional rendering to check that the quiz has a name and exactly 5 questions
     if (!name || !questions || questions.length !== 5) {
         return res.status(400).json({message: 'Quiz name and exactly 5 questions are required'});
-        /*  A HTTP 400 Bad Request client error response status code indicates that 
+        /*  A HTTP 400 (Bad Request) client error response status code indicates that 
             the server would not process the request due to something the server considered to be a client error */
     }
 
@@ -121,7 +123,10 @@ router.post('/addQuiz',  async (req, res) => {
         // Conditional rendering to check if a quiz with the same name already exists
         const existingQuiz = await Quiz.findOne({name});
 
+        // Conditional rendering to check if a quiz with the same name already exists
         if (existingQuiz) {
+             /*  A HTTP 400 (Bad Request) client error response status code indicates that 
+            the server would not process the request due to something the server considered to be a client error */
             return res.status(400).json({message: 'Quiz name already exists'})
         }        
         
@@ -159,7 +164,7 @@ router.put('/editQuiz/:id', checkJwtToken,  async (req, res) => {
 
   // Conditional rendering to check that the name and questions are properly provided
     if (!name || !Array.isArray(questions) || questions.length !== 5) {
-        //Return a 400(Bad request) 
+        //Return a 400(Bad request) status code client response
         return res.status(400).json(
             {
                 success: false,
@@ -257,11 +262,11 @@ router.delete('/deleteQuiz/:id', checkJwtToken,async (req, res) => {
     catch (error) {
         //Error handling
         console.error('Error deleting quiz:', error);//Log an error message in the console for debugging purposes
-        return res.status(500).json({ message: error.message });// Respond with a 500 Internal Server Error status
-/* return res.status(500).json({
+        // return res.status(500).json({ message: error.message });
+        return res.status(500).json({// Respond with a 500 (Internal Server Error) status
             success: false, // Indicate failure
             message: error.message // Return the error message
-        });*/
+        });
     }
 });
 
