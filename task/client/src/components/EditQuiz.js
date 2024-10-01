@@ -103,6 +103,27 @@ const handleEditQuestion = () => {
       ));
   };
 
+   //Function to handle navigation between questions
+  const handleNavigation = useCallback(direction => {
+    if (quiz.questions && Array.isArray(quiz.questions)) {
+      console.error('Quiz questions are not properly defined.');
+      alert('Cannot navigate questions at this time.');
+      return;
+    }
+    if (direction === 'previous') {
+      if (currentQuestionIndex > 0) {
+        setCurrentQuestionIndex(prevIndex => prevIndex - 1);
+      } else {
+        console.log('You are already at the first question.');
+      }
+    } else if (direction === 'next'){
+      if (currentQuestionIndex < quiz.questions.length - 1) {
+        setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+      } else {
+        console.log('You are already at the last question');
+      }
+    }
+  },[])
   //Function to handle navigation between questions
   const handleNavigation = useCallback((direction) => {
     if (quiz.questions && Array.isArray(quiz.questions)) {
