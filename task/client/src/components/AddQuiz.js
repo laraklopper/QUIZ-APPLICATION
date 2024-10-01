@@ -4,7 +4,9 @@ import React, { useState } from 'react';// Import the React module to use React 
 import Row from 'react-bootstrap/Row'; // Import the Row component from react-bootstrap
 import Col from 'react-bootstrap/Col'; // Import the Col component from react-bootstrap
 import Button from 'react-bootstrap/Button'; // Import the Button component from react-bootstrap
-
+//Components
+import FormHeaders from './FormHeaders';
+import NewQuestionsList from './NewQuestionsList';
 
 //Add quiz function component
 export default function AddQuiz(//Export default AddQuiz function component
@@ -43,12 +45,6 @@ export default function AddQuiz(//Export default AddQuiz function component
     );
   };
 
-  // Function to delete a question
-  const deleteNewQuestion =(index) => {
-    const newQuestions = questions.filter((_, i) => i !== index); 
-    setQuestions(newQuestions)
-  }
-
   // Function to handle form submission
   const handleAddNewQuiz = () => {
     if (!quizName || questions.length === 0) {
@@ -61,12 +57,8 @@ export default function AddQuiz(//Export default AddQuiz function component
   //============JSX RENDERING================
   return (
     <div>
-      <Row>
-        <Col>
-        <h2 className='h2'>ADD QUIZ</h2>
-        </Col>
-      </Row>
-      {/*  */}
+     <FormHeaders formHeading='ADD QUIZ'/>
+      {/*Form to add new quiz*/}
       <div id='newQuizForm'>
         <Row>
           <Col xs={6} md={4}>
@@ -268,42 +260,11 @@ export default function AddQuiz(//Export default AddQuiz function component
             {/* Display an error message if an error occurs */}
               {errorMessage && <div className="error">{errorMessage}</div>}
           </Col>
-          {/* New questions output */}
-           <div className='newQuizOutput'> 
-              <Row>
-                <Col md={4} className='quizNameCol'>
-                  {/* Heading displaying the quiz name */}
-                  <h4 className='quizName'>QUIZ NAME: {quizName}</h4>
-                </Col>
-                <Col md={8}>
-                </Col>
-              </Row>             
-              {/* Map the questions */}
-            {questions.map((q, index) => (
-              <div className='questionsOutput' key={index}>
-                    <Row className='question'>
-                      <Col md={3}>             
-                        <p className='questionOutput'>{q.questionText}</p> </Col>
-                      <Col md={2}>
-                        <p className='answerOutput'>{q.correctAnswer}</p></Col>
-                      <Col md={5}> 
-                        <p className='options'>{q.options.join(', ')}</p></Col> 
-                      <Col md={2}>
-                      {/* Button to delete a new Question */}
-                          <Button 
-                            variant='danger' 
-                            type='button'                   
-                            onClick={() => 
-                            deleteNewQuestion(index)}
-                      aria-label={`Delete Question ${index + 1}`}
-                          >
-                            DELETE QUESTION
-                          </Button>
-                      </Col>
-                    </Row> 
-              </div>
-            ))}
-           </div>
+    {/* New questions output */}
+           <NewQuestionsList 
+           quizName={quizName} 
+           questions={questions} 
+           setQuestions={setQuestions}/>
           </Row>
           <Row>
             <Col md={8}></Col>
