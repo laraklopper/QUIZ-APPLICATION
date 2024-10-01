@@ -45,11 +45,12 @@ export default function AddQuiz(//Export default AddQuiz function component
     );
   };
 
-  // Function to handle form submission
+ // Function to handle form submission
   const handleAddNewQuiz = () => {
+    //Conditional rendering
     if (!quizName || questions.length === 0) {
       setErrorMessage('Please enter a quiz name and add at least one question.');
-      return;
+      return;//Exit early
     }    
     addNewQuiz();// Call the addNewQuiz function
   };
