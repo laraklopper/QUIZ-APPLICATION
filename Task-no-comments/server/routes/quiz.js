@@ -145,6 +145,21 @@ router.put('/editQuiz/:id', checkJwtToken,  async (req, res) => {
     }
     
     try {
+        /*
+        for (const [index, question] of questions.entries()) {
+            if (
+                !question.questionText ||// Ensure 'questionText' is provided
+                !question.correctAnswer ||// Ensure 'correctAnswer' is provided
+                !Array.isArray(question.options) ||// Ensure 'options' is an array
+                question.options.length !== 3// Ensure there are exactly 3 options
+            ) {
+                return res.status(400).json({//Return a 400(Bad request) 
+                    success: false,
+                    message: `Each question must have a question text, a correct answer, and exactly 3 options. 
+                    Issue found in question ${index + 1}.`//Include the question index for debugging
+                });
+            }
+        */
         /* for (const question of questions) {
             if (!question.questionText || !question.correctAnswer || question.options.length !== 3) {
                 return res.status(400).json({
