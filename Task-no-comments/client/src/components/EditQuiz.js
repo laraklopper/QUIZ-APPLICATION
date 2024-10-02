@@ -42,11 +42,26 @@ export default function EditQuiz(//Export default editQuiz Function component
 
   // Function to edit a question
 const handleEditQuestion = () => {
-    if (newQuestions.length === 0) {     
-      alert('No questions to update');
-      return;// Exit the function
-    }
+    // if (newQuestions.length === 0) {     
+    //   alert('No questions to update');
+    //   return;// Exit the function
+    // }
   
+    if (!Array.isArray(quizList) || quizList.length === 0) {
+    console.error('No quizzes to update');
+    return;// Exit the function 
+  }
+/*
+   //Conditional rendering to check if the quiz has questions
+  if (!quiz.questions || quiz.questions.length === 0) {
+    console.log('No questions available to update');
+      return;// Exit if there are no questions to update
+    }
+  if (currentQuestionIndex >= quiz.questions.length) {
+    console.error('Invalid Question Index');
+    // alert('Invalid question Index');
+    return;// Exit if index is invalid
+  }*/
   const updatedQuestions = [...newQuestions];
     updatedQuestions[currentQuestionIndex] = { ...editQuizIndex };
     setNewQuestions(updatedQuestions); 
@@ -58,6 +73,22 @@ const handleEditQuestion = () => {
       ));
   };
 
+  const handleOptionChange = (index, value) => {
+  const updatedOptions = [...editQuizIndex.editOptions];
+  updatedOptions[index] = value;
+  setEditQuizIndex({ ...editQuizIndex, editOptions: updatedOptions });
+};
+
+   //==================CONDITIONAL RENDERING=================
+  // Display a loading message if quiz data isn't available yet
+  if (!quiz || !Array.isArray(quiz.questions)) {
+    return <div>Loading...</div>;
+  }
+
+  //Conditional rendering to check if the currentQuestion index is valid
+  if (currentQuestionIndex >= quiz.questions.length) {
+    return <div>Invalid question index</div>
+  }
   //==============JSX RENDERING====================
   
   return (
@@ -147,6 +178,17 @@ const handleEditQuestion = () => {
              </Col>
           </Row>
           {/* Input for each option */}
+              {editQuizIndex.editOptions.map((option, idx) => (
+                <Col xs={6} key={idx} className="editQuizCol">
+                  <OptionInput
+                    index={idx + 1}
+                    value={option}
+                    onChange={(e) => handleOptionChange(idx, e.target.value)}
+                    placeholder={quiz.questions[currentQuestionIndex]?.options[idx] || ''}
+                  />
+                </Col>
+              ))}
+
           {[0, 1, 2].map((optionIndex) => (
             <Row className='editQuizRow' key={optionIndex}>
               <Col xs={6}  className='editQuizCol'>
