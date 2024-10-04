@@ -3,16 +3,40 @@ const express = require('express');// Import Express to handle routing
 const router = express.Router();// Create a new router object
 const cors = require('cors');// Import CORS middleware to handle cross-origin requests
 const mongoose = require('mongoose');// Import Mongoose for MongoDB interaction
+const helmet = require('helmet');
+// const dotenv = require('dotenv');
 //Schemas
 const Quiz = require('../models/quizModel');// Import the Quiz model
-const Score = require('../models/scoreSchema');//Import the Score model
+// const Score = require('../models/scoreSchema');//Import the Score model
 const {checkJwtToken} = require('./middleware');//Import Custom middleware
+
+// Load environment variables from .env file
+// dotenv.config();
+
+
+/*
+// Configure CORS to allow requests only from specified origins
+//const allowedOrigins = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : ['http://localhost:3001'];
+
+router.use(cors({
+    origin: function (origin, callback) {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.indexOf(origin) === -1) {
+            const msg = `The CORS policy for this site does not allow access from the specified Origin: ${origin}`;
+            return callback(new Error(msg), false);
+        }
+        return callback(null, true);
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));*/
 //=======SETUP MIDDLEWARE===========
 // Setup middleware
 router.use(cors()); // Enable CORS for cross-origin requests
 router.use(express.json()); // Parse incoming JSON requests
 mongoose.set('strictPopulate', false); // Disable strict population checks in Mongoose
-
+router.use(helmet())
 /*
 // Utility function to validate the structure of the questions array
 const validateQuestions = (questions) => {
@@ -240,17 +264,26 @@ router.delete('/deleteQuiz/:id', checkJwtToken,async (req, res) => {
         const deletedQuiz = await Quiz.findByIdAndDelete(id);
 
         //Conditional rendering to check if the quiz is found
-        if (!deletedQuiz) {
-            // If the quiz is not found, respond with a 404 Not Found status
-            return res.status(404).json({message: 'Quiz not found'});
-        }
+        // if (!deletedQuiz) {
+        //     // If the quiz is not found, respond with a 404 Not Found status
+        //     return res.status(404).json({message: 'Quiz not found'});
+        // }
 
-        /* if (!deletedQuiz) {
+        //Conditional rendering to check if the quiz is found
+        if (!deletedQuiz) {
             return res.status(404).json({
                 success: false,
                 message: 'Quiz not found'
             });
-        }*/
+        };
+
+         // Verify ownership before deletion
+            if (deletedQuiz.userId.toString() !== req.user.id) {
+                return res.status(403).json({
+                    success: false,
+                    message: 'Unauthorized to delete this quiz'
+                });
+            }*/
        // Delete all scores related to the deleted quiz
         //Delete many removes all documents matching the specified criteria
         await Score.deleteMany({name: deletedQuiz.name});
@@ -273,6 +306,15 @@ router.delete('/deleteQuiz/:id', checkJwtToken,async (req, res) => {
         });
     }
 });
+//------------------CATCH-ALL ROUTE FOR UNDEFINED ENDPOINTS---------------
+
+router.all('*', (req, res) => {
+    res.status(404).json({
+        success: false,
+        message: 'Route not found'
+    });
+});
+
 
 // Export the router to be used in other parts of the application
 module.exports = router; 
