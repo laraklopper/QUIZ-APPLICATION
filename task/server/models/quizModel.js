@@ -2,6 +2,10 @@
 const mongoose = require('mongoose'); // Import the Mongoose library
 // const autopopulate = require('mongoose-autopopulate');// Import the autopopulate plugin for Mongoose
 
+function validateCorrectAnswer(correctAnswer, options) {
+    return options.includes(correctAnswer);
+}
+
 // Define the schema for quizzes
 const quizSchema = new mongoose.Schema({
     //Field for the name of the quiz
@@ -9,28 +13,18 @@ const quizSchema = new mongoose.Schema({
         type: String,//Define the data type as a String
         required: true,
         unique: true,
+        trim: true,
         set: (v) => v.toUpperCase(),
-    },
+    },   
+    
     //Username of the person who created the quiz
-    username: {
-        type: String,//Define the datatype as a string
-        required: [true, 'Username is required'],
-    },
-    /*
-    //Username of the person who created the quiz
-    createdBy: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',// Reference to the 'User' model
-        // Automatically populate the quiz field
-        autopopulate: true,
-        required: [true, 'Username is required'], 
-    },
     userId: {
-        type: mongoose.Schema.Types.ObjectId,// Define the datatype as ObjectId
+        type: mongoose.Schema.Types.ObjectId,
         required: [true, 'Username is required'],            
         ref: 'User',  
-        autopopulate: true,
-    },*/
+        index: true,
+        // autopopulate: true,
+    },
     //Field for questions containing an array of objects
     questions: {
         type: [
@@ -38,24 +32,49 @@ const quizSchema = new mongoose.Schema({
                 //Specify the question text(Question)
                 questionText: {
                     type: String,//Define the data type as a String
-                    required: true,     
+                    required: [true, 'Question text is required'],    
+                    trim: true,
                     set: (v) => v.toUpperCase(),
                 },
                 //Specify the correct answer
                 correctAnswer: {
                     type: String,//Define the datatype as a String
-                    required: true, 
+                    required: [true, 'Correct answer is required'], 
+                    trim: true,
                 },
                 //Specify the answer options or the questions
-                options: {
-                    type: [String],//Define the data type as an array of Strings
-                    required: true,
-                    // Custom validation to ensure 3 options per question
-                    validate: [arrayLimit, '{PATH} must have exactly 3 options']
-                }
-            }
+                 options: {
+                    type: [String], // Define the data type as an array of Strings
+                    required: [true, 'Options are required'], // Indicate that options are required with a custom error message
+                    validate: [
+                        {
+                            validator: function (v) {
+                                return v.length === 3; // Ensure exactly 3 options
+                            },
+                            message: 'Each question must have exactly 3 options',
+                        },
+                    ],
+                     validate: [arrayLimit, '{PATH} must have exactly 3 options']
+                    trim: true, // Remove whitespace from each option
+                },
+                // Custom validator to ensure correctAnswer is among options
+                 validate: {
+                    validator: function () {
+                        return validateCorrectAnswer(this.correctAnswer, this.options);
+                    },
+                    message: 'Correct answer must be one of the provided options',
+                },
+            },
         ],
         required: true,//Indicate that the field is required
+        /* validate: [
+            {
+                validator: function (v) {
+                    return v.length === 5; // Ensure exactly 5 questions
+                },
+                message: 'Each quiz must have exactly 5 questions',
+            },
+        ],*/
         // Custom validation to ensure exactly 5 questions per quiz
         validate: [arrayLimit5, '{PATH} must have exactly 5 questions']
     },   
@@ -82,19 +101,6 @@ quizSchema.index({userId: 1})
 // Apply the autopopulate plugin to the schema
 // quizSchema.plugin(autopopulate);
 
-// Middleware function that runs before a quiz is deleted
-/*quizSchema.pre('deleteOne', {document: true, query: false}, async function (next) {
-    try {
-        // Delete all associated scores for the quiz being deleted
-        // reference to the quiz name
-        await Score.deleteMany({ name: this.name });
-        console.log(`Deleted all scores for quiz: ${this.name}`);
-        next();// Proceed to the next middleware function
-        
-    } catch (error) {
-        console.error('Error deleting associated scores:', error);
-        next(error);// Proceed to the next middleware function
-    }
-})*/
+
 // Export the mongoose model for 'Quiz' using the defined schema
 module.exports = mongoose.model('Quiz', quizSchema);
