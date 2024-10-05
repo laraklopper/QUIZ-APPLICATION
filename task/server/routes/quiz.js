@@ -70,21 +70,12 @@ router.get('/findQuiz/:id', checkJwtToken, async (req, res) => {
                 message: 'Invalid quiz ID'
             });
         }
-
-         /*Conditional rendering to check if the quizId
-       is a valid MongoDB ObjectId*/
-        /* if (!mongoose.Types.ObjectId.isValid(id)) {
-            return res.status(400).json({
-                success: false,
-                message: 'Invalid quiz ID'
-            });
-        }*/
         
         // Find the quiz by its ID and populate the 'userId' field with the 'username'
         // Populate the 'userId' field with the associated 'username' from the User collection
         const quiz = await Quiz.findById(id)
         .populate('userId', 'username')// Populate the userId field with the username
-        .lean()//Return a plain JS object
+        // .lean()//Return a plain JS object
         .exec()//Execute the query
         
         //Conditional rendering to check if the quiz is found
@@ -206,7 +197,6 @@ router.put('/editQuiz/:id', checkJwtToken,  async (req, res) => {
                 question.options.length !== 3// Ensure there are exactly 3 options
             ) {
                 return res.status(400).json({//Return a 400(Bad request) 
-
                     success: false,
                     message: `Each question must have a question text, a correct answer, and exactly 3 options. 
                     Issue found in question ${index + 1}.`//Include the question index for debugging
@@ -223,7 +213,8 @@ router.put('/editQuiz/:id', checkJwtToken,  async (req, res) => {
         // Update the quiz
         const updatedQuiz = await Quiz.findByIdAndUpdate(
             id, // ID of the quiz to update
-            { name, questions },// The updated quiz details 
+            //{$set: req.body}
+            {$set: { name, questions }},// The updated quiz details 
             { new: true, }// Return the updated document
         );
 
@@ -243,7 +234,6 @@ router.put('/editQuiz/:id', checkJwtToken,  async (req, res) => {
     } 
     catch (error) {
         console.error('Error editing quiz:', error);//Log an error message in the console for debugging purposes
-        // return res.status(500).json({ error: error.message });
          return res.status(500).json({// Respond with a 500 Internal Server Error status and the error message
             success: false, // Indicate failure
             error: error.message // Return the error message
@@ -263,31 +253,30 @@ router.delete('/deleteQuiz/:id', checkJwtToken,async (req, res) => {
                 //If no quiz is found with the provided ID, `deletedQuiz` will be `null`
         const deletedQuiz = await Quiz.findByIdAndDelete(id);
 
+        /*
         //Conditional rendering to check if the quiz is found
-        // if (!deletedQuiz) {
-        //     // If the quiz is not found, respond with a 404 Not Found status
-        //     return res.status(404).json({message: 'Quiz not found'});
-        // }
+        if (!deletedQuiz) {
+            // If the quiz is not found, respond with a 404 Not Found status
+            return res.status(404).json({message: 'Quiz not found'});
+        }*/
 
         //Conditional rendering to check if the quiz is found
         if (!deletedQuiz) {
-            return res.status(404).json({
-                success: false,
-                message: 'Quiz not found'
-            });
+            return res.status(404).json({ success: false, message: 'Quiz not found'});
         };
 
          // Verify ownership before deletion
-            if (deletedQuiz.userId.toString() !== req.user.id) {
+            /*if (deletedQuiz.userId.toString() !== req.user.id) {
                 return res.status(403).json({
                     success: false,
                     message: 'Unauthorized to delete this quiz'
                 });
             }*/
-       // Delete all scores related to the deleted quiz
-        //Delete many removes all documents matching the specified criteria
-        await Score.deleteMany({name: deletedQuiz.name});
-        //The Score model uses the name field to associate scores with quizzes
+        
+  /* Delete all scores related to the deleted quiz
+        Delete many removes all documents matching the specified criteria
+        The Score model uses the name field to associate scores with quizzes*/
+        // await Score.deleteMany({name: deletedQuiz.name});
 
         console.log('Deleted Quiz:', deletedQuiz);// Log the deleted quiz in the console for debugging purposes
          /*res.status(200).json({
@@ -307,14 +296,14 @@ router.delete('/deleteQuiz/:id', checkJwtToken,async (req, res) => {
     }
 });
 //------------------CATCH-ALL ROUTE FOR UNDEFINED ENDPOINTS---------------
-
+/*
 router.all('*', (req, res) => {
     res.status(404).json({
         success: false,
         message: 'Route not found'
     });
 });
-
+*/
 
 // Export the router to be used in other parts of the application
 module.exports = router; 
