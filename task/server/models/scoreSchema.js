@@ -4,6 +4,18 @@ const mongoose = require('mongoose');// Import the Mongoose library
 
 //Define the score schema
 const scoreSchema = new mongoose.Schema({
+  /*   // Reference to the User who took the quiz
+      userId: {
+        type: mongoose.Schema.Types.ObjectId, // Define the data type as ObjectId
+        ref: 'User', // Reference the User model
+        required: [true, 'User ID is required'], // Ensure that userId is required with a custom message
+    },  
+      // Reference to the Quiz taken
+    quizId: {
+        type: mongoose.Schema.Types.ObjectId, // Define the data type as ObjectId
+        ref: 'Quiz', // Reference the Quiz model
+        required: [true, 'Quiz ID is required'], // Ensure that quizId is required with a custom message
+    },*/
      // Field for the name of the quiz taken
      name: {
         type: String,
@@ -11,33 +23,10 @@ const scoreSchema = new mongoose.Schema({
     },
     /* Field for username of the user who
     took the quiz*/
-     username: {
-        type: String,
-        required: [true, 'username is required'],
-    },
-    /* userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',// Reference the User collection
-        // autopopulate: true,// Automatically populate the quiz field
-        required: true,
-        //Validate to ensure the username is a valid objectId
-        validate: {
-            validator: mongoose.Types.ObjectId.isValid,
-            message: 'Invalid user Id',//Custom error message if validation fails
-        },
-    }, 
-    quizId: {
-        type: mongoose.Schema.Types.ObjectId,
-        // Reference the Quiz collection
-        ref: 'Quiz',
-        // autopopulate: true,// Automatically populate the quiz field
-        required: [true, 'Quiz name is required'],
-        // Validate to ensure the username is a valid objectId
-        validate: {
-            validator: mongoose.Types.ObjectId.isValid,
-            message: 'Invalid quiz Id',//Custom error message if validation fails
-        },
-    },*/
+    //  username: {
+    //     type: String,
+    //     required: [true, 'username is required'],
+    // },
     //Field for the score
     score: {
         type: Number,// Define the type as Number
