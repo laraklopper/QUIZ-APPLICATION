@@ -1,22 +1,27 @@
 // Import necessary modules and packages
 const mongoose = require('mongoose'); // Import the Mongoose library
-// const autopopulate = require('mongoose-autopopulate');// Import the autopopulate plugin for Mongoose
+// Import the autopopulate plugin for Mongoose
+// const autopopulate = require('mongoose-autopopulate');
 
+/*
+//Function to ensure that thecorrectAnswer exists within the 
+options array for each question
 function validateCorrectAnswer(correctAnswer, options) {
     return options.includes(correctAnswer);
-}
+}*/
 
-// Define the schema for quizzes
+// Define the schema for quiz
 const quizSchema = new mongoose.Schema({
     //Field for the name of the quiz
     name: {
         type: String,//Define the data type as a String
         required: true,
         unique: true,
+        /*String method to remove whiteSpace before or  
+        from both ends of this string and returns a new string*/
         trim: true,
         set: (v) => v.toUpperCase(),
     },   
-    
     //Username of the person who created the quiz
     userId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -25,6 +30,15 @@ const quizSchema = new mongoose.Schema({
         index: true,
         // autopopulate: true,
     },
+     /*Username of the person who created the quiz
+     username: {
+         type:  mongoose.Schema.Types.ObjectId,
+        autopopulate: true, 
+         /* Indicate that the username is required and 
+         add a custom error message*/
+        required: [true, 'Username is required'],
+     },
+    */
     //Field for questions containing an array of objects
     questions: {
         type: [
@@ -44,8 +58,9 @@ const quizSchema = new mongoose.Schema({
                 },
                 //Specify the answer options or the questions
                  options: {
-                    type: [String], // Define the data type as an array of Strings
-                    required: [true, 'Options are required'], // Indicate that options are required with a custom error message
+                    type: [String], // Define the data type as an array of Strings 
+                     // Indicate that options are required with a custom error message
+                    required: [true, 'Options are required'],
                     validate: [
                         {
                             validator: function (v) {
