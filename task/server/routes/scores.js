@@ -7,6 +7,7 @@ const mongoose = require('mongoose');// Import Mongoose for MongoDB interaction
 const Score = require('../models/scoreSchema');//Import the Score model
 const User = require('../models/userSchema');// Import the User model
 const Quiz = require('../models/quizModel');// Import the Quiz model
+//Import Custom middleware
 const { checkJwtToken } = require('./middleware')//Import Custon middleware
 //=======SETUP MIDDLEWARE===========
 // Setup middleware
@@ -24,15 +25,15 @@ router.get('/findQuizScores/:quizName/:username',  checkJwtToken, async (req, re
         const { quizName, username } = req.params; // Extract quizName and username from the route parameters
 
         // Fetch the score for the specified quiz and user
-        const quizScore = await Score.findOne({username, name: quizName}).exec();
+        const quizScore = await Score.findOne({username,/*name:*/quizName}).exec();
 
         //Conditional rendering to check if a score is fount
         if (!quizScore) {
             // If no score is found, return a 404 error
             return res.status(404).json({ error: 'Score not found' });
         }
-
-        res.json(quizScore)// Return the quiz score in JSON format
+    // Return the quiz score in JSON format
+        res.status(200).json({ success: true, quizScore });
         console.log(quizScore);    // Log the fetched score in the console for debugging purposes
     } 
     catch (error) {
@@ -43,24 +44,25 @@ router.get('/findQuizScores/:quizName/:username',  checkJwtToken, async (req, re
 
 // Get all scores for the authentica
 router.get('/findScores', async (req, res) => {
-    try {
-        // const userId = req.user._id;
-        const  {username} = req.query; //Extract the username from query parameters
-
-        let userScores;
-        // Conditional rendering to check if a username is provided, and find scores accordingly
+    try { 
+        //Extract the username from query parameters
+        const  {username} = req.query;
+        let userScores;// Declare a variable to store the quiz scores
+        
+        /* Conditional rendering to check if a username is provided,
+        and find scores accordingly*/
         if(username){
             //Find scores for a specific user 
             userScores = await Score.find({ username }).exec();
         }else{
             // Find all scores if no username is provided
-            const userScores = await Score.find(req.body).exec(); 
+            userScores = await Score.find(req.body).exec(); 
         }
         
         // Find all scores for the user
         const userScores = await Score.find(req.body).exec(); 
         res.json(userScores)// Return the fetched scores in JSON format
-        console.log(userScores);//Log the scores in the console for debugging purposes
+        console.log(userScores);//Debugging
         
     } catch (error) {
         res.status(500).json({ message: 'Error fetching user scores', error });// Return 500 status code for server error
@@ -76,25 +78,28 @@ router.get('/findScores/:username', async (req, res) => {
 
         // Fetch the user document based on the username
         // Use `findOne` to locate a user with the provided username
-        const user = await User.findOne({ username }).exec();
+        const user = await User.findOne({ username })
+            .exec();
 
         // Conditional rendering to check if the user exists
         if (!user) { 
-                    // If no user is found with the given username, return a 404 error
+          // If no user is found with the given username, return a 404 error
             return res.status(404).json({ error: 'User not found' });
         }
 
         // Fetch the user score based on the user id
         const result = await Score.find({ username: user.username }) // Find scores matching the username
             .populate('name')// Populate the quiz name field if needed
-            .sort({ createdAt: -1 })// Sort scores by creation date in descending order
+            .sort({ date: -1 }) // Sort the scores by date (most recent first)
+            //.sort({ createdAt: -1 })// Sort scores by creation date in descending order
             .exec()//Execute the query
 
         res.json({ userScores: result });// Return the user scores in JSON format        
         console.log(result);// Log the fetched scores for debugging purposes
     } catch (error) {
-        console.error('Error finding user scores:', error);//Log an error message in the console for debugging purposes
-        return res.status(500).json({ error: error.message });// Respond with a 500 (Internal Server Error) response
+        console.error('Error finding user scores:', error);//Debugging
+        // Respond with a 500 (Internal Server Error) response
+        return res.status(500).json({ error: error.message });
     }
 });
 
@@ -125,7 +130,6 @@ router.post('/addScore', /*checkJwtToken*/, async(req, res) => {
         
         // If the existing score is higher or equal, don't update
         if (existingScore && existingScore.score >= score) {
-            // If the existing score is higher or equal, don't update
             return res.status(200).json(
                 { message: "New score is not higher than the existing score" }
             );
@@ -146,8 +150,8 @@ router.post('/addScore', /*checkJwtToken*/, async(req, res) => {
         
     } 
     catch (error) {
-        console.error('Error saving score:', error);//Log an error message in the console for debugging purposes
-        return res.status(500).json({ error: error.message });// Return a 500 (Internal Server Error) response
+        console.error('Error saving score:', error);
+        return res.status(500).json({ error: error.message });
     }
 })
 
