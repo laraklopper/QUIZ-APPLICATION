@@ -241,7 +241,19 @@ router.put('/editQuiz/:id', checkJwtToken,  async (req, res) => {
     };
 });
 
-
+/*router.put('/:id', async (req, res) => {
+    try {
+        const updatedQuiz = await Quiz.updateOne(
+            {_id: req.params.id},
+            {$set: req.body}
+        )
+        res.status(200).json({ success: true, updatedQuiz })
+        // console.log(updatedQuiz);
+    } catch (error) {
+        console.error('Error editing quiz:', error)
+        return res.status(500).json({ success: false, error: error.message });
+    }
+})*/
 //--------DELETE---------------
 // Route to delete a quiz
 router.delete('/deleteQuiz/:id', checkJwtToken,async (req, res) => {
