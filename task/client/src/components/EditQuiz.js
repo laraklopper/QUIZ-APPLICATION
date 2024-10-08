@@ -63,7 +63,7 @@ export default function EditQuiz(//Export default editQuiz Function component
 
   //============EVENT LISTENERS=================
   // Function to edit a question
-const handleEditQuestion = () => {
+/*const handleEditQuestion = () => {
   // Conditional rendering to ensure that the quizList is not an empty array
   if (!Array.isArray(quizList) || quizList.length === 0) {
     console.error('No quizzes to update');//Log an error messag in the console for debugging purposes
@@ -84,8 +84,7 @@ const handleEditQuestion = () => {
      const updatedQuestions = [...newQuestions];
 
  
-  /* Update the specific question being edited 
-    with the current editQuizIndex state*/
+  // Update the specific question being edited with the current editQuizIndex state
   updatedQuestions[currentQuestionIndex] = {
     questionText: editQuizIndex.editQuestionText,
     correctAnswer: editQuizIndex.editCorrectAnswer,
@@ -104,7 +103,7 @@ const handleEditQuestion = () => {
         ? { ...q, questions: updatedQuestions, name: newQuizName }
         : q  // If it doesn't match, return the quiz unchanged
       ));
-  };
+  };*/
 
   //Function to handle form submission
   const handleEditQuiz= useCallback(async () => {
@@ -289,22 +288,21 @@ const handleEditQuestion = () => {
           </div>
           </Col>            
         </Row>
+      {/* BUTTONS */}
         <Row className='editQuizRow'>
-              {/* BUTTONS */}                     
-              <Col xs={6} md={4} className='editQuizCol'>
-              {/* Button to edit a question */}
+          <Col className='editQuizCol'></Col>
+          {/*Button to edit a question*/}
+            {/* <Col xs={6} md={4} className='editQuizCol'>
               <Button 
               variant='primary'
+              className='editQuizBtn'
               onClick={handleEditQuestion}
-              className='editQuestionBtn'
-              type='button'
-              aria-label='editQuestion'
-              >
+              type='button'>
                 EDIT QUESTION
               </Button>
-              </Col>
-          <Col xs={12} md={8}></Col>
-          </Row>
+            </Col>
+            <Col xs={12} md={8}></Col> */}
+        </Row>
            <NavigationBtns 
               quiz={quiz} 
               currentQuestionIndex={currentQuestionIndex} 
