@@ -3,56 +3,19 @@ const express = require('express');// Import Express to handle routing
 const router = express.Router();// Create a new router object
 const cors = require('cors');// Import CORS middleware to handle cross-origin requests
 const mongoose = require('mongoose');// Import Mongoose for MongoDB interaction
-const helmet = require('helmet');
-// const dotenv = require('dotenv');
 //Schemas
 const Quiz = require('../models/quizModel');// Import the Quiz model
 // const Score = require('../models/scoreSchema');//Import the Score model
 const {checkJwtToken} = require('./middleware');//Import Custom middleware
 
-// Load environment variables from .env file
-// dotenv.config();
-
-
-/*
-// Configure CORS to allow requests only from specified origins
-//const allowedOrigins = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : ['http://localhost:3001'];
-
-router.use(cors({
-    origin: function (origin, callback) {
-        // Allow requests with no origin (like mobile apps or curl requests)
-        if (!origin) return callback(null, true);
-        if (allowedOrigins.indexOf(origin) === -1) {
-            const msg = `The CORS policy for this site does not allow access from the specified Origin: ${origin}`;
-            return callback(new Error(msg), false);
-        }
-        return callback(null, true);
-    },
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-}));*/
 //=======SETUP MIDDLEWARE===========
 // Setup middleware
-router.use(cors()); // Enable CORS for cross-origin requests
-router.use(express.json()); // Parse incoming JSON requests
 mongoose.set('strictPopulate', false); // Disable strict population checks in Mongoose
-router.use(helmet())
-/*
-// Utility function to validate the structure of the questions array
+//===================
+//Utility function
 const validateQuestions = (questions) => {
-    // Ensure that the questions array exists, is an array, and has exactly 5 items
-    if (!Array.isArray(questions) || questions.length !== 5) {
-        return false;
-    }
-    // Loop through each question to validate its fields
-    for (const question of questions) {
-        // Each question must have questionText, correctAnswer, and exactly 3 options
-        if (!question.questionText || !question.correctAnswer || question.options.length !== 3) {
-            return false;
-        }
-    }
-    return true; // Return true if all questions are valid
-};*/
+    return questions.every(q => q.questionText && q.options && q.correctAnswer);
+}
 
 //=============ROUTES====================
 //------------------GET---------------
@@ -61,15 +24,21 @@ router.get('/findQuiz/:id', checkJwtToken, async (req, res) => {
     try {
         const { id } = req.params;// Retrieve the quiz ID from the request parameters
 
-         /*Conditional rendering to check if the quizId 
-        is a valid MongoDB ObjectId*/
-        if (!mongoose.Types.ObjectId.isValid(id)) {
+       
+       //Conditional rendering to check if the quizId is a valid MongoDB ObjectId
+        if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+            // Respond with a 400 Bad Request status and an error message
+            return res.status(400).json({success: false,
+                message: 'Invalid or missing quiz ID'
+            });
+        }
+        /*if (!mongoose.Types.ObjectId.isValid(id)) {
             // If not valid, respond with a 400 Bad Request status and an error message
             return res.status(400).json({
                 success: false,
                 message: 'Invalid quiz ID'
             });
-        }
+        }*/
         
         // Find the quiz by its ID and populate the 'userId' field with the 'username'
         // Populate the 'userId' field with the associated 'username' from the User collection
