@@ -32,8 +32,14 @@ const checkJwtToken = (req, res, next) => {
     const token = authHeader.split(' ')[1];
 
     try {
-        // Verify the token using the secret key
-        const decoded = jwt.verify(token, 'secretKey',);
+         // Verify the token using the secret key
+        const decoded = jwt.verify(
+            token,
+            /*Secret key used for signing the token
+            stored in enviromental variables*/
+            'secretKey'
+            /*process.env.JWT_SECRET*/
+        );
         req.user = decoded;
         console.log('Token provided');
 
