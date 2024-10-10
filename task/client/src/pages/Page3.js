@@ -31,6 +31,11 @@ export default function Page3(
   // ========STATE VARIABLES===============
   //Edit quiz variables
   const [newQuizName, setNewQuizName] = useState('');  // State to store new quiz name
+  //   const [newQuizData, setNewQuizData] = useState({
+  //   questionText: '',
+  //   correctAnswer: '',
+  //   options: ['', '', ''] 
+  // })
   const [update, setUpdate] = useState(false);  // Toggle between edit mode and normal mode
   const [newQuestions, setNewQuestions] = useState([]) // State to store new questions when editing a quiz
   const [quizToUpdate, setQuizToUpdate] = useState(null);// State to store the quiz ID of the quiz being updated  
@@ -55,8 +60,7 @@ export default function Page3(
   const addNewQuiz = async () => {
     //Conditional rendering to check that the quiz has exacly 5 questions
     if (questions.length !== 5) {
-      // Alert if the number of questions is incorrect
-      alert('You must add exactly 5 questions.');
+      console.error('You must add exactly 5 questions.');
       return;// Exit the function to prevent further execution
     }
     // Create a quiz object to send to the server
@@ -69,7 +73,7 @@ export default function Page3(
       const token = localStorage.getItem('token');// Retrieve the authentication token from localStorage
       //Send a POST request to the server to add a new quiz
       const response = await fetch('http://localhost:3001/quiz/addQuiz', {
-        method: 'POST',//HTTP request method
+        // method: 'POST',//HTTP request method
         mode: 'cors', // Enable cross-origin resource sharing
         headers: {
           'Content-Type': 'application/json',//Specify the content-type in the payload as JSON
@@ -185,6 +189,11 @@ export default function Page3(
   // ===========EVENT LISTENERS==============  
   // Function to toggle the quiz edit form visibility
   const toggleQuizUpdate = useCallback((quizId) => {
+    // if (quizToUpdate === quizId) {
+    //   setQuizToUpdate(null)      
+    // } else {
+    //   setQuizToUpdate(quizId)
+    // }
     setUpdate((prevUpdate) => !prevUpdate);// Toggle the 'update' state between true and false
     // Set the 'quizToUpdate' state to the selected quiz's ID for editing
     setQuizToUpdate(quizId);
