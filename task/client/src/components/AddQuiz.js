@@ -20,6 +20,8 @@ export default function AddQuiz(//Export default AddQuiz function component
   addNewQuiz,
   currentQuestion,
   setCurrentQuestion,
+    setNewQuizData, 
+    newQuizData
 }) {
   //===========STATE VARIABLES====================
   const [errorMessage, setErrorMessage] = useState('');// State to manage the error message displayed to the user
@@ -28,7 +30,6 @@ export default function AddQuiz(//Export default AddQuiz function component
   //Function to add a new question
   const handleAddQuestion = () => {
     if (questions.length >= 5) {
-      alert('You must add up to 5 questions.'); // Notify the user
       console.log('You must add up to 5 questions.');//Log a message in the console for debugging purporses
       return;// Exit the function to prevent adding more questions
     }
