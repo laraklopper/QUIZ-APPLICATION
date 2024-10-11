@@ -1,12 +1,13 @@
 // Import necessary modules and packages
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';// Import the React module to use React functionalities
+import '../CSS/EditQuiz.css';//Import CSS stylesheet
 //Bootstrap
-import Row from 'react-bootstrap/Row'; 
-import Col from 'react-bootstrap/Col'; 
-import Button from 'react-bootstrap/Button'; 
+import Row from 'react-bootstrap/Row'; // Import the Row component from react-bootstrap
+import Col from 'react-bootstrap/Col'; // Import the Col component from react-bootstrap
+import Button from 'react-bootstrap/Button'; // Import the Button component from react-bootstrap
 // Components
-import FormHeaders from './FormHeaders';
-import NavigationBtns from './NavigationBtns';
+import FormHeaders from './FormHeaders';//Import FormHeaders function component
+import NavigationBtns from './NavigationBtns';//Import NavigationBtns function component
 
 //EditQuiz function component
 export default function EditQuiz(//Export default editQuiz Function component
@@ -24,8 +25,9 @@ export default function EditQuiz(//Export default editQuiz Function component
   }
 ) {
   //=============STATE VARIABLES======================
-  // State to track the index of the current question being edited
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);// State to track the index of the current question being edited
+  const [error, setError] = useState(null);  // State for tracking any error messages  
+
 
   //=========USE EFFECT HOOK==================
   /* Effect to initialize and update the editQuizIndex 
@@ -63,7 +65,7 @@ export default function EditQuiz(//Export default editQuiz Function component
 
   //============EVENT LISTENERS=================
   // Function to edit a question
-/*const handleEditQuestion = () => {
+const handleEditQuestion = () => {
   // Conditional rendering to ensure that the quizList is not an empty array
   if (!Array.isArray(quizList) || quizList.length === 0) {
     console.error('No quizzes to update');//Log an error messag in the console for debugging purposes
@@ -103,7 +105,7 @@ export default function EditQuiz(//Export default editQuiz Function component
         ? { ...q, questions: updatedQuestions, name: newQuizName }
         : q  // If it doesn't match, return the quiz unchanged
       ));
-  };*/
+  };
 
   //Function to handle form submission
   const handleEditQuiz= useCallback(async () => {
