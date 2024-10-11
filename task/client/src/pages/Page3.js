@@ -29,13 +29,14 @@ export default function Page3(
 ) {
   
   // ========STATE VARIABLES===============
+  //Variables for creating a new quiz
+  /*const [newQuizData, setNewQuizData] = useState({//State to store data for a NewQuiz
+    newquestion: '',
+    correctAnswer: '',
+    options: ['','','']
+  })*/
   //Edit quiz variables
   const [newQuizName, setNewQuizName] = useState('');  // State to store new quiz name
-  //   const [newQuizData, setNewQuizData] = useState({
-  //   questionText: '',
-  //   correctAnswer: '',
-  //   options: ['', '', ''] 
-  // })
   const [update, setUpdate] = useState(false);  // Toggle between edit mode and normal mode
   const [newQuestions, setNewQuestions] = useState([]) // State to store new questions when editing a quiz
   const [quizToUpdate, setQuizToUpdate] = useState(null);// State to store the quiz ID of the quiz being updated  
@@ -100,7 +101,6 @@ export default function Page3(
     catch (error) {
       console.error('There was an error creating the quiz:', error);// Log any errors that occur during the request
       setError('There was an error creating the quiz');// Set the error state to display the error in the UI
-      alert('There was an error creating the quiz');// Alert the user about the error
     }
   };
 
@@ -108,11 +108,14 @@ export default function Page3(
   //Function to edit a quiz
   const editQuiz = async (quizId) => {//Define an async function to edit a quiz
 
-    // Conditional rendering to check if the number of questions is exactly 5
-    if (questions.length !== 5) {
-      setFormError('You must have exactly 5 questions.');// Set form error if the validation fails
-      return;// Exit the function to prevent further execution
-    }
+    /* // Create a updated quiz object to send to the server
+    const editedQuiz = {
+      name: newQuizName,
+      questions: editQuizIndex
+    }*/
+
+        // console.log(editedQuiz);//Log a message in the console for debugging purposes
+
     try {
       const token = localStorage.getItem('token');// Retrieve the JWT token from local storage
       //Send a PUT request to the server to edit a quiz
@@ -125,10 +128,8 @@ export default function Page3(
         },
         body: JSON.stringify({
           name: newQuizName, // The new quiz name provided by the user
-          questions: editQuestionIndex,// The new array of questions       
-          // question: editQuizIndex.editQuestionText,// Edited question text
-          // correctAnswer: editQuizIndex.editCorrectAnswer,// Correct answer for the question
-          // options: editQuizIndex.editOptions   // Options for the question
+          questions: editQuestionIndex,// The new array of questions     
+          // editedQuiz
             })
       });
       //Response handling
@@ -148,7 +149,6 @@ export default function Page3(
       else {
         throw new Error('Error editing quiz');//Throw an error message if the PUT request is unsuccessful
       }
-
     } 
     catch (error) {
       console.error(`Error editing the quiz: ${error}`);//Log an error message in the console for debugging purposes
@@ -156,7 +156,7 @@ export default function Page3(
     }
   }
 
-
+//Http
 //------------DELETE------------------------
 //Function to delete a quiz
   const deleteQuiz = async (quizId) => {//Define an async function to delete a quiz
