@@ -13,12 +13,6 @@ const { checkJwtToken } = require('./middleware');//Import Custom middleware
 // Setup middleware
 mongoose.set('strictPopulate', false); // Disable strict population checks in Mongoose
 
-//=============================
-
-//Utility function
-const validateQuestions = (questions) => {
-    return questions.every(q => q.questionText && q.options && q.correctAnswer);
-}
 //=============ROUTES====================
 //------------------GET---------------
 //Route to GET a specific quiz using the quiz Id
