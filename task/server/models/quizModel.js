@@ -23,22 +23,20 @@ const quizSchema = new mongoose.Schema({
         set: (v) => v.toUpperCase(),
     },   
     //Username of the person who created the quiz
-    userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: [true, 'Username is required'],            
-        ref: 'User',  
-        index: true,
+     //  Username of the person who created the quiz  
+    /*userId: {
+        type: mongoose.Schema.Types.ObjectId, // Reference to the User model
+        ref: 'User', 
+        required: [true, 'User ID is required'], 
         // autopopulate: true,
     },
-     /*Username of the person who created the quiz
+     /*
      username: {
          type:  mongoose.Schema.Types.ObjectId,
         autopopulate: true, 
-         /* Indicate that the username is required and 
-         add a custom error message*/
+         // Indicate that the username is required and add a custom error message
         required: [true, 'Username is required'],
-     },
-    */
+     },*/ 
     //Field for questions containing an array of objects
     questions: {
         type: [
