@@ -124,33 +124,23 @@ router.put('/editQuiz/:id', checkJwtToken, async (req, res) => {
                 { success: false, message: 'Quiz name and exactly 5 questions are required' }
             )
         }
+
+    const updatedQuiz = {}
+    if (name) updatedQuiz.name = name;
+    if (questions) updatedQuiz.questions = questions;
+    
     try {
-
-      
-/*
-        //Iterate over each question to validate its structure.
-        for (const [index, question] of questions.entries()) {
-            if (!question.questionText || !question.correctAnswer || !Array.isArray(question.options) || question.options.length !== 3) {
-                return res.status(400).json({//Return a 400(Bad request) 
-                    success: false,
-                    message: `Each question must have a question text, a correct answer, and exactly 3 options. 
-                    Issue found in question ${index + 1}.`//Include the question index for debugging
-                });
-            }
-*/
-        
-        console.log(editedQuiz)//Log a message in the console for debugging purposes
-
         // Update the quiz
         const editedQuiz = await Quiz.findByIdAndUpdate(
             id, // ID of the quiz to update
             {$set : updatedQuiz},
             { new: true, }// Return the updated document
         );
-        
-       const updatedQuiz = {}
-        if (name) updatedQuiz.name = name
-        if (questions) updatedQuiz.questions =questions
+        console.log(editedQuiz)//Log a message in the console for debugging purposes
+
+       // const updatedQuiz = {}
+       //  if (name) updatedQuiz.name = name
+       //  if (questions) updatedQuiz.questions =questions
    
         //conditional rendering to check if the quiz exists
         if (!editedQuiz) {
@@ -170,7 +160,57 @@ router.put('/editQuiz/:id', checkJwtToken, async (req, res) => {
     };
 });
 
+/*
+//Allowing partial updates
+router.put('/editQuiz/:id', checkJwtToken, async (req, res) => {
+    const { id } = req.params;
+    console.log(req.body);
+    const { name, questions } = req.body;
 
+    // Ensure at least one field is provided for update
+    if (!name && !questions) {
+        return res.status(400).json({
+            success: false,
+            message: 'At least one of quiz name or questions is required for update'
+        });
+    }
+
+    const updatedQuiz = {};
+    if (name) updatedQuiz.name = name;
+    if (questions) {
+        if (!Array.isArray(questions) || questions.length !== 5) {
+            return res.status(400).json({
+                success: false,
+                message: 'Exactly 5 questions are required'
+            });
+        }
+        updatedQuiz.questions = questions;
+    }
+
+    try {
+        const editedQuiz = await Quiz.findByIdAndUpdate(
+            id,
+            { $set: updatedQuiz },
+            { new: true, runValidators: true }
+        );
+
+        if (!editedQuiz) {
+            return res.status(404).json({ message: 'Quiz not found' });
+        }
+
+        res.status(200).json({ success: true, editedQuiz });
+        console.log(updatedQuiz);
+    } catch (error) {
+        console.error('Error editing quiz:', error);
+
+        if (error.name === 'ValidationError') {
+            return res.status(400).json({ success: false, message: error.message });
+        }
+
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+*/
 
 //--------DELETE---------------
 // Route to delete a quiz
