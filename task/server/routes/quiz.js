@@ -138,10 +138,6 @@ router.put('/editQuiz/:id', checkJwtToken, async (req, res) => {
         );
         console.log(editedQuiz)//Log a message in the console for debugging purposes
 
-       // const updatedQuiz = {}
-       //  if (name) updatedQuiz.name = name
-       //  if (questions) updatedQuiz.questions =questions
-   
         //conditional rendering to check if the quiz exists
         if (!editedQuiz) {
             // If the quiz is not found, respond with a 404 Not Found status
@@ -159,58 +155,6 @@ router.put('/editQuiz/:id', checkJwtToken, async (req, res) => {
         return res.status(500).json({success: false, error: error.message });
     };
 });
-
-/*
-//Allowing partial updates
-router.put('/editQuiz/:id', checkJwtToken, async (req, res) => {
-    const { id } = req.params;
-    console.log(req.body);
-    const { name, questions } = req.body;
-
-    // Ensure at least one field is provided for update
-    if (!name && !questions) {
-        return res.status(400).json({
-            success: false,
-            message: 'At least one of quiz name or questions is required for update'
-        });
-    }
-
-    const updatedQuiz = {};
-    if (name) updatedQuiz.name = name;
-    if (questions) {
-        if (!Array.isArray(questions) || questions.length !== 5) {
-            return res.status(400).json({
-                success: false,
-                message: 'Exactly 5 questions are required'
-            });
-        }
-        updatedQuiz.questions = questions;
-    }
-
-    try {
-        const editedQuiz = await Quiz.findByIdAndUpdate(
-            id,
-            { $set: updatedQuiz },
-            { new: true, runValidators: true }
-        );
-
-        if (!editedQuiz) {
-            return res.status(404).json({ message: 'Quiz not found' });
-        }
-
-        res.status(200).json({ success: true, editedQuiz });
-        console.log(updatedQuiz);
-    } catch (error) {
-        console.error('Error editing quiz:', error);
-
-        if (error.name === 'ValidationError') {
-            return res.status(400).json({ success: false, message: error.message });
-        }
-
-        res.status(500).json({ success: false, error: error.message });
-    }
-});
-*/
 
 //--------DELETE---------------
 // Route to delete a quiz
