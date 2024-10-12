@@ -4,18 +4,19 @@ const jwt = require('jsonwebtoken');
 
 // Middleware to verify JWT and extract user info
 const authenticateToken = (req, res, next) => {
-    // Extract the authorization header
-    const authHeader = req.headers['authorization'];
-    // Extract the token from the header
-    const token = authHeader && authHeader.split(' ')[1];
+  const authHeader = req.headers['authorization'];// Extract the authorization header
+    const token = authHeader && authHeader.split(' ')[1];// Extract the token from the header
+    if (token == null) return res.sendStatus(401);// If no token, return unauthorized
 
-    if (token == null) return res.sendStatus(401);
-
-    // Verify the token using a secret key
-    jwt.verify(token, 'secretKey', (err, user) => {
-        if (err) return res.sendStatus(403);
-        req.user = user;
-        next();
+ // Verify the token using a secret key
+    jwt.verify(token, 
+        'secretKey', //SecretKey for signing the token
+        /*process.env.JWT_SECRET,*///secret key used for signing the token stored in enviromental variables
+        (err, user) => {
+            if (err) return res.sendStatus(403);// If token invalid, return forbidden
+            req.user = user;// Attach user info to request object
+            // req.userId = decoded.userId;
+            next();// Proceed to the next middleware or route handler
     });
 };
 
@@ -40,8 +41,8 @@ const checkJwtToken = (req, res, next) => {
             'secretKey'
             /*process.env.JWT_SECRET*/
         );
-        req.user = decoded;
-        console.log('Token provided');
+        req.user = decoded;// Attach decoded user information to the request object
+        console.log('Token provided');//Log a message in the console for debugging purposes
 
         next();// Call the next middleware or route handler
     }
@@ -78,5 +79,60 @@ const checkAge = (req, res, next) => {
     next();
 };
 
+
+/*
+//Middleware to check if the user is Admin
+const adminUser = async (req, res, next) => {
+    try {
+        const {admin} = req.body(admin)// Extract admin status from the request body
+
+        if (!admin) {
+            return res.status(403).json({ message: 'Access denied. Admins only.' }); // Deny access if not admin
+        }
+
+        next(); // Call the next middleware or route handler
+    } catch (error) {
+        console.error('Error checking admin status', error.message);
+        res.status(500).json({message : 'Internal Server Error'})       
+    }
+}*/
+
+// Middleware to add the username to the quiz
+/*const currentUser = async (req, res, next) => {
+    try {
+        const user = await User.findUserId(req.user.userId).select('Username');// Find user by ID and select username
+
+        if (!username) {
+            return res.status(404).json({ message: 'Username not found' }); // Respond if username not found
+        }
+        req.user.username = user.username; // Attach username to the request object
+        next(); // Proceed to the next middleware
+    } catch (error) {
+        console.error('Username not found:', error.message); // Log error if encountered
+        res.status(500).json({ message: 'Internal server error.' }); // Respond with server error
+    }
+}*/
+
+//Middleware function to check if a score exists for the current user
+/*const checkUserScores = async (req, res, next) => {
+    try {
+        const { username, quizName } = req.params;// Extract username and quiz name from params
+        const scoreExists = await Score.findOne({ username, name: quizName }) // Check if score exists
+            .exec()
+
+            //Conditional rendering to check if the score exists
+        if (scoreExists) {
+            req.existingScore = scoreExists;// Attach existing score to request object
+            next()// Call the next middleware or route handler
+        } else {
+            res.status(404).json({ message: 'No score found for this user and quiz' })
+        }
+    } catch (error) {
+        console.error('Error checking user score:', error.message);//Log an error message in the console for debugging purposes
+        res.status(500).json({ message: 'Error checking user score.' }); // Respond with a server error
+    }
+}*/
+
+
 //Export middleware to be used in other parts of the application
-module.exports = { authenticateToken, checkJwtToken, checkAge }
+module.exports = { authenticateToken, checkJwtToken, checkAge,/* adminUser, ,checkUserScores*/}
