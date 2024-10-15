@@ -139,12 +139,12 @@ export default function QuizDisplay(//Export default quizDisplay component
       const existingScore = await checkExistingScore();
 
       //Conditional rendering to check if a score already exists
-      if (existingScore) {      
+      /*if (existingScore) {      
         /*If an existing score is found, call the 
         updateScore function to update it*/
         await updateScore(existingScore._id) 
         return// Exit the function after updating the score
-      }
+      }*/
       //Send a POST request to the server
       const response = await fetch(`http://localhost:3001/scores/addScore`, {
         method: 'POST',//HTTP request method
@@ -177,7 +177,7 @@ export default function QuizDisplay(//Export default quizDisplay component
       console.error('Error saving score', error.message);// Log an error message in the console for debugging purposes
       setError('Error saving score', error.message)// Update the error state to display an error message in the UI
     }
-  }, [currentUser, quizName, setError, setUserScores, checkExistingScore, updateScore, currentScore])
+  }, [currentUser, quizName, setError, setUserScores, checkExistingScore, /*updateScore,*/ currentScore])
 
 
 
