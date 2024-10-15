@@ -99,7 +99,7 @@ router.get('/findScores/:username', async (req, res) => {
 
         // Fetch the user score based on the user id
         const result = await Score.find({ username: user.username })
-            // .populate('name') // Populate the quiz name reference if it's a relationship
+            .populate('name') // Populate the quiz name reference if it's a relationship
             .sort({ createdAt: -1 })// Sort the scores by creation date (most recent first)
             .exec()//Execute the query
 
@@ -117,6 +117,7 @@ router.get('/findScores/:username', async (req, res) => {
 //Route to add a new score
 router.post('/addScore', async(req, res) => {
     console.log(req.body);//Log the request body in the console for debugging purposes
+    // console.log(`Request body: ${JSON.stringify(req.body)}`);
 
     try {
         // Extract username, quiz name, and score from the request body
@@ -173,9 +174,9 @@ router.post('/addScore', async(req, res) => {
             : await new Score({ username, name, score }).save();// Create a new score
 
 
-        res.status(201).json({ success: true, data: newScore });
+        // res.status(201).json({ success: true, data: newScore });
 
-        // res.status(201).json(newScore)// Save the score and return the result in JSON format
+        res.status(201).json(newScore)// Save the score and return the result in JSON format
         console.log(newScore);//Log the score in the console for debugging purposes
         
     } 
@@ -187,62 +188,59 @@ router.post('/addScore', async(req, res) => {
 
 //----------------PUT--------------------
 //Route to edit existing score
-//----------------PUT--------------------
-//Route to edit existing score
-// router.put('/updateScore/:id', checkJwtToken, async (req, res) => {   
-//     try { 
-//         const { id } = req.params; // Extract the score ID from route parameters
-//         const { score } = req.body; // Extract the new score from the request body
+router.put('/updateScore/:id', checkJwtToken, async (req, res) => {   
+    try { 
+        const { id } = req.params; // Extract the score ID from route parameters
+        const { score } = req.body; // Extract the new score from the request body
 
-//         if (!mongoose.Types.ObjectId.isValid(id)) {
-//             return res.status(400).json({ success: false, message: 'Invalid score ID.' });
-//         }
-//         if (typeof score !== 'number' || score < 0) {
-//             return res.status(400).json({ success: false, message: 'Score must be a non-negative number.' });
-//         }
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ success: false, message: 'Invalid score ID.' });
+        }
+        if (typeof score !== 'number' || score < 0) {
+            return res.status(400).json({ success: false, message: 'Score must be a non-negative number.' });
+        }
 
-//         // Find existing score
-//         const existingScore = await Score.findById(id).exec();
+        // Find existing score
+        const existingScore = await Score.findById(id).exec();
 
-//         //Conditional rendering to check if the score was found
-//         if (!existingScore) {
-//             //If no score is found return a 404 (Not Found) response
-//             return res.status(404).json({ message: 'Score not found' });
-//         }
+        //Conditional rendering to check if the score was found
+        if (!existingScore) {
+            //If no score is found return a 404 (Not Found) response
+            return res.status(404).json({ message: 'Score not found' });
+        }
 
-//         // Conditional rendering to check if new score is higher
-//         if (existingScore.score >= score) {
-//             return res.status(200).json(
-//                 { message: 'New score is not higher than the existing score' });
-//         }
-//         // Find the score by its ID and update it
-//         const editedScore = await Score.findByIdAndUpdate(
-//             id,
-//             { score, $inc: { attempts: 1 } },// Increment attempts 
-//             { new: true } //Return the updated document
-//         );
+        // Conditional rendering to check if new score is higher
+        if (existingScore.score >= score) {
+            return res.status(200).json({ message: 'New score is not higher than the existing score' });
+        }
+        // Find the score by its ID and update it
+        const editedScore = await Score.findByIdAndUpdate(
+            id,
+            { score, $inc: { attempts: 1 } },// Increment attempts 
+            { new: true } //Return the updated document
+        );
 
-//         //Conditional rendering to check if the score was successfully updated
-//         if (!editedScore) { 
-//             //Return a 404(Not Found) response
-//             res.status(404).json({ message: 'Score not found' });            
-//         };
+        //Conditional rendering to check if the score was successfully updated
+        if (!editedScore) { 
+            //Return a 404(Not Found) response
+            res.status(404).json({ message: 'Score not found' });            
+        };
 
-//         // existingScore.score = score;
-//         // existingScore.attempts += 1;
-//         // const editedScore = await existingScore.save();
+        // existingScore.score = score;
+        // existingScore.attempts += 1;
+        // const editedScore = await existingScore.save();
         
-//         // res.status(200).json({ success: true, data: editedScore });
-//         // Return the updated score in JSON format
-//         res.status(200).json(editedScore);
-//         console.log(editedScore);//Log the edited score in the console for debugging purposes
+        // res.status(200).json({ success: true, data: editedScore });
+        // Return the updated score in JSON format
+        res.status(200).json(editedScore);
+        console.log(editedScore);//Log the edited score in the console for debugging purposes
         
-//     } 
-//     catch (error) {
-//         res.status(500).json({ message: 'Error updating score' });//Return a 500 (Internal Sarver Error) response
-//         console.error('Error updating score')//Log an error message in the console for debugging purposes
-//     }
-// })
+    } 
+    catch (error) {
+        res.status(500).json({ message: 'Error updating score' });//Return a 500 (Internal Sarver Error) response
+        console.error('Error updating score')//Log an error message in the console for debugging purposes
+    }
+})
 
 
 
