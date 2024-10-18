@@ -5,23 +5,21 @@ import Row from 'react-bootstrap/Row'; // Import the Row component from react-bo
 import Col from 'react-bootstrap/Col'; // Import the Col component from react-bootstrap
 import Button from 'react-bootstrap/Button'; // Import the Button component from react-bootstrap
 //Components
-import FormHeaders from './FormHeaders';
+import FormHeaders from './FormHeaders';//Import FormHeaders function component 
 import NewQuestionsList from './NewQuestionsList';
 
 
 //Add quiz function component
 export default function AddQuiz(//Export default AddQuiz function component
   {//PROPS PASSED FROM PARENT COMPONENT
-  quizName,
-  setQuizName, 
-  // currentUser,
-  questions, 
-  setQuestions,
-  addNewQuiz,
-  currentQuestion,
-  setCurrentQuestion,
-    setNewQuizData, 
-    newQuizData
+    quizName,
+    setQuizName, 
+    questions, 
+    setQuestions,
+    addNewQuiz,
+    currentQuestion,
+    currentUser,
+    setCurrentQuestion,
 }) {
   //===========STATE VARIABLES====================
   const [errorMessage, setErrorMessage] = useState('');// State to manage the error message displayed to the user
