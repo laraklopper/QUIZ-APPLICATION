@@ -6,7 +6,7 @@ import Col from 'react-bootstrap/Col'; // Import the Col component from react-bo
 import Button from 'react-bootstrap/Button'; // Import the Button component from react-bootstrap
 //Components
 import FormHeaders from './FormHeaders';//Import FormHeaders function component 
-import NewQuestionsList from './NewQuestionsList';
+import NewQuestionsList from './NewQuestionsList';//Import NewQuestionsList function component 
 
 
 //Add quiz function component
