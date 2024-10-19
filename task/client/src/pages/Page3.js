@@ -57,27 +57,29 @@ export default function Page3(
 
   // ==============REQUESTS=======================
   // ----------POST-------------------
-  //Function to add a new quiz
-  const addNewQuiz = async () => {
+ //Function to add a new quiz
+  const addNewQuiz = useCallback(async () => {
     //Conditional rendering to check that the quiz has exacly 5 questions
-    if (questions.length !== 5) {
-      console.error('You must add exactly 5 questions.');
+    if (questions.length !== 5) {     
+      console.log('You must add exactly 5 questions.');//Log an message in the console for debugging purposes
       return;// Exit the function to prevent further execution
     }
     // Create a quiz object to send to the server
     const quiz = {
       name: quizName,// Quiz name entered by the user
-      // username: currentUser.username, 
-      questions,// The array of questions
+      username: currentUser.username,//Username of the user creating the quiz
+      questions ,// The array of questions
     }
-    try {
-      const token = localStorage.getItem('token');// Retrieve the authentication token from localStorage
+    try {      
+      // Retrieve the authentication token from localStorage
+      const token = localStorage.getItem('token');
+      console.log(quiz)
       //Send a POST request to the server to add a new quiz
       const response = await fetch('http://localhost:3001/quiz/addQuiz', {
-        // method: 'POST',//HTTP request method
+        method: 'POST',//HTTP request method
         mode: 'cors', // Enable cross-origin resource sharing
         headers: {
-          'Content-Type': 'application/json',//Specify the content-type in the payload as JSON
+          'Content-Type': 'application/json',//Specify the content-type 
           'Authorization': `Bearer ${token}`,// Attach the token in the Authorization header  
         },
         body: JSON.stringify(quiz) // Convert the quiz object to a JSON string before sending
@@ -85,36 +87,25 @@ export default function Page3(
   
       // Handle the response from the server
       if (response.ok) {
-        alert('New Quiz successfully added')// Notify the user that the quiz was successfully added
-        const newQuiz = await response.json(); // Parse the new quiz object from the server response
+        const newQuiz = await response.json(); // Parse the new quiz object 
         // Update the quizList
         setQuizList((prevQuizList) => [...prevQuizList, newQuiz]);
         // Reset the quiz name and questions after successful quiz creation
+        setQuestions(['']);
         setQuizName('');     
-        setQuestions([]);
-      } 
-      else {
-        throw new Error('There was an error creating the quiz');//Throw an error message if the POST request is unsuccessful
-      }
 
+      } 
     } 
     catch (error) {
-      console.error('There was an error creating the quiz:', error);// Log any errors that occur during the request
-      setError('There was an error creating the quiz');// Set the error state to display the error in the UI
+      //Error handling
+      console.error('There was an error creating the quiz:', error);//Log an error message in the console for debugging purposes
+      setError('There was an error creating the quiz');// Set the Error State with an error message
     }
-  };
+  },[currentUser,questions,quizName,setError,setQuestions, setQuizList,setQuizName]);
 
   // ---------------PUT-----------------------
   //Function to edit a quiz
   const editQuiz = async (quizId) => {//Define an async function to edit a quiz
-
-    /* // Create a updated quiz object to send to the server
-    const editedQuiz = {
-      name: newQuizName,
-      questions: editQuizIndex
-    }*/
-
-        // console.log(editedQuiz);//Log a message in the console for debugging purposes
 
     try {
       const token = localStorage.getItem('token');// Retrieve the JWT token from local storage
@@ -123,40 +114,46 @@ export default function Page3(
         method: 'PUT',//HTTP request method
         mode: 'cors',// Enable Cross-origin resource sharing
         headers: {
-          'Content-Type': 'application/json',//Specify the content-type in the payload as JSON
-          'Authorization': `Bearer ${token}`,// Attach the token in the Authorization header
+          'Content-Type': 'application/json',//Specify the Content-Type in the payload as JSON
+          'Authorization': `Bearer ${token}`,// Attach the token in the Authorization header  
         },
-        body: JSON.stringify({
+        body: JSON.stringify(
+          {
           name: newQuizName, // The new quiz name provided by the user
-          questions: editQuestionIndex,// The new array of questions     
-          // editedQuiz
+             username: currentUser.username,      
+          questions: newQuestions,// Send the updated questions
             })
       });
+
       //Response handling
       if (response.ok) {
-        const updatedQuiz = await response.json();// Parse the updated quiz data from the response
-        // Update the quiz list with the modified quiz data
-        setQuizList(quizList.map(q => (q._id === updatedQuiz._id ? updatedQuiz : q)));
-        
-        // Reset the edit form by clearing the state variables
-        setEditQuizIndex([{editQuestionText: '',  editCorrectAnswer: '', editOptions: ['', '', ''] }]);
+        // Parse the updated quiz data from the response
+        const data = await response.json();
+        const updatedQuiz = data.editedQuiz
 
+        // Update the quiz list with the modified quiz data
+        setQuizList(quizList.map(q => 
+          (q._id === updatedQuiz._id ? 
+            updatedQuiz : q)));
+        // Reset the edit form by clearing the state variables
+        // setEditQuizIndex([{ editQuestionText: '',   editCorrectAnswer: '', editOptions: ['', '', '']  }]);
         setQuizToUpdate(null);  // Reset the quiz being updated
         setNewQuizName('');     // Clear the new quiz name input
         setNewQuestions([]);    // Clear the new questions array
+        setFormError('');
+        setError('')
       } 
-      
       else {
-        throw new Error('Error editing quiz');//Throw an error message if the PUT request is unsuccessful
+        const errorData = await response.json();
+        setError(errorData.message || 'Error editing quiz'); 
       }
     } 
     catch (error) {
       console.error(`Error editing the quiz: ${error}`);//Log an error message in the console for debugging purposes
-      setError(`Error editing the quiz: ${error}`);// Set the error state to display the error in the UI
+      setError(`Error editing the quiz: ${error}`);//Set the Error State with an error message
+      
     }
   }
-
-//Http
 //------------DELETE------------------------
 //Function to delete a quiz
   const deleteQuiz = async (quizId) => {//Define an async function to delete a quiz
@@ -222,8 +219,8 @@ export default function Page3(
                 </Col>
                 <Col md={3}>
                 {/* username of the user who created the quiz */}
-                  {/* <p className='itemText'>USERNAME: {quiz.username}</p>  */}
-              </Col>
+                    <p className='quizUsername' hidden>USERNAME: {quiz.username}</p> 
+                </Col>
                 <Col  md={3} className='buttonCol'> 
                   <div>
                     {/* Button to delete the Quiz */}
