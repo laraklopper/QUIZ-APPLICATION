@@ -125,6 +125,20 @@ router.put('/editQuiz/:id', checkJwtToken, async (req, res) => {
         }
 
     try {
+         const quiz = await Quiz.findById(id)// Find the quiz by ID
+
+
+        //Conditional rendering to check that the quiz exists
+        if (!quiz) {
+            // If the quiz doesn't exist, return a 404 response
+            return res.status(404).json({ message: 'Quiz not found' });
+        }
+
+          //Conditional rendering to check if the user editing the quiz is the user who created the quiz*/
+        if (username !== quiz.username) {
+            console.error('Unauthorised');//Log an error message in the console for debugging purposes
+            return res.status(403).json({ message: 'Access denied. You do not have permission edit to this quiz.' })
+        }
       const updatedQuiz = {}
     if (name) updatedQuiz.name = name
     if (questions) updatedQuiz.questions = questions
@@ -137,11 +151,11 @@ router.put('/editQuiz/:id', checkJwtToken, async (req, res) => {
         );
  
 
-        //conditional rendering to check if the quiz exists
-        if (!editedQuiz) {
-            // If the quiz is not found, respond with a 404 Not Found status
-            return res.status(404).json({ message: 'Quiz not found' });
-        }
+        // //conditional rendering to check if the quiz exists
+        // if (editedQuiz) {
+        //     // If the quiz is not found, respond with a 404 Not Found status
+        //     return res.status(404).json({ message: 'Quiz not found' });
+        // }
         
 
         // Respond with the updated quiz
