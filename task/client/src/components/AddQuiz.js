@@ -16,7 +16,7 @@ export default function AddQuiz(//Export default AddQuiz function component
     setQuizName,        //Function to update the quizName state
     questions,          // Array of questions that are part of the quiz
     setQuestions,       // Function to update the questions array
-    addNewQuiz,         // Function passed from parent to submit the new quiz
+    // addNewQuiz,         // Function passed from parent to submit the new quiz
     currentQuestion,    // The current question being added 
     currentUser,        // Current logged-in user information
     setCurrentQuestion, // Function to update the current question object
@@ -24,6 +24,53 @@ export default function AddQuiz(//Export default AddQuiz function component
   //===========STATE VARIABLES====================
   const [errorMessage, setErrorMessage] = useState('');// State to manage the error message displayed to the user
 
+   // ==============REQUESTS=======================
+  // ----------POST-------------------
+  //Function to add a new quiz
+  const addNewQuiz = useCallback(async () => {
+    //Conditional rendering to check that the quiz has exacly 5 questions
+    if (questions.length !== 5) {
+      console.log('You must add exactly 5 questions.');//Log an message in the console for debugging purposes
+      return;// Exit the function to prevent further execution
+    }
+    // Create a quiz object to send to the server
+    const quiz = {
+      name: quizName,// Quiz name entered by the user
+      username: currentUser.username,
+      questions,// The array of questions
+    }
+    try {
+      // Retrieve the authentication token from localStorage
+      const token = localStorage.getItem('token');
+      console.log(quiz)
+      //Send a POST request to the server to add a new quiz
+      const response = await fetch('http://localhost:3001/quiz/addQuiz', {
+        method: 'POST',//HTTP request method
+        mode: 'cors', // Enable cross-origin resource sharing
+        headers: {
+          'Content-Type': 'application/json',//Specify the content-type 
+          'Authorization': `Bearer ${token}`,// Attach the token in the Authorization header  
+        },
+        body: JSON.stringify(quiz) // Convert the quiz object to a JSON string before sending
+      });
+
+      // Handle the response from the server
+      if (response.ok) {
+        const newQuiz = await response.json(); // Parse the new quiz object 
+        // Update the quizList
+        setQuizList((prevQuizList) => [...prevQuizList, newQuiz]);
+        // Reset the quiz name and questions after successful quiz creation
+        setQuestions(['']);
+        setQuizName('');
+
+      }
+    }
+    catch (error) {
+      //Error handling
+      console.error('There was an error creating the quiz:', error);//Log an error message in the console for debugging purposes
+      setError('There was an error creating the quiz');// Set the Error State with an error message
+    }
+  }, [currentUser, questions, quizName, setError, setQuestions, setQuizList, setQuizName]);
   //============EVENT LISTENERS=========================
   //Function to add a new question
   const handleAddQuestion = () => {
@@ -49,7 +96,7 @@ export default function AddQuiz(//Export default AddQuiz function component
       }
     );
   };
-
+    /*
   // Function to handle form submission
   const handleAddNewQuiz = () => {
     //Conditional rendering to check if the quiz name is provided and if there is at least one question
@@ -59,8 +106,7 @@ export default function AddQuiz(//Export default AddQuiz function component
     }    
     addNewQuiz();// Call the addNewQuiz function
     setErrorMessage('')// Clear any error messages after successful submission
-  };
-  
+  };*/
 
   //============JSX RENDERING================
   return (
@@ -301,7 +347,7 @@ export default function AddQuiz(//Export default AddQuiz function component
               <Button 
                 variant='primary' 
                 type='button'  
-                onClick={handleAddNewQuiz}
+                onClick={addNewQuiz}
                 aria-label='Add Quiz'
               >
                   ADD QUIZ
