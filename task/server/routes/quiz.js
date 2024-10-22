@@ -14,6 +14,19 @@ mongoose.set('strictPopulate', false); // Disable strict population checks in Mo
 
 
 //=============ROUTES====================
+/*
+|============================|=================|
+| CRUD OPERATION | HTTP VERB | Request method  |
+|================|===========|=================|
+|CREATE          | POST      | router.post()   |
+|----------------|-----------|-----------------|
+|READ            | GET       | router.get()    |
+|----------------|-----------|-----------------|     
+|UPDATE          | PUT       | router.put()    |
+|----------------|-----------|-----------------|
+|DELETE          | DELETE    | router.delete() |
+|================|===========|=================|
+*/
 //------------------GET---------------
 //Route to GET a specific quiz using the quiz Id
 router.get('/findQuiz/:id', checkJwtToken, async (req, res) => {
@@ -115,7 +128,7 @@ router.put('/editQuiz/:id', checkJwtToken, async (req, res) => {
     console.log(req.body);//Log the request body in the console for debugging purposes
     const { name, questions } = req.body;// Extract name and questions from the request body
 
-
+/*
         // Conditional rendering to check that the name and questions are properly provided
         if (!name || !Array.isArray(questions) || questions.length !== 5) {
             //Return a 400(Bad request) 
@@ -123,7 +136,7 @@ router.put('/editQuiz/:id', checkJwtToken, async (req, res) => {
                 { success: false, message: 'Quiz name and exactly 5 questions are required' }
             )
         }
-
+*/
     try {
          const quiz = await Quiz.findById(id)// Find the quiz by ID
 
@@ -139,9 +152,16 @@ router.put('/editQuiz/:id', checkJwtToken, async (req, res) => {
             console.error('Unauthorised');//Log an error message in the console for debugging purposes
             return res.status(403).json({ message: 'Access denied. You do not have permission edit to this quiz.' })
         }
-      const updatedQuiz = {}
-    if (name) updatedQuiz.name = name
-    if (questions) updatedQuiz.questions = questions
+
+        //Create the updated quiz object
+        const updatedQuiz = {}
+
+        if (name) {
+           updatedQuiz.name =name 
+        }
+
+        // if (name) updatedQuiz.name = name
+        // if (questions) updatedQuiz.questions = questions
 
         // Update the quiz
         const editedQuiz = await Quiz.findByIdAndUpdate(
@@ -151,15 +171,19 @@ router.put('/editQuiz/:id', checkJwtToken, async (req, res) => {
         );
  
 
-        // //conditional rendering to check if the quiz exists
-        // if (editedQuiz) {
-        //     // If the quiz is not found, respond with a 404 Not Found status
-        //     return res.status(404).json({ message: 'Quiz not found' });
-        // }
-        
+          // Conditional rendering to check that the questions are properly provided
+        if (questions && Array.isArray(questions) && questions.length === 5) {
+            updatedQuiz.questions = questions
+        } else {
+            // Return a 400 (Bad Request)
+            return res.status(400).json({message: 'No valid fields to update'})
+        }
+        /*
+        update only the provided fields:
+        If name is provided, it will only update the name. If questions are provided and valid, it will update the questions. If both are provided, it will update both.
+        */
 
-        // Respond with the updated quiz
-         res.status(200).json({ success: true, editedQuiz });
+         res.status(200).json({ success: true, editedQuiz });// Respond with the updated quiz
         console.log(updatedQuiz);//Log the updated quiz in the console for debugging purposes      
            }   
     catch (error) {
