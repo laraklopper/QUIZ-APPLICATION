@@ -53,12 +53,24 @@ router.get('/findScores', async (req, res) => {
             return res.status(400).json({success: false, message: 'Username must be a string'})
         }
 
-        //Fetch all existing quiz names
-        const quizNames = await Quiz.find({}).select('name').exec()
-        const existingQuizName = quizNames.map(q => q.name)
-        //Delete the userScore if the quiz does not exist
-        await Scores.deleteMany({name: {$nin : existingQuizName}})
-               
+          // Fetch all quiz names from the database to check for existing quizzes
+        let quizNames = await Quiz.find({}).select('name').exec()
+        let existingQuizNames = quizNames.map(q => q.name); // Extract  quiz names into an array
+
+        // Fetch all usernames from the database to check for existing users
+        // let userNames = await User.find({}).select('username').exec()
+        // let existingUsernames = userNames.map(u => u.username)//Extract usernames into an array
+
+         
+        console.log(existingQuizNames);//Log the existing quiz names in the console for debugging purposes
+        // console.log(existingUsernames);//Log the existing usernames in the console for debugging purposes
+        
+        /* Remove any Score documents where the quiz name or username 
+        no longer exists in the Quiz or User collection*/
+        await Score.deleteMany({ name: { $nin: existingQuizNames }})// Delete scores with quiz names not in existingQuizNames 
+        // await Score.deleteMany({username: { $nin: existingUsernames}})// Delete scores with usernames not in existing usernames
+       
+        
         let userScores;// Declare a variable to store the quiz scores
 
         // Conditional rendering to check if a username is provided
