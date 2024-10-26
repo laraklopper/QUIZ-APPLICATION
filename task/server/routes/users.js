@@ -2,66 +2,12 @@
 const express = require('express');// Import Express to handle routing
 const router = express.Router();// Create a new router object
 const jwt = require('jsonwebtoken');// Import the jsonwebtoken module for handling JSON Web Tokens
-const cors = require('cors');// Import CORS middleware to handle cross-origin requests
 //Schemas
 const User = require('../models/userSchema');//Import the user schema
+const Score = require('../models/scoreSchema');//Import the score schema
+const Quiz = require('../models/quizModel');//Import the quiz Schema
 //Import custom middleware
-// const {authenticateToken, checkAge} = require('./middleware');
-
-//=======SETUP MIDDLEWARE===========
-router.use(cors()); // Enable Cross-Origin Resource Sharing
-router.use(express.json()); // Parse incoming JSON requests
-
-//=========CUSTOM MIDDLEWARE==================
-// Middleware to verify JWT and extract user info
-const authenticateToken = (req, res, next) => {
-    // Extract the authorization header
-    const authHeader = req.headers['authorization'];
-    // Extract the token from the header
-    const token = authHeader && authHeader.split(' ')[1];
-
-    if (token == null) return res.sendStatus(401);// If no token, return unauthorized
-
-    // Verify the token using a secret key
-    jwt.verify(token,//token to verify
-        'secretKey',//SecretKey for signing the token
-        /*process.env.JWT_SECRET,*///secret key used for signing the token stored in enviromental variables
-        (err, user) => {
-            if (err) return res.sendStatus(403);// If token invalid, return forbidden
-            req.user = user;// Attach user info to request object
-            // req.userId = decoded.userId;
-
-            next();// Proceed to the next middleware or route handler
-        });
-        
-};
-
-//Middleware function to check that admin user is 18 years or older
-const checkAge = (req, res, next) => {
-    // Extract the date of birth from the request body
-    const { dateOfBirth } = req.body;
-
-    //Conditional rendering to check if the date of birth is entered
-    if (!dateOfBirth) {
-        console.error('Date of Birth is required');//Log an error message in the console for debugging purposes
-        return res.status(400).json(
-            { error: 'Date of Birth is required' }
-        );
-    }
-
-    // Calculate the user's age based on the date of birth
-    const dob = new Date(dateOfBirth);
-    const age = Math.floor((Date.now() - dob) / 31557600000); 
-
-    if (age < 18) {
-        console.error('Admin Users must be older than 18 years old');
-        return res.status(400).json(
-            { error: 'Admin users must be above 18 years old' }
-        );
-    }
-    // If age is valid, proceed to the next middleware or route handle
-    next();
-};
+const {authenticateToken, checkAge} = require('./middleware');
 
 //=============ROUTES=====================
 //------------------GET---------------
@@ -222,21 +168,37 @@ router.post('/register', checkAge, async (req, res) => {
 
 //-------------PUT-----------------
 //Route to edit a user account
-router.put('/editAccount/:id', async (req, res) => {
-    console.log(req.body);//Log the request body in the console for debugging purposes
-    
+router.put('/editAccount/:id', authenticateToken, async (req, res) => {
+    console.log('updated user:' + req.body);//Log the request body in the console for debugging purposes
     console.log('edit Account');// Log a message in the console for debugging purposes
-    try {        
-        // Extract the user ID from the request parameters
-        const { id } = req.params;
-        // Extract the username and email from the request body
-        const { username, email } = req.body;
 
+    try {            
+        const { id } = req.params;// Extract the user ID from the request parameters
+        const { username, email } = req.body;// Extract the username and email from the request body
 
+        
         // Create an object to hold the fields that will be updated
         const updateUser = {};
         if (username) updateUser.username = username; 
         if (email) updateUser.email = email; 
+
+        // Update the username in the Score collection if username was changed
+        let userScores = await Score.find({}).select('username').exec();
+        let scoreUsernames = userScores.map(user => user.username)
+
+        await Score.findOneAndUpdate(
+            { username: { $in: scoreUsernames } },
+            { $set: { username } }
+        )
+        
+        // Update the username in the quiz collection if username was changed
+        let quizUsernames = await Score.find({}).select('username').exec();
+        let quizUsers = quizUsernames.map(q => q.username)
+
+        await Quiz.findOneAndUpdate(
+            { username: { $in: quizUsers } },
+            { $set: { username } }
+        )
 
         // Find the user by ID and update the relevant fields
         const updatedAccount = await User.findByIdAndUpdate(
@@ -251,17 +213,15 @@ router.put('/editAccount/:id', async (req, res) => {
             // If the updated user is not found send a 404(Not Found) status respons and an error message
             return res.status(404).json({ message: 'User not found' })
         }
-        console.log('Updated User Account:', updatedAccount);
-        res.status(201).json(
-            { 
-                message: 'User account successfully updated', 
-                updatedAccount 
-            }
-        );
+        
+        
+  
+        console.log('Updated User Account:', updatedAccount);//Log the updated user account in the console for debugging purposes
+        res.status(201).json({ message: 'User account successfully updated', updatedAccount });// Return success message and updated account
     } 
     catch (error) {
         console.error(`Error occured while updating User Account ${error.message}`);//Log an error message in the console for debugging purposes
-        return res.status(500).json({ message: 'Internal server error' })
+        return res.status(500).json({ message: 'Internal server error' })// Send 500(Internal server error) status code and error message in JSON response
 
     }
 })
