@@ -33,14 +33,13 @@ export default function QuizDisplay(//Export default quizDisplay component
 
     //=========REQUESTS============
     //-------GET--------------------
-    //Function to check if a score for the Quiz already exists
+    /*//Function to check if a score for the Quiz already exists
     const checkExistingScore = useCallback(async () => {
       try {
         const token = localStorage.getItem('token'); // Retrieve JWT token from local storage
         
         //Conditional rendering to check if the JWT token is missing
-        if (!token) {
-          alert('Authentication required');//Notify the User that authentication is required
+        if (!token) {         
           console.log('Authentication required');//Log a message in the console for debugging purposes
           return null;// Exit the function if no token is found
         }
@@ -54,9 +53,8 @@ export default function QuizDisplay(//Export default quizDisplay component
             'Authorization': `Bearer ${token}`,//Add the Authorization header 
           }
         });
-
-        /* Conditional rendering to check if the response
-          is not successful (status code is not in the range 200-299)*/
+        // Conditional rendering to check if the response
+          //is not successful (status code is not in the range 200-299)
         if (!response.ok) {
           throw new Error ('Error fetching scores for the quiz');//Throw an error message if the GET request is unsuccessful
         }
@@ -72,16 +70,55 @@ export default function QuizDisplay(//Export default quizDisplay component
           // Handle unexpected data structure
           console.error('Invalid data structure for userScores');//Log an error message in the console for debugging purposes
           return null;
-        }
-
-
+        }        
+        // console.log(result);
+        // setUserScores(result)
         
       } catch (error) {
-        console.error('Error fetching scores:', error.message);
+        console.error('Error fetching scores:', error.message);//Log an error message in the console for debugging purposes
         setError('Error fetching scores');// Update the error state to display an error message in the UI
         return null;//Return null in the case of an error
       }
-    },[ quizName, setError, currentUser.username])
+    },[ quizName, setUserScores,setError, currentUser.username])
+  //   //--------PUT------------
+  //   Function to update score if a score for the quiz already 
+  //   exists and is better than the prevous result/score
+  const updateScore = useCallback(async (scoreId) => {
+    try {
+      // Retrieve token from localStorage
+      const token = localStorage.getItem('token');
+
+      if (!token) return// Exit function if no token is found
+      
+      //Send a PUT request to the server
+      const response = await fetch (`http://localhost:3001/scores/updateScore/${scoreId}`, {
+        method: 'PUT',//HTTP request method
+        mode: 'cors',//Enable Cross-Origin Resource Sharing 
+        headers: {
+          'Content-Type': 'application/json',// Specify the Content-Type in the request payload
+          'Authorization': `Bearer ${token}`,//Set the mode to cors, allowing cross-origin request
+        },
+        body: JSON.stringify({
+          username: current.username 
+          score: currentScore
+        })
+      })
+
+      // Conditional rendering to check if the response
+      //is not successful (status code is not in the range 200-299)
+      if (!response.ok) {
+        throw new Error('Error updating score');//Throw and error message if the POST request is unsuccessful
+      }
+      const result = await response.json();// Parse the JSON response
+
+      // Update the user scores state with the new username 
+      setUserScores(prevScores => [result, ...prevScores])
+    } catch (error) {
+      console.error('Error saving score', error.message);//Log an error message in the console for debugging purposes
+      setError('Error saving score', error.message)//Set the Error state with an error message
+    }
+  },[currentScore, setError, setUserScores])*/
+
     //--------PUT------------
     /*Function to update score if a score for the quiz already 
     exists and is better than the prevous result/score*/
@@ -122,26 +159,23 @@ export default function QuizDisplay(//Export default quizDisplay component
   },[currentScore, setError, setUserScores])
 
   //-------------POST-------------------------
-
-  // Function to add the user Score
+  // Function to add the user Score if a score does nor exist for the user
   const addScore = useCallback(async () => {//Define an async function to add a users Score
     try {
       
       const token = localStorage.getItem('token');// Retrieve JWT token from local storage
       // Conditional rendering to check if token is missing
       if (!token) {
-        alert('Authentication required');//Notify the user if the token is missing 
-        console.log('Authentication required');//Log a message in the console for debugging purposes
+        console.log('Authentication required');
         return;//Exit the function if the token is missing
       }
 
-      // Check if a score for the quiz already exists
+     /* 
+    // Conditional rendering to check if a score for the quiz already exists
       const existingScore = await checkExistingScore();
-
-      //Conditional rendering to check if a score already exists
-      /*if (existingScore) {      
-        /*If an existing score is found, call the 
-        updateScore function to update it*/
+     //Conditional rendering to check if a score already exists
+      if (existingScore) {      
+     //  If an existing score is found, call the updateScore function to update it
         await updateScore(existingScore._id) 
         return// Exit the function after updating the score
       }*/
@@ -154,7 +188,7 @@ export default function QuizDisplay(//Export default quizDisplay component
           'Authorization': `Bearer ${token}`,//Add the Authorization header 
         },
         body: JSON.stringify({
-          username: currentUser, // Username from the current user object
+          username: currentUser.username, // Username from the current user object
           name: quizName,// The name of the quiz being taken
           score: currentScore,// The user's score to be submitted
         })
@@ -177,7 +211,9 @@ export default function QuizDisplay(//Export default quizDisplay component
       console.error('Error saving score', error.message);// Log an error message in the console for debugging purposes
       setError('Error saving score', error.message)// Update the error state to display an error message in the UI
     }
-  }, [currentUser, quizName, setError, setUserScores, checkExistingScore, /*updateScore,*/ currentScore])
+  }, [currentUser, quizName, setError, setUserScores, /*checkExistingScore, updateScore,*/ currentScore])
+
+
 
 
 
