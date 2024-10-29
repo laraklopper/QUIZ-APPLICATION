@@ -13,12 +13,12 @@ const scoreSchema = new mongoose.Schema({
     },
     //Field for username of the user who took the quiz
      username: {
-        type: String,
+        type: String,//Specify the data type as a string
         required: [true, 'username is required'],
     },
     //Field for the score
     score: {
-        type: Number,// Define the type as Number
+        type: Number,// Specify the data type as Number
         default: 0,
         required: true,
         //Ensure the score is an integer
@@ -37,7 +37,7 @@ const scoreSchema = new mongoose.Schema({
     },
     //Field for the date of the current attempt
     date: {
-        type: Date,//Define the dataType as a date
+        type: Date,//Specify the dataType as a date
         default: Date.now,
         required: true,
     },
