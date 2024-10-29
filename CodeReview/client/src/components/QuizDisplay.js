@@ -22,7 +22,7 @@ export default function QuizDisplay(//Export default quizDisplay component
     timer,
     setSelectedQuizId,
     setUserScores,
-    userScores
+    userScores//code review
   }) {
     //======STATE VARIABLES===========
   const [quizIndex, setQuizIndex] = useState(0); // Current question index in the quiz
@@ -67,8 +67,8 @@ export default function QuizDisplay(//Export default quizDisplay component
         console.log("User scores Test: ", userScores)
         // Find the existing score for the current quiz
         // Conditional rendering if userScores is an array and contains objects with a name property
-        console.log(result)
-        if (Array.isArray(userScores)) {
+        console.log(result)//(Code Review)
+        if (Array.isArray(userScores)) {//(code Review)
           // Find the existing score for the current quiz
           const existingScore = userScores.find(score => score.name === quizName);
           return existingScore || null; // Return the found score or null if not found
