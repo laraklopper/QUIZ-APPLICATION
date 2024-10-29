@@ -95,14 +95,14 @@ router.get('/findScores/:username', async (req, res) => {
 
 //Find userScore for a specific quiz
 router.get('/findQuizScores/:quizName/:username', async (req, res) => {
-    console.log("route reached")
+    console.log("route reached")//(code review)Log a message in the console for debugging purposes
     try {
         const { quizName, username } = req.params; // Extract quizName and username from the route parameters
 
         // Fetch the score for the specified quiz and user
         const quizScore = await Score.findOne({username, name: quizName}).exec();//Execute the query
 
-        //Conditional rendering to check if a score is fount
+        //Conditional rendering to check if a score is found
         if (!quizScore) {
             // If no score is found, return a 404 error
             return res.status(404).json({ error: 'Score not found' });
@@ -120,7 +120,7 @@ router.get('/findQuizScores/:quizName/:username', async (req, res) => {
 //-----------POST----------------------
 //Route to add a new score
 router.post('/addScore',  async(req, res) => {
-    console.log("req body: ", req.body);//Log the request body in the console for debugging purposes
+    console.log("req body: ", req.body);//(code Review)Log the request body in the console for debugging purposes
 
     try {
         const { username, name, score } = req.body;// Extract username, quiz name, and score from the request body
