@@ -168,10 +168,27 @@ router.put('/editAccount/:id', authenticateToken, async (req, res) => {
         if (username) updateUser.username = username; 
         if (email) updateUser.email = email; 
 
+        const existingUser =await User.findById(id);//Find the current user document
+
+         //Conditional rendering to check if the username was changed
+        if (username && username !== existingUser.username) {
+            // Update the username in the Score collection if username was changed
+            await Score.updateMany(
+                { username: existingUser.username },// Find by the old username
+                { $set: { username } }// Set to the new username
+            )
+
+            // Update the username in the quiz collection if username was changed
+                await Quiz.updateMany(
+                    { username: existingUser.username },// Find by the old username
+                    { $set: { username } }// Set to the new username
+                )
+        }
+        
         /*Mongoose findOneAndUpdate or updateMany*/
-        // Update the username in the Score collection if username was changed
-        // let userScores = await Score.find({}).select('username').exec();
-        // let scoreUsernames = userScores.map(user => user.username)
+        /*// Update the username in the Score collection if username was changed
+        let userScores = await Score.find({}).select('username').exec();
+        let scoreUsernames = userScores.map(user => user.username)
 
         if (username) {
             await Score.updateMany(
@@ -184,21 +201,21 @@ router.put('/editAccount/:id', authenticateToken, async (req, res) => {
             //     {$set: {username}}            
             // )       
         // Update the username in the quiz collection if username was changed
-        // let quizUsernames = await Quiz.find({}).select('username').exec();
-        // let quizUsers = quizUsernames.map(q => q.username)
+        let quizUsernames = await Quiz.find({}).select('username').exec();
+        let quizUsers = quizUsernames.map(q => q.username)
 
        
-        //     await Quiz.updateMany(
-        //         { username: "username"},
-        //         { $set: { username } }
-        //     )
+            // await Quiz.updateMany(
+            //     { username: "username"},
+            //     { $set: { username } }
+            // )
         // Update the username in the Quiz collection if the username has been provided
         if (username) {
             await Quiz.updateMany(
                 { username: { $eq: username } }, // Find documents with matching username
                 { $set: { username: username } } // Update username
             );
-        }
+        }*/
 
         // Find the user by ID and update the relevant fields
         const updatedAccount = await User.findByIdAndUpdate(
@@ -210,11 +227,10 @@ router.put('/editAccount/:id', authenticateToken, async (req, res) => {
 
         //Conditional rendering to check if the updated user is found
         if (!updatedAccount) {
-            // If the updated user is not found send a 404(Not Found) status respons and an error message
+            // If the updated user is not found send a 404(Not Found) status response and an error message
             return res.status(404).json({ message: 'User not found' })
         }
         
-  
         console.log('Updated User Account:', updatedAccount);//Log the updated user account in the console for debugging purposes
         res.status(201).json({ message: 'User account successfully updated', updatedAccount });// Return success message and updated account
     } 
