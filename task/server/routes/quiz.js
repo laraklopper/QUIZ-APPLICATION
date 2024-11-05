@@ -128,19 +128,10 @@ router.put('/editQuiz/:id', checkJwtToken, async (req, res) => {
     console.log(req.body);//Log the request body in the console for debugging purposes
     const { name, questions } = req.body;// Extract name and questions from the request body
 
-/*
-        // Conditional rendering to check that the name and questions are properly provided
-        if (!name || !Array.isArray(questions) || questions.length !== 5) {
-            //Return a 400(Bad request) 
-            return res.status(400).json(
-                { success: false, message: 'Quiz name and exactly 5 questions are required' }
-            )
-        }
-*/
     try {
          const quiz = await Quiz.findById(id)// Find the quiz by ID
 
-
+        const user = await User.findOne({}).select('username')
         //Conditional rendering to check that the quiz exists
         if (!quiz) {
             // If the quiz doesn't exist, return a 404 response
@@ -156,13 +147,24 @@ router.put('/editQuiz/:id', checkJwtToken, async (req, res) => {
         //Create the updated quiz object
         const updatedQuiz = {}
 
+         //Conditional rendering to check if the name is provided
         if (name) {
-           updatedQuiz.name =name 
+           updatedQuiz.name =name // Only update the name if provided
         }
-
+        
+        /*
+        update only the provided fields:
+        If name is provided, it will only update the name. If questions are provided and valid, it will update the questions. If both are provided, it will update both.
+        */
         // if (name) updatedQuiz.name = name
         // if (questions) updatedQuiz.questions = questions
-
+        // Conditional rendering to check that the questions are properly provided
+        if (questions && Array.isArray(questions) && questions.length === 5) {
+            updatedQuiz.questions = questions
+        } else {
+            // Return a 400 (Bad Request)
+            return res.status(400).json({message: 'No valid fields to update'})
+        }
         // Update the quiz
         const editedQuiz = await Quiz.findByIdAndUpdate(
             id, // ID of the quiz to update
@@ -171,17 +173,6 @@ router.put('/editQuiz/:id', checkJwtToken, async (req, res) => {
         );
  
 
-          // Conditional rendering to check that the questions are properly provided
-        if (questions && Array.isArray(questions) && questions.length === 5) {
-            updatedQuiz.questions = questions
-        } else {
-            // Return a 400 (Bad Request)
-            return res.status(400).json({message: 'No valid fields to update'})
-        }
-        /*
-        update only the provided fields:
-        If name is provided, it will only update the name. If questions are provided and valid, it will update the questions. If both are provided, it will update both.
-        */
 
          res.status(200).json({ success: true, editedQuiz });// Respond with the updated quiz
         console.log(updatedQuiz);//Log the updated quiz in the console for debugging purposes      
@@ -210,11 +201,14 @@ router.delete('/deleteQuiz/:id', checkJwtToken,async (req, res) => {
             return res.status(404).json({ message: 'Quiz not found' });
         }
 
-        /* Delete all scores related to the deleted quiz
-        Delete many removes all documents matching the specified criteria
-        The Score model uses the name field to associate scores with quizzes*/
-        await Score.deleteMany({name: deletedQuiz.name});
-
+       // const user = await User.findOne({})//Fetch the logged-in user from the database
+        // // Conditional rendering to check if the logged-in user has permission to delete this quiz
+        // if ( user.username !== quiz.username) {
+        //     console.error('You are unauthorised to delete this quiz');//Log an error message in the console for debugging purposes
+        //     return res.status(403).json({ message: 'Access denied. You do not have permission edit to this quiz.' })
+        // }
+        // If user is authorized, delete the quiz
+        // const deletedQuiz = await Quiz.findByIdAndDelete(id);// Find the quiz by its ID and delete it from the database
         console.log('Deleted Quiz:', deletedQuiz);// Log the deleted quiz in the console for debugging purposes
         res.status(200).json({ success: true, message: 'Quiz successfully deleted' });//Return a 200 OK status with a JSON object containing a success message
     } 
