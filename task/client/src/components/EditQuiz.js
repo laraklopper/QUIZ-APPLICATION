@@ -255,10 +255,10 @@ const handleEditQuestion =(useCallback(() => {
         {/* Input for each option */}
         {[0, 1, 2].map((optionIndex)=> (
           <Row className='editQuizRow' key={optionIndex}>
-            <Col xs={6} className='editQuizCol' htmlFor={`editOption${optionIndex + 1}`}>
+            <Col xs={6} className='editQuizCol'>
               <div className='editField'>
                 {/* Label for new option */}
-                <label className='editQuizLabel'>
+                <label className='editQuizLabel' htmlFor={`editOption${optionIndex + 1}`}>
                   <p className='labelText'>{optionIndex + 1}. ALTERNATIVE ANSWER:</p>
                 </label>
                 {/* Input for new option */}
