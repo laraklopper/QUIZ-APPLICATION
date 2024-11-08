@@ -5,7 +5,7 @@ const Quiz = require('../models/quizModel')// Import the Quiz model
 const User = require('../models/userSchema')//Import the User Schema
 
 // Middleware to verify JWT and extract user info
-const authenticateToken = (req, res, next) => {
+/*const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];// Extract the Authorization header from the request
     const token = authHeader && authHeader.split(' ')[1];// Extract the token part after 'Bearer'
     if (token == null) return res.sendStatus(401);// If there's no token, respond with 401 (Unauthorised) response 
@@ -20,17 +20,19 @@ const authenticateToken = (req, res, next) => {
             // req.userId = decoded.userId;
             next();// Proceed to the next middleware or route handler
     });
-};
+};*/
 
 
 //Middleware function to check and verify a JWT token from the 'token' header
 const checkJwtToken = (req, res, next) => {
     const authHeader = req.headers.authorization// Retrieve the authorization header from the request
+     const token = authHeader && authHeader.split(' ')[1];// Extract the authorization header
+    if (!token) return res.status(401).json({ message: 'Access denied. No token provided.' })// Respond with a 401 (Unauthorised) status code
 
-    //Conditional rendering to check if the Authorization header is missing or does not start with 'Bearer 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.status(401).json({ message: 'Access denied. No token provided.' });// Respond with a 401 (Unauthorised) status code
-    }
+    // //Conditional rendering to check if the Authorization header is missing or does not start with 'Bearer 
+    // if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    //     return res.status(401).json({ message: 'Access denied. No token provided.' });// Respond with a 401 (Unauthorised) status code
+    // }
 
     const token = authHeader.split(' ')[1];// Extract the authorization header
 
@@ -50,11 +52,7 @@ const checkJwtToken = (req, res, next) => {
         console.error('No token attatched to the request');//Log an error message in the console for debugging purposes
         res.status(400).json({ message: 'Invalid token.' });// Respond with a 400 (Bad Request) status
     }
-}
-
-
-
-//Middleware function to check that admin user is 18 years or older
+}//Middleware function to check that admin user is 18 years or older
 const checkAge = (req, res, next) => {
     const { dateOfBirth } = req.body;// Extract the date of birth from the request body
 
@@ -67,6 +65,9 @@ const checkAge = (req, res, next) => {
     }
     // Calculate the user's age based on the date of birth
     const dob = new Date(dateOfBirth);// Convert the date of birth from string to Date object
+    // const ageDiffMs = Date.now() - dob.getTime(); // Difference in milliseconds
+    // const ageDate = new Date(ageDiffMs); // Convert to a date object for easier calculation
+    // const age = Math.abs(ageDate.getUTCFullYear() - 1970); // Calculate age by subtracting the epoch year
     const age = Math.floor((Date.now() - dob) / 31557600000);// Calculate age in years
 
     // Conditional rendering to check if the calculated age is less than 18
@@ -77,7 +78,7 @@ const checkAge = (req, res, next) => {
 
     next();// Call the next middleware or route handler
 };
-
+/*
 //Middleware function to check if the user is an admin user
 const isAdmin = async (req, res, next) => {
     const userId = req.user.id;
@@ -96,43 +97,36 @@ const isAdmin = async (req, res, next) => {
         res.status(500).json({ message: error.message });
     }
 }
-
-//Middleware function to check if the user is the quiz owner or admin
-const checkQuizOwnerOrAdmin = async (req, res, next) => {
-    const {id} = req.params
-   
+*/
+//Middleware to check if the user has authorisation to modify or delete a quiz
+const quizAuthorization = async (req, res, next) => {
     try {
-        const quiz = await Quiz.findById(id)
-        const user = await User.findById(userId)
+        const {id} = req.params; //Retrieve quizId from query params
 
-        if (!quiz) return res.status(404).json({ message: 'Quiz not found' });
-       
-        if (quiz.username === user.username || user.admin) {
-            req.quiz = quiz;
-            next();
-        } else {
-            res.status(403).json({ message: 'Unauthorized to modify this quiz' });
-        }   
+        const quiz = await Quiz.findById(id);//Find the quiz by ID
+
+        //Conditional rendering to check if the quiz is not found
+        if (!quiz) {
+            return res.status(404).json({ message: 'Quiz not found' })// Respond with 404 (Not Found)if quiz is not found
+        }
+    
+
+        const user = await User.findById(req.user.id);// Retrieve user from the token payload
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' })// Respond with 404 if user is not found
+        }
+
+        // Conditional rendering to check if the user is authorized to modify the quiz 
+        if (quiz.userId.toString() !== user._id.toString() && !user.isAdmin) {
+            return res.status(401).json(//Respond with a 401 (Unauthorised) response
+                { message: 'Access denied. You do not have permission to modify this quiz.' });
+        }
+        next()// Call the next middleware or route handler
     } catch (error) {
-        console.error('Authorization error:', error.message);
-        res.status(500).json({ message: error.message });
+        console.error('Authorization error:', error.message); // Log the error for debugging purposes
+        res.status(500).json({ message: 'Server error while authorizing user.' });// Respond with a 500 status on server error
     }
 }
-
-// module.exports = (resourceOwner) => {
-//     return (req, res, next) => {
-//         try {
-//             // Allow action if user is admin or resource owner
-//             if (req.user.role === 'admin' || req.user.username === resourceOwner) {
-//                 return next();
-//             }
-//             return res.status(403).json({ message: 'Access denied. You do not have permission to perform this action.' });
-//         } catch (error) {
-//             res.status(500).json({ message: 'Authorization failed' });
-//         }
-//     };
-// };
-
-
 //Export middleware to be used in other parts of the application
-module.exports = { authenticateToken, checkJwtToken, checkAge, isAdmin, checkQuizOwnerOrAdmin}
+module.exports = {checkJwtToken, checkAge, quizAuthorization}
