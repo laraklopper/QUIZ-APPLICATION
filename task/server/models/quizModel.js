@@ -1,95 +1,51 @@
 // Import necessary modules and packages
 const mongoose = require('mongoose'); // Import the Mongoose library
-// Import the autopopulate plugin for Mongoose
-// const autopopulate = require('mongoose-autopopulate');
-
-/*
-//Function to ensure that thecorrectAnswer exists within the 
-options array for each question
-function validateCorrectAnswer(correctAnswer, options) {
-    return options.includes(correctAnswer);
-}*/
 
 // Define the schema for quiz
 const quizSchema = new mongoose.Schema({
     //Field for the name of the quiz
     name: {
         type: String,//Define the data type as a String
-        required: true,
-        unique: true,
-        /*String method to remove whiteSpace before or  
-        from both ends of this string and returns a new string*/
-        trim: true,
-        set: (v) => v.toUpperCase(),
-    },   
+        required: true,//Indicate that the quizName as required
+        set: (v) => v.toUpperCase(),// Automatically converts the quizName to uppercase before saving
+        unique: false,//Specify the unique option as false
+        trim: true,// Remove leading and trailing whitespace
+    }, 
     //Username of the person who created the quiz
-     //  Username of the person who created the quiz  
-    /*userId: {
-        type: mongoose.Schema.Types.ObjectId, // Reference to the User model
-        ref: 'User', 
-        required: [true, 'User ID is required'], 
-        // autopopulate: true,
-    },
-     /*
-     username: {
-         type:  mongoose.Schema.Types.ObjectId,
-        autopopulate: true, 
-         // Indicate that the username is required and add a custom error message
+    username: {
+        type: String,//Specify the data type as a string
+        // Indicate that the username is required and add a custom error message
         required: [true, 'Username is required'],
-     },*/ 
+    },
     //Field for questions containing an array of objects
+      //Field for questions containing an array of objects(subdocuments)
     questions: {
         type: [
             {
                 //Specify the question text(Question)
                 questionText: {
-                    type: String,//Define the data type as a String
-                    required: [true, 'Question text is required'],    
-                    trim: true,
-                    set: (v) => v.toUpperCase(),
+                    type: String,//Specify the data type as a String
+                    required: [true, 'Question text is required'],//Indicate the question as required
+                    set: (v) => v.toUpperCase(),// Automatically converts the question to uppercase before saving
+                    trim: true,// Remove leading and trailing whitespace
                 },
                 //Specify the correct answer
                 correctAnswer: {
-                    type: String,//Define the datatype as a String
-                    required: [true, 'Correct answer is required'], 
-                    trim: true,
+                    type: String,//Specify the datatype as a String
+                    required: [true, 'Correct answer is required'],//Indicate that the correct answer as required with a custom error message
+                    trim: true,// Remove leading and trailing whitespace
                 },
                 //Specify the answer options or the questions
-                 options: {
-                    type: [String], // Define the data type as an array of Strings 
-                     // Indicate that options are required with a custom error message
-                    required: [true, 'Options are required'],
-                    validate: [
-                        {
-                            validator: function (v) {
-                                return v.length === 3; // Ensure exactly 3 options
-                            },
-                            message: 'Each question must have exactly 3 options',
-                        },
-                    ],
-                     validate: [arrayLimit, '{PATH} must have exactly 3 options']
-                    trim: true, // Remove whitespace from each option
-                },
-                // Custom validator to ensure correctAnswer is among options
-                 validate: {
-                    validator: function () {
-                        return validateCorrectAnswer(this.correctAnswer, this.options);
-                    },
-                    message: 'Correct answer must be one of the provided options',
-                },
-            },
-        ],
-        required: true,//Indicate that the field is required
-        /* validate: [
-            {
-                validator: function (v) {
-                    return v.length === 5; // Ensure exactly 5 questions
-                },
-                message: 'Each quiz must have exactly 5 questions',
-            },
-        ],*/
-        // Custom validation to ensure exactly 5 questions per quiz
-        validate: [arrayLimit5, '{PATH} must have exactly 5 questions']
+                options: {
+                    type: [String],//Define the data type as an array of Strings
+                    required: true,// Mark that the options is required
+                    trim: true,// Remove leading and trailing whitespace
+                    validate: [arrayLimit, '{PATH} must have exactly 3 options'],//Validate the number of options required
+                }
+            }
+        ],        
+        required: [true, 'Questions are required for the quiz'],//Mark the quizQuestion as required and add a custom error message
+        validate: [arrayLimit5, '{PATH} must have exactly 5 questions'],//Validate the number of questions required
     },   
 }, { timestamps: true });
 // Automatically adds createdAt and updatedAt fields
@@ -106,14 +62,6 @@ each quiz has exactly 5 questions*/
 function arrayLimit5(val) {
     return val.length === 5;
 }
-
-/* Create an index for userId to improve query 
-performance when filtering quizzes by user*/
-quizSchema.index({userId: 1})
-
-// Apply the autopopulate plugin to the schema
-// quizSchema.plugin(autopopulate);
-
 
 // Export the mongoose model for 'Quiz' using the defined schema
 module.exports = mongoose.model('Quiz', quizSchema);
