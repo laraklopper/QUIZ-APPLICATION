@@ -17,7 +17,7 @@ db.inventory.updateOne(
 - If the `quantity` was 10, it will now be 15.
 - If the `sold` was 3, it will now be 2.
 
-Syntax
+_**Syntax**_
 ```
 { $inc: { <field1>: <amount1>, <field2>: <amount2>, ... } }
 ````
@@ -36,7 +36,11 @@ db.products.find(
 
 **Explanation**:
 - Returns all documents where `category` is not `electronics` or `appliances`.
-
+  
+_**Syntax**_
+`````````
+{ field: { $nin: [ <value1>, <value2> ... <valueN> ] } }
+````````````
 ---
 
 ### 3. **`$in`**
