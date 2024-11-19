@@ -102,19 +102,15 @@ db.users.updateOne(
 db.employees.find(
   { role: { $eq: "manager" } }
 );
-```
+`````
 
 **Explanation**:
 - Returns all documents where the `role` field is exactly `"manager"`.
-- 
+  
 _**Syntax**_
 
-`````````
+```````
 { $eq: [ <expression1>, <expression2> ] }
-`````
----
+```````
 
-Syntax
-`````````
-{ $eq: [ <expression1>, <expression2> ] }
-`````
+---
