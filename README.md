@@ -1,118 +1,56 @@
-# SOFTWARE REQUIREMENTS
-The proposed web application (`software product`) is a quiz game application that allows users to  answer questions from certain question categories from questions provided by admin users and data from third party APIs (Application Programming Interface).  
+# FINAL CAPSTONE
+The proposed web application (‘software product’) is a quiz application. The intended users who will benefit are individuals who will benefit from the application are individuals that enjoy quiz games for recreational purposes
+The application is written (created) using MERN stack which is a popular open source `JavaScript-based` developer friendly web stack. MERN stack uses MongoDB to handle the database, React.js to create the front-end, Express.js to create the back end and uses Node.js as the runtime environment.
 
 ## TABLE OF CONTENTS
-1. [SYSTEM ARCHITECTURE](#system-architecture)
-2. [SYSTEM REQUIEREMENTS SPECIFICATION](#system-requirements-specification)
-3. [REFERENCES](#references)
-   
-## SYSTEM ARCHITECTURE
-### WEB STACK
+1. [HOW TO USE THE APPLICATION](#how-to-use-the-application)
+2. [SYSTEM REQUIEREMENTS SPECIFICATION](#how-to-run-the-application)
+3. [DEPLOYMENT](#deployment)
+4. [REFERENCES](#references)
 
-A `web stack` refers to the combination of tools and technologies used to create a website or web application. The web stack that will be used for creating the application is the `MERN stack` which is web stack is a popular open source, `JavaScript-based` stack which is developer-friendly, highly customisable, and cost-effective, its popularity is due to `Reacts` ability to simplify the creation and management of an application’s `user interface (UI)` and `improve overall site performance`. 
-React.js allows you to write code use it an unlimited number of times therefore allowing you to write more modular code therefore making it easier to read and less complicated making it highly efficient for building dynamic and interactive web pages. Further, `(CRA)` can be generated in the `command line interface` using only one command which therefore saves time.
-Therefore, `MongoDB` will handle the database, `Express.js` will provide the web application framework to develop the server-side, `React.js` (create-react-app) will be used to create the front-end, user-interface and `Node.js` will be used as the JavaScript runtime environment. 
+## HOW TO USE THE APPLICATION
+To use the application users are required to register(sign up) and login. Users are also able to register as admin users subject to certain age restrictions controlled by custom middleware. 
+## HOW TO RUN THE APPLICATION
 
-### STYLING 
-External Cascading Styling Sheets (CSS) will be used because although this may take longer than other styling methods such as inline CSS styling in the React.js component(s) can make the React.js code longer, more complicated, and therefore difficult to read. 
+A proxy server is included in the front-end to allow the front and back-end to run together. The application uses ‘nodemon’ third-party middleware in the back-end to allow the application to run the back-end and front-end in the command line interface(CLI) or terminal using `npm start`. The folders must, however, be run separately.
+The server is started (listens) on the port specified in the .env file using app.listen() in the app.js file or defaults to port 3001.
 
-### FILE STRUCTURE
-The `root-directory` is the main folder that contains all the files and folders for the application. The file structure of the root-directory consists of the two different folders, the front-end `client` folder and the back-end `server` folder and this `README markdown file` containing information about the application. The back-end and front-end folders are in separate folders to ensure that there clear separation between the back-end and front-end code.
-The front-end will contain the code relating to React.js files, and the CSS styling code. The back end will contain the Express.js code and the code that using `Mongoose` third party middleware to connect to the `MongoDB` database. 
+The application is connected to the MongoDB database using mongoose third-party middleware in the `app.js` file in the back end (server) folder. The code uses `mongoose.connect()` to establish a connection between the application and the MongoDB database.
 
-### DEPLOYMENT
+### How to modify MongoDB URI's and API keys
 
-There are several platforms which can be used for deploying an application, such as, `Heroku, Vercel and Netlify`, inter alia. However, although Heroku is a `platform as a service (PaaS)` that simplifies deployment and management and supports multiple programming languages and frameworks, deploying an application on Heroku requires additional costs, `Vercel` is a platform used to host static sites and serverless functions and is optimised for `Next.js` applications and offers features like automatic `SSL (Secure Sockets Layer)`, edge caching, and serverless deployment.
+The application is connected to the MongoDB database using mongoose third party middleware in the backend. The code uses `mongoose.connect()` to connect to establish a connection with the MongoDB database. 
+The MongoDB connection URI is constructed using the username, password, cluster URL and the database name. these are stored in the .env file which stores sensitive information.
+The application does not include any third-party API. All API requests in the application are REST API requests made from the front end to the backend
 
-The application will, however, be deployed using `Netlify` since it is a cost-free and therefore cost-effective platform and provides serverless functions allowing developers to run backend code without having to manage the server which can be used to create API’s and handle form submissions, which is fundamental to the application. Further, it also provides, security features such as `user authentication` and global `CDN (Content Delivery Network)` for fast scalable deployment, therefore ensuring high performance deployment.
+### Security measures
+To ensure security the application uses several third-party middleware libraries, custom-middleware in the back end and general user authentication and authorisation in the front and backend code.
 
-## SYSTEM REQUIREMENTS SPECIFICATION
-### HOW THE APPLICATION WILL WORK
-The application uses `nodemon` third party middleware in the back-end to allow the application to run in the front-end and back-end code using `npm start`, the front-end `client` and back-end `server` folders must, however, be run separately using `npm start` in the terminal/command line interface.  A `proxy server` will be included in the `package.json` file in the front-end ensure that the back-end and front-end code will run together. 
-The intended  users who will benefit from the application are individuals that enjoy quiz games for recreational purposes. To use the application requires that users register (sign up), and the option to sign up as admin users, subject to certain restriction, such as age requirements. The application  also provides admin users with user authorization for specific rights and permissions.  After  registration users are able to login. 
+**Third party middleware used for Security:**
 
-### SIMILAR SOFTWARE
+**_JWT(‘Jsonwebtoken’):_** A JSON web token is an open standard that securely relays information between client and servers as a compact, self-contained JSON object. A JWT is attached to each request in the backend and is attached in the authorisation header. The benefit of JWT is that it is stateless since it does server does not have to remember the user’s information in session storage which significantly reduces the amount of work required to manage the state. 
 
-Examples of similar applications/software are `Kahoot`, and `Trivia Crack`. However, there are several  significant differences between these applications and the intended web-application/software such as, the media types used on the application and the purposes.
-#### KAHOOT
-The intended web-application/software is different in that Kahoot is used for educational and recreational purposes and the proposed application is only used for recreational purposes. Further, Kahoot provides real-time online live-hosted quizzes, the intended application does not provide any video media type to reduce the time it takes the application to load.  
+_**Helmet:**_ Helmet is an Express.js third-party middleware package that enables Express to enhance security through Cross-Site-Scripting protection(XSS) and helps secure the application by setting up various HTTP response headers in the Express backend. 
 
-#### TRIVIA CRACK
-Trivia Crack is also an application used for recreational purposes, however, although the intended application/software also allows users to add questions, Trivia Crack allows users to add video questions, and the intended application/software does not provide users with the option to add questions in media in video format to reduce the time it takes the application to load and therefore improve performance allow the application to load faster.
+_**CORS (Cross-Origin-Resource Sharing):**_ CORS is a http-header based mechanism that indicates the origins (domain, schema or port) that the which the browser should permit loading resources. Cross-Origin-Resource Sharing are added in the front-end fetch functions and is installed and setup added in backend.
 
-### USER STORIES
-#### ALL USERS
+**_.dotenv:_** the application also contains a .env file using dotenv middleware to store sensitive information or environmental variables such as the database URL, port and database name which are accessed in the app.js file in the backend.
 
--	As a user of the application, I want the application to be able to provide a friendly user interface (UI) to ensure a positive user experience (UX)
--	As a user of the application, I want the application to provide secure user login to protect details on my account.
--	As a user of the application, I want the application to provide a user interface that is user friendly to allow a positive user experience.
--	As a user of the application, I want the application to be able to store my user account details after registration.
--	As a user of the application, I want to be able to view the results after answering questions.
--	As a user of the application, I want the application to be able to edit my account details.
--	As a user of the application, I want the application to allow me to add new questions and save them to the database.
 
-#### ADMIN USERS
+### Testing
 
--	As a user of the application who handles administration functions, I want to be able to store data in the database, and retrieve the from the database after logging in.
--	As a user of the application who handles administrative functions, I want to able fetch the users and delete/remove users who do not comply with the rules relating to the application. 
--	As a user who handles administrative functions, I want to be able to delete any questions submitted by users which are inappropriate or do not comply with the rules regulating the application to avoid any suspicious user activity. 
+APIs in the application were tested using Postman which is an API testing tool which acts as an interface between application and establishes a connection between them. Most requests in Postman require authorisation to verify the eligibility of the user to access the resource in the server. The authorisation process is applied for identification to allow access.
 
-### SYSTEM REQUIREMENTS 
+Error handling in express.js refers to how express catches and process errors that occur both asynchronously and synchronously.  Express provides built in error handling methods.
+The application uses try catch statements and HTTP status codes in the backend for error handling. 
 
-#### FUNCTIONAL REQUIREMENTS 
-Functional requirements are the activities required of the program. These requirements are related to the functionality of the application and `specifies what the application must do` and are dependent on the type of software being developed. These are essentially the requirements that the end user expects the web application (software product) to offer and have an impact on how the user interacts with the system and are therefore user focused. 
+## DEPLOYMENT
+### PLATFORMS
+There are several platforms that can be used to deploy  a web application, for example, `Heroku`, `Vercel`, `Render` and `Netlify`, inter alia.
+However, although Heroku is a ‘platform as a service (PaaS)’ that simplifies management and supports multiple programming languages and frameworks, deploying an application on Heroku requires additional costs, `Vercel` is a platform used to host static sites and serverless functions and is largely optimised for `Next.js` applications and offers features like automatic `SSL (Secure Sockets Layer)` , edge caching and serverless deployment.
 
-***The functional requirements of the application include:***
-
-- User authentication upon user registration and user login.
-- A navigation bar to allow users to navigate between the different pages after the user has logged in and includes a navigation bar to allow users to navigate between the login and registration pages.
-- A form which allows users can select a quiz and have the option to add a timer and the form allows to add a timer if they want to. The form, however, does not allow users to play/answer questions from a quiz they created. The select quiz form provides a toggle button to display the chosen quiz. The quiz allows users to move to the next question in the quiz or restart the quiz they have selected.
-- Users are able to view their results/score after a quiz, which is then saved to the database which users can then access later.
-- The application provides a toggle button which provides a form which includes middleware to allow authorisation for admin users to add, edit and delete questions/or the entire quiz, and save it to the database. Normal users are also authorized to add a new quiz, edit a quiz or delete a quiz if they created it.
-- The a toggle button on the USER ACCOUNT page (PAGE 4)  that displays a form that allows the user to edit their user account/details.
-- Users are able to logout on each page and the application stores the data securely after user logout.
-
-Functional requirements also include the `CRUD` (Create (POST), Read (GET), Update (PUT) and, Delete) operations which are requests made to the database to either add(POST), retrieve(GET), update(PUT), or delete(DELETE) documents from the database. 
-
-**CRUD operations in the application include:**
-
-`CREATE (POST)`: 
-
-- Login, 
-- Register, 
-- Add Quiz, and 
-- Add Score
-
-`READ (GET)`:
-
-- Get/fetch the users name and display it on the homepage in the welcome message,
-- Get/fetch the details for a single user,  
-- Get/fetch all user details if the user is an admin user for administrative purposes, and
-- Get/fetch a quiz or questions and Get/fetch user scores
-
-`UPDATE (PUT)`:
-
-- Update user details, and 
-- Update a quiz or questions.
-
-`DELETE`:
-
-- Delete or remove a user for administrative purposes, and 
-- Delete or remove a quiz/question by a normal user or an admin for administrative purposes.
-  
-#### NON-FUNCTIONAL REQUIREMENTS
-Non-functional requirements are related to factors regarding the applications usability, reliability, performance, and security and are therefore essential for ensuring that the web application meets the required standards of these factors. Since the platform that the application is deployed on provides a global CDN, where the purpose is to improve performance, reliability, and security,  the application therefore, ensures that these standards are met.  
-
-***The non-functional requirements of the application include:***
-
--	User satisfaction to ensuring a positive user-experience.
--	Compatibility with different devices and browsers for broader accessibility.
--	Thorough testing, to ensure system reliability.
--	The ability to store an increased user load and data volume.
--	Performance optimization for efficient data retrieval and processing.
--	Security measures to protect user data using middleware for user authentication and to protect data from unauthorized access or breaches.
--	Regulatory requirements for user data handling and user privacy.
-  
+### HOW WAS THE APPLICATION DEPLOYED
+### LINK
 ## REFERENCES
 
 - https://www.nobledesktop.com/classes-near-me/blog/
@@ -126,3 +64,12 @@ Non-functional requirements are related to factors regarding the applications us
 - https://docs.netlify.com/
 - https://devcenter.heroku.com/categories/reference
 - https://aws.amazon.com/what-is/cdn/
+- https://developer.mozilla.org/en-US/docs/Web/URI#syntax_of_uniform_resource_identifiers_uris
+- https://vercel.com/docs/cli/domains#usage
+- https://devcenter.heroku.com/categories/reference
+- https://www.geeksforgeeks.org/what-is-package-json-in-node-js/?ref=ml_lbp
+- https://www.geeksforgeeks.org/folder-structure-for-a-node-js-project/
+- https://www.geeksforgeeks.org/nextjs-vs-reactjs-which-one-to-choose/#is-next-better-than-react
+- https://expressjs.com/en/5x/api.html#app.listen_path_callback
+  
+
