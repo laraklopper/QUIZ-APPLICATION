@@ -12,7 +12,7 @@ The application is written (created) using MERN stack which is a popular open so
 To use the application users are required to register(sign up) and login. Users are also able to register as admin users subject to certain age restrictions controlled by custom middleware. 
 ## HOW TO RUN THE APPLICATION
 
-A proxy server is included in the front-end to allow the front and back-end to run together. The application uses ‘nodemon’ third-party middleware in the back-end to allow the application to run the back-end and front-end in the command line interface(CLI) or terminal using `npm start`. The folders must, however, be run separately.
+A proxy server is included in the front-end to allow the front and back-end to run together. The application uses ‘nodemon’ third-party middleware in the back-end to allow the application to run the back-end and front-end in the `command line interface(CLI)` or `terminal` using `npm start`. The folders must, however, be run separately.
 The server is started (listens) on the port specified in the .env file using app.listen() in the app.js file or defaults to port 3001.
 
 The application is connected to the MongoDB database using mongoose third-party middleware in the `app.js` file in the back end (server) folder. The code uses `mongoose.connect()` to establish a connection between the application and the MongoDB database.
@@ -57,9 +57,6 @@ However, although Heroku is a ‘platform as a service (PaaS)’ that simplifies
 - https://www.geeksforgeeks.org/nextjs-vs-reactjs-which-one-to-choose/#is-next-better-than-react
 - https://www.geeksforgeeks.org/folder-structure-for-a-node-js-project/
 - https://www.geeksforgeeks.org/what-is-package-json-in-node-js/?ref=ml_lbp
-- https://www.geeksforgeeks.org/what-are-functional-requirements-in-system-design-examples-definition/
-- https://www.geeksforgeeks.org/what-are-non-functional-requirements-in-system-design-examples-definition/?ref=next_article
-- https://www.geeksforgeeks.org/software-engineering-classification-of-software-requirements/
 - https://vercel.com/docs/cli/domains#usage
 - https://docs.netlify.com/
 - https://devcenter.heroku.com/categories/reference
@@ -68,8 +65,6 @@ However, although Heroku is a ‘platform as a service (PaaS)’ that simplifies
 - https://vercel.com/docs/cli/domains#usage
 - https://devcenter.heroku.com/categories/reference
 - https://www.geeksforgeeks.org/what-is-package-json-in-node-js/?ref=ml_lbp
-- https://www.geeksforgeeks.org/folder-structure-for-a-node-js-project/
-- https://www.geeksforgeeks.org/nextjs-vs-reactjs-which-one-to-choose/#is-next-better-than-react
 - https://expressjs.com/en/5x/api.html#app.listen_path_callback
   
 
