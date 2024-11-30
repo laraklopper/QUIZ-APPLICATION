@@ -53,7 +53,10 @@ mongoose.connection.once('open', () => {
 });
 
 //===========SETUP MIDDLEWARE==================
-app.use(cors());  // Enable CORS for all routes, allowing cross-origin requests
+app.use(cors({
+    origin: 'https://quiz-app-capstone.onrender.com',
+    methods : ['GET','POST',"PUT", "DELETE"]
+}));  // Enable CORS for all routes, allowing cross-origin requests
 app.use(express.json());  // Enable parsing of JSON bodies in incoming requests
 app.use(helmet()) // Use Helmet for setting secure HTTP headers
 
