@@ -1,0 +1,93 @@
+/* Section 1 */
+/* SELECT QUIZ FORM*/
+#selectQuizLayout{
+    display: flex;
+    background-color: #157291;
+}
+/* Layout */
+#selectQuizCol {
+    display: flex;
+    align-items: baseline;
+    margin: 0px;
+    padding: 5px;
+    background-color: #25bb6d;
+    /* background-color: #157291; */
+    border: 5px solid black;
+    border-radius: 2px;
+}
+/* Buttons */
+.questions{
+    flex-direction: column;
+    display: flex;
+    align-items: baseline;
+}
+.questionCol{
+    margin: 0px;
+        padding: 0px;
+        display: block;
+}
+.questionRow{
+    width: 100%;
+        margin-bottom: 10px;
+        margin-top: 5px;
+        margin-left: 0px;
+        margin-right: 0px;
+        padding: 0px;
+}
+.option{
+        display: block;
+            margin: 5px;
+            padding: 1px;
+}
+#quizOption {
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+#quizSelect{
+        display: flex;
+            margin-left: 10px;
+            align-items: center;
+            margin-right: 10px;
+            margin-bottom: 5px;
+            margin-top: 5px;
+            padding: 5px;
+                text-align: center;
+                    text-transform: uppercase;
+                    font-weight: 600;
+                
+}
+.question{
+    display: flex;
+    align-items: baseline;
+    flex-direction: column;
+    font-family: monospace;
+    font-size: 20px;
+}
+
+.quizName{
+        text-align: center;
+            text-transform: uppercase;
+            font-weight: 800;
+}
+.h6{
+        text-transform: uppercase;  
+}
+#selectQuizForm {
+    border-color: black;
+    border-style: solid;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    padding: 10px;
+    background-color: #00ACE6;
+}
+
+.questionOptionCol {
+    align-items: center;
+    padding: 10px;
+    background-color: darkcyan;
+    display: flex;
+    flex-direction: column;
+        border-radius: 20px;        
+}
