@@ -1,0 +1,123 @@
+/* QUIZ */
+#quiz {
+    background-color: #7D8EA0;
+    border-color: black;
+    border-style: solid;
+    padding: 10px
+}
+/* Layout */
+.quizNavRow {
+    margin-top: 10px;
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-bottom: 10px;
+}
+.questionRow {
+    display: flex;
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+}
+/* OPTIONS */
+.options {
+    display: flex;
+    align-items: baseline;
+    flex-direction: column;
+}
+.optionsRow {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+.optionCol {
+    display: flex;
+    align-items: baseline;
+    flex-direction: column;
+    justify-content: center;
+    width: 33.33333333%;
+}
+/* Question */
+#questionText {
+    font-weight: 800;
+    text-transform: capitalize;
+    font-size: 16px;
+}
+
+.number {
+    font-weight: 800;
+    font-family: sans-serif;
+}
+
+/* Timer */
+.timerCol {
+    display: flex;
+    align-items: baseline;
+}
+/* FEEDBACK */
+/* Layout */
+.feedbackRow {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+/* Feedback */
+.feedback {
+    text-align: center;
+    font-weight: 800;
+    font-family: monospace;
+    margin-top: 10px;
+}
+/* RESULT */
+#resultText {
+    font-weight: 800;
+    font-family: monospace;
+        font-size: 20px;
+}
+/* Buttons */
+/* Answer buttons */
+#answerOption {
+    width: 90%;
+    margin-top: 5px;
+    margin-bottom: 2px;
+    margin-left: 0px;
+    margin-right: 0px;
+    font-weight: 700;
+    border: #042c33 solid 5px;
+    border-style: solid;
+    text-transform: uppercase;
+    font-family: monospace;
+    font-size: 20px;
+    color: black;
+}
+.answerOption {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: fit-content;
+    margin-left: 0px;
+    margin-right: 0px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    font-weight: bold;
+    color: black;
+    text-transform: capitalize;
+}   
+/* Buttons */
+
+#nextBtn {
+    margin-right: 5px;
+    font-family: monospace;
+    font-weight: 800;
+    color: #000;
+    width: 200px;
+    font-size: 18px;
+}
+#resetBtn {
+    font-weight: 700;
+    font-family: monospace;
+    color: black;
+    font-size: 18px;
+    width: 150px;
+}

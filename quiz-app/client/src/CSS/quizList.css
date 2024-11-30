@@ -1,0 +1,120 @@
+/* QUIZZES */
+/* List of quizzes */
+.quizItem {
+    margin-top: 2px;
+    background-color: #0987b1;
+    margin-bottom: 2px;
+    margin-left: 1px;
+    margin-right: 1px;
+    padding: 4px;
+    border: black;
+    border-style: solid;
+}
+#quizOutput {
+    padding: 10px;
+    background-color: rgb(127, 206, 255);
+    border: 1px solid #000000;
+}
+/* Layout */
+.quizListRow {
+    margin-top: 2px;
+    margin-bottom: 2px;
+    display: flex;
+    padding: 5px;
+    margin-left: 1px;
+    align-items: baseline;
+    margin-right: 1px;
+}
+#userNameCol {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+}
+/* Text */
+/* quizname label */
+.quizNameLabel {
+    display: flex;
+    align-items: baseline;
+    margin: 0px;
+    padding: 0px;
+    text-transform: capitalize;
+    font-size: 18px;
+    font-family: cursive;
+    font-weight: 800
+}
+#quizName {
+    text-transform: capitalize;
+    padding-left: 7px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    font-family: monospace;
+    font-weight: 800;
+}
+.quizLabelText {
+    margin-bottom: 0px;
+    margin-top: 0px;
+    font-weight: 800;
+    font-family: monospace;
+        font-size: 16px;
+}
+/* Username of user who created the quiz */
+.quizUsername {
+    /* visibility: hidden; */
+    font-weight: 800;
+    padding: 5px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    margin-left: 1px;
+    margin-right: 1px;
+    text-transform: uppercase;
+    font-family: monospace;
+}
+.quizUsernameLabel {
+    font-size: 16px;
+    font-family: cursive;
+    font-weight: 800;
+}
+.quizUserLabelText{
+    margin-bottom: 0px;
+    margin-top: 0px;
+    font-weight: 800;
+    font-family: monospace;
+    font-size: 16px;
+}
+/* Buttons Col */
+.buttonCol {
+    display: flex;
+    margin: 0px;
+    padding: 0px;   ;
+    justify-content: flex-end;
+}
+/* Buttons */
+/* Edit Quiz button */
+#editQuizBtn {
+    margin-right: 15px;
+    font-weight: 700;
+    font-family: monospace;
+    font-size: 18px;
+}
+#authoriseEdit {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+}
+/* Delete QUiz button */
+#deleteQuizBtn {
+    font-weight: 700;
+    color: black;
+    font-family: monospace;
+    width: 150px;
+    font-size: 18px;
+}
+#authoriseDelete {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+}
