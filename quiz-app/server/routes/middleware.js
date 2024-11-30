@@ -1,9 +1,7 @@
 // Import necessary modules and packages
 const jwt = require('jsonwebtoken');// Import the 'jsonwebtoken' library for handling JSON Web Tokens
-// const User = require('../models/userSchema')//Import the user schema
-require('dotenv').config()// Load environment variables from .env file
 
-const secretKey = process.env.JWT_SECRET_KEY// Get the JWT secret key from the environment variables
+
 
 //Middleware function to check and verify a JWT token from the 'token' header
 const checkJwtToken = (req, res, next) => {
@@ -16,7 +14,7 @@ const checkJwtToken = (req, res, next) => {
         // Verify the token using the secret key
         const decoded = jwt.verify(
             token,
-            secretKey || 'secretKey',//Secret key used for signing the token stored in enviromental variables
+           'secretKey',//Secret key used for signing the token 
         );
         req.user = decoded;// Attach decoded user information to the request object
         console.log('Token provided');//Log a message in the console for debugging purposes
