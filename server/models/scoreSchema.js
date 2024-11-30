@@ -13,7 +13,7 @@ const scoreSchema = new mongoose.Schema({
     //Field for username of the user who took the quiz
      username: {
         type: String,//Specify the data type as a 
-        required: [true, 'username is required'],
+        required: [true, 'username is required'],//Mark the field as required
          trim: true,// Remove leading and trailing whitespace
     },
     //Field for the score
