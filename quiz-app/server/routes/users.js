@@ -8,10 +8,8 @@ const Score = require('../models/scoreSchema');//Import the score schema
 const Quiz = require('../models/quizModel');//Import the quiz Schema
 //Import custom middleware
 const { checkAge, checkJwtToken, checkPasswordLength} = require('./middleware');
-require('dotenv').config()// Load environment variables from .env file
 
-// Get the JWT secret key from the environment variables
-const secretKey = process.env.JWT_SECRET_KEY;
+
 console.log(secretKey); // Log the secret key for debugging purposes
 
 //=============ROUTES=====================
@@ -134,7 +132,7 @@ router.post('/register', checkAge, checkPasswordLength, async (req, res) => {
         // Generate JWT token for the newly registered user
         const token = jwt.sign(
             { _id: savedUser._id },// Payload containing the user's ID
-            secretKey || 'secretKey', // Secret key for token signing                    
+              'secretKey', // Secret key for token signing                    
             {
                 expiresIn: '12h',// Token expiration time set to 12 hours
                 algorithm: 'HS256'// Specify the signing algorithm 
