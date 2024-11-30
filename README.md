@@ -74,7 +74,6 @@ However, although Heroku is a ‘`platform as a service (PaaS)`’ that simplifi
 
 ## REFERENCES
 
-- https://www.nobledesktop.com/classes-near-me/blog/
 - https://www.geeksforgeeks.org/nextjs-vs-reactjs-which-one-to-choose/#is-next-better-than-react
 - https://www.geeksforgeeks.org/folder-structure-for-a-node-js-project/
 - https://www.geeksforgeeks.org/what-is-package-json-in-node-js/?ref=ml_lbp
@@ -83,6 +82,7 @@ However, although Heroku is a ‘`platform as a service (PaaS)`’ that simplifi
 - https://www.geeksforgeeks.org/software-engineering-classification-of-software-requirements/
 - https://vercel.com/docs/cli/domains#usage
 - https://docs.netlify.com/
-- https://devcenter.heroku.com/categories/reference 
+- https://devcenter.heroku.com/categories/reference
+- https://www.geeksforgeeks.org/explain-the-purpose-of-the-helmet-middleware-in-express-js/
   
 
