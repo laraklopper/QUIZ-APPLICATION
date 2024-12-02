@@ -1,0 +1,203 @@
+/* NEW QUIZ OUTPUT */
+.newQuizOutput {
+    margin-right: 10px;
+    border-style: solid;
+    border-width: 2px;
+    background-color: #000000;
+}
+
+.newQuestionsOutput {
+    background: aqua;
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding: 0px;
+    border: black;
+    border-style: solid;
+}
+
+#newQuiz {
+    margin-left: 0px;
+    margin-right: 0px;
+    background-color: cadetblue;
+    border: solid black;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+/* QUESTIONS AND ANSWERS */
+/* Quiz name */
+.quizNameRow {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 5px;
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-top: 10px;
+}
+#newQuizBtnCol {
+    display: flex;
+    justify-content: flex-end;
+}
+.questionsRow {
+    width: 100%;
+    display: flex;
+    margin: 0px;
+    padding: 5px;
+}
+.outputCol {
+    display: flex;
+    margin: 0px;
+    padding: 0px;
+    /* text-align: center; */
+    justify-content: center;
+}
+.quizNameItem{
+    margin: 0px;
+    padding: 0px;
+    
+}
+.quizNameCol {
+    display: flex;
+    justify-content: flex-start;
+    margin: 0px;
+    padding-left: 10px;
+    padding-right: 0px;
+    padding-top: 10px;
+    padding-bottom: 0px;
+}
+/* LIST OF NEW QUESTIONS */
+/* New question */
+.newQuestionCol{
+    display: flex;
+    align-items: center;
+    margin: 0px;
+    padding: 0px;
+}
+.newQuestionText{
+    display: flex;
+     margin: inherit;
+        align-items: center;
+        font-weight: 500;
+        text-transform: uppercase;
+}
+.addQuizBtnStack{
+    display: flex;
+}
+/* New question Answer */
+.newAnswerCol{
+        display: flex;
+            align-items: center;
+            margin: inherit;
+}
+.newAnswerOutput{
+    display: flex;
+        margin: inherit;
+        align-items: center;
+        font-weight: 500;
+        text-transform: uppercase;
+}
+/* New question option */
+.newOptionsCol{
+    display: flex;
+    align-items: center;
+    margin: inherit;
+}
+.newOptionsOutput {
+    margin: inherit;
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+/* Button layout */
+#addQuestionBtnCol {
+    display: flex;
+    justify-content: flex-end;
+    text-transform: uppercase;
+}
+.newQuizBtnCol{
+    display: flex;
+    
+}
+
+.questionsOutput {
+    margin: inherit;
+    font-weight: 500;
+}
+.newOptionsOutput {
+    margin: inherit;
+    font-weight: 500;
+}
+/* New questions */
+.newQuizNameStack{
+        display: flex;
+            padding-left: 12px;
+            padding-right: 0px;
+            padding-top: 5px;
+            padding-bottom: 0px;
+}
+.quizName {
+    text-transform: uppercase;
+    margin-top: 5px;
+    margin-left: 5px;
+    margin-right: 0px;
+    margin-bottom: 5px;
+    font-family: monospace;
+    font-weight: 800;
+}
+.question {
+    display: flex;
+    align-items: baseline;
+    margin: 10px;
+}
+#outputHeading {
+    margin-top: 2px;
+    margin-bottom: 2px;
+    padding: 2px;
+}
+/* Layout */
+#addQuizBtnRow {
+    margin-top: 10px;
+    margin-left: 0px;
+    margin-right: 0px;
+    padding: 10px;
+    margin-bottom: 0px;
+}
+.addQuizBtnStack {
+    margin-top: 0px;
+    margin-bottom: 5px;
+    margin-right: 10px;
+    margin-left: 0px;
+    display: flex;
+    justify-content: flex-end;
+    padding: 0px;
+}
+/* Buttons */
+#addQuizBtn {
+    margin: 10px;
+    padding: 5px;
+    font-weight: 800;
+    width: 150px;
+    color: #000000;
+    font-family: monospace;
+    font-size: 18px;
+}
+#deleteQuesBtn {
+    font-weight: 700;
+    color: black;
+    font-family: monospace;
+    width: 200px;
+    font-size: 18px;
+}
+#clearOutputBtn {
+    margin: 10px;
+    color: #000000;
+    padding: 5px;
+    font-weight: 800;
+    width: 150px;
+    font-family: monospace;
+    font-size: 18px;
+}
