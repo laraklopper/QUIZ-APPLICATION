@@ -1,0 +1,177 @@
+html,body {
+  margin: 0;
+  /* Remove default margins */
+  padding: 0;
+  /* Remove default padding */
+}
+body{
+  background-size: cover;
+  background-color: #006080;
+  background-position: center;
+  background-repeat: no-repeat;
+  overflow: visible;  
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
+}
+#root {
+  margin: 0px;
+  width: 100%;
+  display: flex;
+  background-color: #006080;
+  align-items: stretch;
+  height: 100%;
+  overflow: visible;
+}
+/* CONTAINER */
+.appContainer {
+  background-color:#007AA2;
+  margin-top: 10px;
+  margin-bottom: 10px; 
+  margin-left: 10px;
+  margin-right: 10px;
+  padding:9px;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+/* HEADER */
+.header {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 0px;
+  margin-right: 0px;
+  padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 20px;
+    padding-bottom: 10px;
+  padding: 10px;
+  background-color:#0099cc
+}
+/* HEADINGS */
+.h1 {
+  font-family: cursive;
+  text-align: center;
+  color: #00394D;
+  font-weight: 800;
+    padding-top: 10px;
+    padding-right: 0px;
+    padding-bottom: 0px;
+    padding-left: 0px;
+    margin: 0px;
+}
+.h2{
+  text-align: center;
+  font-family: cursive;
+  font-weight: 800;
+}
+.h3 {
+  text-align: center;
+  font-weight: 600;
+  padding: 0px;
+}
+.section1 {
+  margin: 0px;
+  padding: 10px;
+  background-color: #006385;
+  display: block;
+}
+
+/* RULES */
+.rulesHeading{
+      padding-right: 5px;
+        font-weight: 800;
+        margin: 0px;
+        padding-left: 0px;
+        padding-bottom: 5px;
+        padding-top: 2px;
+}
+.rulesCol {
+  margin: 0px;
+  padding: 0px;
+}
+.rulesList {
+  list-style-type: none;
+  background-color: #006385;
+  padding: 10px;
+  
+}
+.rule {
+  font-weight: 600;
+  font-family: sans-serif;
+  display: flex;
+  align-items: baseline;
+}
+
+/* PAGE FOOTER */
+.pageFooter {
+  background-color: #0095C7;
+  padding-top: 20px;
+  display: block;
+    padding-bottom: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 0px;
+  margin-right: 0px;
+}
+.footerRow{
+    margin-top: 25px;
+    margin-bottom: 10px;
+    margin-left: 0px;
+    margin-right: 0px;
+    padding: 20px;
+      
+}
+/* Logout button */
+/* Layout */
+.logoutRow {
+  padding: 5px;
+  display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+    margin-bottom: 0px;
+}
+.logoutStack{
+      margin-left: 0px;
+        margin-right: 0px;
+        display: flex;
+        margin-top: 0px;
+        margin-bottom: 0px;
+        padding: 0px;
+}
+
+/* Button */
+#logoutBtn{
+  font-weight: 800;
+  color: black;
+  font-family: monospace;
+  font-size: 20px;
+ width:180px ;
+}
+/* FORMS */
+.labelText {
+  font-weight: 800;
+  font-family: cursive;
+  margin-bottom: 0px;
+  margin-top: 5px;
+  margin-right: 5px;
+  font-size: 16px;
+}
+/* FORM HEADERS */
+/* Layout */
+.formHeaderRow{
+      margin-top: 5px;
+        margin-bottom: 5px;
+        margin-left: 0px;
+        margin-right: 0px;
+        padding: 4px;
+}
+/* Text */
+#formHeading{
+  font-weight: 800;
+  font-family: cursive;
+  text-align: center;
+      color: #052b38;
+}
