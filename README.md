@@ -72,6 +72,8 @@ However, although Heroku is a ‘`platform as a service (PaaS)`’ that simplifi
 
 ### Link
 
+https://client-9cop.onrender.com/reg
+
 ## REFERENCES
 
 - https://www.geeksforgeeks.org/nextjs-vs-reactjs-which-one-to-choose/#is-next-better-than-react
