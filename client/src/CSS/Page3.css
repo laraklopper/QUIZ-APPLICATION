@@ -1,0 +1,73 @@
+/* PAGE3 */
+/* Headings */
+.h4{
+    text-align: center;
+    font-family: sans-serif;
+    font-weight: 500;
+}
+.h3{
+    text-align: center;
+}
+/* SECTION */
+.page3Section1 {
+    background-color: #0095C7;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    margin-left: 0px;
+    margin-right: 0px;
+    padding: 10px;
+    display: block;
+}
+#page3Section2 {
+    margin-top: 5px;
+    margin-bottom: 10px;
+    margin-left: 0px;
+    margin-right: 0px;
+    padding: 10px;
+    background-color: #0082AD;
+}
+/* EDIT INSTRUCTIONS */
+/* Instructions on how to edit a quiz */
+#editQuizInstructions{
+    margin-top: 10px;
+    background-color: #006080;
+    padding: 10px;
+}
+
+
+/* Layout */
+#editInstructionsRow{
+    display: flex;
+}
+
+#editInstructBtnCol{
+    display: flex;
+    align-items: flex-end;
+        justify-content: flex-end;
+}
+/* Instructions */
+#editInstructions{
+    border-style: solid;
+        border-color: black;
+        margin-left: 10px;
+        padding-top: 10px;
+        padding-left: 5px;
+        padding-right: 0px;
+        padding-bottom: 5px;
+        display: flex;
+        flex-direction: column;
+        background-color: #187a9a;
+}
+.instruct{
+    font-weight: 600;
+}
+#authMessage{
+    list-style-type: none;
+}
+#editInstructionsBtn {
+    width: 200px;
+    color: black;
+    font-weight: 700;
+}
+
+
