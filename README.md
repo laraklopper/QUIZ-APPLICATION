@@ -63,16 +63,15 @@ _Server Errors:_
 -	500 (`Internal Server Error`)
 
 ## DEPLOYMENT
-### Platforms
 
 There are several platforms that can be used to deploy a web application, for example, `Heroku`, `Vercel`, `Render` and `Netlify`, inter alia.
 However, although Heroku is a ‘`platform as a service (PaaS)`’ that simplifies management and supports multiple programming languages and frameworks, deploying an application on `Heroku` requires additional costs, `Vercel` is a platform used to host static sites and serverless functions and is largely optimised for `Next.js` applications and offers features like automatic `SSL (Secure Sockets Layer)` , edge caching and serverless deployment.
 
-### How was the application deployed
-
 ### Link
-
+**FRONT END**
 https://client-9cop.onrender.com/reg
+**BACK END**
+https://server-siwu.onrender.com
 
 ## REFERENCES
 
