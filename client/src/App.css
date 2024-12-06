@@ -1,8 +1,6 @@
 html,body {
   margin: 0;
-  /* Remove default margins */
   padding: 0;
-  /* Remove default padding */
 }
 body{
   background-size: cover;
@@ -20,7 +18,7 @@ body{
   display: flex;
   background-color: #006080;
   align-items: stretch;
-  height: 100%;
+  height: fit-content;
   overflow: visible;
 }
 /* CONTAINER */
