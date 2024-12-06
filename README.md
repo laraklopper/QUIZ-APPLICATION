@@ -61,7 +61,18 @@ _Client Errors:_
 
 _Server Errors:_ 
 -	500 (`Internal Server Error`)
+  
+#### Unit and snapshot testing
 
+Unit and snapshot tests, were also done in the backend and frontend code to test the code for errors using `Jest` in the frontend and `Supertest` in the backend.
+
+**_UNIT TESTING_**
+
+Unit testing involves individual testing. Instead of testing the functionality of the code as a whole, unit testing involves testing individual components and functions.
+
+**_SNAPSHOT TESTING_**
+
+Snapshot tests are used to make sure that the UI(`user interface`) does not change unexpectedly.
 ## DEPLOYMENT
 
 There are several platforms that can be used to deploy a web application, for example, `Heroku`, `Vercel`, `Render` and `Netlify`, inter alia.
