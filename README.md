@@ -67,14 +67,24 @@ _Server Errors:_
 There are several platforms that can be used to deploy a web application, for example, `Heroku`, `Vercel`, `Render` and `Netlify`, inter alia.
 However, although Heroku is a ‘`platform as a service (PaaS)`’ that simplifies management and supports multiple programming languages and frameworks, deploying an application on `Heroku` requires additional costs, `Vercel` is a platform used to host static sites and serverless functions and is largely optimised for `Next.js` applications and offers features like automatic `SSL (Secure Sockets Layer)` , edge caching and serverless deployment.
 
+### How was the application deployed
+
+The application was deployed using Render because it focuses on general full-stack hosting for web-services, APIs, and static sites. Therefore, the 
+backend(`server side`) and frontend(`client side`) were both deployed using Render. The backend and frontend were deployed separately because the back end was deployed as a `web service` and the front end was deployed as a `static site`.  
+
 ### Link
-**FRONT END**
-https://client-9cop.onrender.com/reg
-**BACK END**
-https://server-siwu.onrender.com
+
+**_Front End_**
+
+https://client-9cop.onrender.com
+
+**_Back End_**
+
+https://server-siwu.onrender.com 
+
 
 ## REFERENCES
-
+- https://www.nobledesktop.com/classes-near-me/blog/
 - https://www.geeksforgeeks.org/nextjs-vs-reactjs-which-one-to-choose/#is-next-better-than-react
 - https://www.geeksforgeeks.org/folder-structure-for-a-node-js-project/
 - https://www.geeksforgeeks.org/what-is-package-json-in-node-js/?ref=ml_lbp
@@ -83,7 +93,9 @@ https://server-siwu.onrender.com
 - https://www.geeksforgeeks.org/software-engineering-classification-of-software-requirements/
 - https://vercel.com/docs/cli/domains#usage
 - https://docs.netlify.com/
-- https://devcenter.heroku.com/categories/reference
+- https://devcenter.heroku.com/categories/reference 
 - https://www.geeksforgeeks.org/explain-the-purpose-of-the-helmet-middleware-in-express-js/
-  
+- https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+
+
 
