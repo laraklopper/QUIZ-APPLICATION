@@ -1,5 +1,5 @@
 // Import necessary modules and packages
-import React, { useCallback, useState } from 'react';// Import the React module to use React functionalities
+import React, { useCallback, useState, useEffect } from 'react';// Import the React module to use React functionalities
 import config from '../config';//Import configuration files
 //CSS stylesheets
 import '../CSS/QuizDisplay.css';//Import QuizDisplay stylesheet
