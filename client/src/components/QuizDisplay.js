@@ -33,12 +33,35 @@ export default function QuizDisplay(//Export default QuizDisplay function compon
   const [quizStarted, setQuizStarted] = useState(false);// Boolean to track whether the user has started the quiz
   const [quizCompleted, setQuizCompleted] = useState(false); // Boolean to track whether the quiz is completed
   const [currentScore, setCurrentScore] = useState(0);// State to store the user's score during the quiz
+const [loading, setLoading] = useState(true); // state to indicate whether or not the component is loading
 
+  //==============USE EFFECT HOOK========================
+   //UseEffect to fetch and setup necessary data
+  //the useEffect hook ensures that when the QuizDisplay component is rendered 
+  useEffect(() => {
+    const setup = async () => {// Define an async function for initial setup
+      try {
+        // Conditional rendering to check if there is a selected quiz ID
+        if (selectedQuizId) {
+          // Call the fetchQuiz function with the selected quiz ID to fetch quiz data
+          await fetchQuiz(selectedQuizId)
+        }
+      } catch (error) {
+        setError(`Error setting up quiz:${error.message}`)// Update the error state with an error message for the UI
+        console.error('Setup error:', error);// Log the error details in the console for debugging purpose
+      }
+      finally{
+        // Update the loading state to false, regardless of whether fetching was successful or failed
+        setLoading(false)
+      }
+    }
+    setup()//Call the setup function
+  },[selectedQuizId, fetchQuiz, setError])
   
     //=========REQUESTS============
     //-------GET--------------------
     //Function to check if a score for the Quiz already exists
-    const checkExistingScore = useCallback(async () => {
+    const checkExistingScore = useCallback(async () => {//Define an async function to check if a Score for the quiz exists 
       try {
         const token = localStorage.getItem('token'); // Retrieve JWT token from local storage
         
@@ -99,7 +122,7 @@ export default function QuizDisplay(//Export default QuizDisplay function compon
     //--------PUT------------
     /*Function to update score if a score for the quiz already 
     exists and is better than the prevous result/score*/
-  const updateScore = useCallback(async (scoreId) => {
+  const updateScore = useCallback(async (scoreId) => {//Define an async function to update the user score
 
     try {      
       const token = localStorage.getItem('token');// Retrieve token from localStorage
@@ -260,9 +283,10 @@ export default function QuizDisplay(//Export default QuizDisplay function compon
 
   return (
     <div id='quizDisplay'>    
-      {/* Show the quiz start form if a quiz is 
-      selected but not started */}
-      {selectedQuizId && (
+     {/* Show the quiz start form if a quiz is selected but not started */}
+      {loading && <div>Loading...</div>}
+       {/* Render child components only when loading is complete */}
+      {!loading && selectedQuizId && (
         <div id='quizDisplayForm'>
          {/* Form to start quiz */}
          <StartQuizForm
@@ -276,7 +300,7 @@ export default function QuizDisplay(//Export default QuizDisplay function compon
         </div>
       )}
       {/* QUIZ */}
-      {quiz && quizStarted && (
+      {!loading && quiz && quizStarted &&  (
         // Quiz function component
         <Quiz
         selectedQuiz={quiz}
@@ -296,7 +320,7 @@ export default function QuizDisplay(//Export default QuizDisplay function compon
         />
       )}
       {/* Display the Result component when the user completes the quiz */}
-      {quizCompleted && (
+      {!loading && quizCompleted && (
         <div>
           {/* Render the Result function component */}
           <Result
