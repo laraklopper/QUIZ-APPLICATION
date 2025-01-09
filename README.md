@@ -1,5 +1,6 @@
 # QUIZ APPLICATION
 Final capstone task
+
 The web application is a quiz application. The intended users who will benefit from the application are individuals who enjoy quiz games for recreational purposes.
 The application is written using `MERN stack` which is a popular open source `JavaScript-based` developer friendly web stack. MERN stack uses `MongoDB` (a `NoSQL` database), to handle the database, `React.js` to create the front-end, `Express.js` to create the backend and uses `Node.js` as the runtime environment.
 
