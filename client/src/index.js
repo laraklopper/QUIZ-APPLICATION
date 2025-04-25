@@ -11,7 +11,6 @@ import { BrowserRouter } from 'react-router-dom';//Import BrowserRouter from rea
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>{/* Enable additional checks and warnings during development */}
-    
     <BrowserRouter>
       <App />
     </BrowserRouter>
