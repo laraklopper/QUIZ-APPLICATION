@@ -95,15 +95,17 @@ console.assert(2 + 2 === 5, "Math is broken!");
 ## SUMMARY
 ---
 
-| **Console Method**      | **Use Case**                      | **Explanation**                                                                 |
-|------------------------|----------------------------------|---------------------------------------------------------------------------------|
-| `console.log()`         | General info, form submission     | Logs standard messages or variables, like "Form submitted with name"     |
-| `console.warn()`        | Validation warnings               | Shows a yellow warning in the console when a required field is missing         |
-| `console.error()`       | API error handling, login fail    | Outputs an error in red if something fails, e.g., a failed `fetch` or login    |
-| `console.table()`       | Display array/object data         | Shows structured data in a table for easy readability (e.g., list of users)    |
-| `console.debug()`       | Debug function values             | Outputs detailed info (often hidden unless "verbose" logs are enabled)         |
-| `console.time()`        | Measure how long a task takes     | Starts a timer—useful for performance testing or debugging slow code           |
-| `console.timeEnd()`     | Stop the timer                    | Ends the timer and logs the elapsed time                                       |
-| `console.group()`       | Group related logs                | Creates an expandable/collapsible group in the console for organized logs      |
-| `console.groupEnd()`    | End the log group                 | Closes the group opened by `console.group()`                                   |
-| `console.assert()`      | Conditional logging (on fail)     | Only logs if the given expression is false, great for catching logic issues    |
+| **Console Method**   | **Use Case**                   | **Explanation**                                                             |
+| -------------------- | ------------------------------ | --------------------------------------------------------------------------- |
+| `console.log()`      | General info, form submission  | Logs standard messages or variables, like "Form submitted with name"        |
+| `console.info()`     | Informational messages         | Similar to `console.log()`, styled differently in some browsers for clarity |
+| `console.warn()`     | Validation warnings            | Shows a yellow warning in the console when a required field is missing      |
+| `console.error()`    | API error handling, login fail | Outputs an error in red if something fails, e.g., a failed `fetch` or login |
+| `console.table()`    | Display array/object data      | Shows structured data in a table for easy readability (e.g., list of users) |
+| `console.debug()`    | Debug function values          | Outputs detailed info (often hidden unless "verbose" logs are enabled)      |
+| `console.time()`     | Measure how long a task takes  | Starts a timer—useful for performance testing or debugging slow code        |
+| `console.timeEnd()`  | Stop the timer                 | Ends the timer and logs the elapsed time                                    |
+| `console.group()`    | Group related logs             | Creates an expandable/collapsible group in the console for organized logs   |
+| `console.groupEnd()` | End the log group              | Closes the group opened by `console.group()`                                |
+| `console.assert()`   | Conditional logging (on fail)  | Only logs if the given expression is false, great for catching logic issues |
+
